@@ -7,11 +7,15 @@ use Exception;
 class MickyCLI
 {
 
-    private $output = null;
+    public static string $BASE_MKY = 'MKYCommand';
 
-    private $retval = 0;
+    private array $cli = [];
 
-    private $longOptions = [
+    private array $output = [];
+
+    private int $retval = 0;
+
+    private static $longOptions = [
         'create' => 'required',
         'name' => 'required',
         'pk' => 'required',
@@ -20,52 +24,59 @@ class MickyCLI
         'request' => 'required',
         'controller' => 'required',
         'method' => 'required',
+        'model' => 'required',
+        'route' => 'required',
+        'api' => 'novalue',
+        'url' => 'required',
+        'routename' => 'optional',
+        'middleware' => 'required'
     ];
 
-    private $shortOptions = [
-        'n' => 'required',
-        't' => 'required',
-        'r' => 'required',
-        'c' => 'required',
-        'm' => 'required',
-    ];
-
-    private $required = [
+    private static $required = [
         'create' => [
             'controller' => [
-                'name' => 'required, n',
+                'name' => 'required',
                 'crud' => 'optional'
             ],
             'model' => [
-                'name' => 'required, n',
+                'name' => 'required',
                 'pk' => 'optional',
-                'table' => 'optional, t'
+                'table' => 'optional'
             ],
             'route' => [
-                'request' => 'required, r',
-                'controller' => 'required, c',
-                'method' => 'required, m',
-                'name' => 'optional, n'
+                'request' => 'required',
+                'url' => 'required',
+                'controller' => 'required',
+                'method' => 'required',
+                'routename' => 'optional',
+                'api' => 'optional',
+                'middleware' => 'optional'
+            ],
+            'middleware' => [
+                'name' => 'required',
             ]
         ],
     ];
 
-    public function getAllOptions()
+    public function __construct(array $cli)
     {
-        return array_merge($this->shortOptions, $this->longOptions);
+        $this->cli = $cli;
     }
 
     public function getOption(string $option)
     {
-        return $this->getAllOptions()[$option];
+        return self::$longOptions[$option];
     }
 
-    public function cliLongOptions()
+    public static function cliLongOptions()
     {
         $longOpt = array_map(function ($o) {
-            switch ($this->longOptions[$o]) {
+            switch (self::$longOptions[$o]) {
                 case 'required':
                     return $o . ':';
+                    break;
+                case 'optional':
+                    return $o . '::';
                     break;
                 case 'novalue':
                     return $o;
@@ -73,55 +84,13 @@ class MickyCLI
                 default:
                     break;
             }
-        }, array_keys($this->longOptions));
+        }, array_keys(self::$longOptions));
         return $longOpt;
     }
 
-    public function cliShortOptions()
-    {
-        $shortOpt = array_map(function ($o) {
-            switch ($this->shortOptions[$o]) {
-                case 'required':
-                    return $o . ':';
-                    break;
-                case 'novalue':
-                    return $o;
-                    break;
-                default:
-                    break;
-            }
-        }, array_keys($this->shortOptions));
-        return $shortOpt;
-    }
-
-    // DEBUT COMPILE
-
-    public function start_mky()
-    {
-        return "<?php\n";
-    }
-
-    public function require_mky()
-    {
-        return "require_once '" . BASE_MKY . "./config.php'; \n
-        require_once 'vendor/autoload.php'; \n";
-    }
-
-    public function compileExec(string $compile = '')
-    {
-        $exec = fopen(BASE_MKY . "/exec.php", "w");
-        if ($compile) {
-            $compile = start_mky() . require_mky() . $compile;
-        }
-        fwrite($exec, $compile ? $compile : "");
-    }
-
-    // FIN COMPILE
-
-
     public function getCommandBy(...$args)
     {
-        $res = $this->commandList;
+        $res = self::$required;
         foreach ($args as $key) {
             if ($this->isFieldExist($key)) {
                 $res = $res[$key];
@@ -145,17 +114,17 @@ class MickyCLI
         throw new Exception("La méthode {$method} n'existe pas.");
     }
 
-    public function isInputOptions(array $options)
+    public function isInputCli()
     {
-        if (!empty($options)) {
+        if (!empty((array_keys($this->cli)))) {
             return true;
         }
         throw new Exception("Saisir une option (--option).");
     }
 
-    public function isInputMethod(array $options)
+    public function isInputMethod()
     {
-        foreach ($options as $key => $value) {
+        foreach ($this->cli as $key => $value) {
             if ($value == false || !empty($value)) {
                 return true;
             }
@@ -163,30 +132,90 @@ class MickyCLI
         }
     }
 
-    private function checkOptions(array $options)
+    private function sendOptions()
     {
         $send = [];
-        if ($this->isInputOptions($options)) {
-            if ($this->isInputMethod($options)) {
-                foreach ($options as $option => $method) {
-                    if ($method != false && !empty($method)) {
-                        $send[] = "--$option=$method";
-                    } elseif ($method == false) {
-                        $send[] = "--$option";
-                    } else {
-                        throw new Exception("Erreur de commande mky.");
-                    }
-                }
+        foreach ($this->cli as $cli => $option) {
+            if ($option != false) {
+                $send[] = "--$cli=$option";
+            } elseif ($option == false) {
+                $send[] = "--$cli";
+            } else {
+                throw new Exception("Erreur de commande mky.");
             }
         }
         return join(' ', $send);
     }
 
-    public function executeMKY(array $options)
+    private function checkCLI(string $cliKey)
     {
-        $script = $this->checkOptions($options);
-        echo "\n-------------------------  Execution: php exec $script  ------------------------\n\n";
-        exec("php " . BASE_MKY . "/exec.php $script", $this->output, $this->retval);
+        $cliOption = $this->cli[$cliKey];
+        unset($this->cli[$cliKey]);
+        if (!empty($this->cli)) {
+            foreach ($this->cli as $cli => $option) {
+                $req = $this->getCommandBy($cliKey, $cliOption);
+                if (!isset($req[$cli])) {
+                    unset($this->cli[$cli]);
+                } elseif ($req[$cli] == 'required' && empty($this->cli[$cli])) {
+                    throw new Exception("La commande $cli est requie.");
+                }
+            }
+        } else {
+            throw new Exception("Saisir des paramètres pour la commande $cliKey::$cliOption.");
+        }
+        $this->cli[$cliKey] = $cliOption;
+        return true;
+    }
+
+    public function executeMKY()
+    {
+        $script = $this->sendOptions();
+        exec("php " . self::$BASE_MKY . "/exec.php $script", $this->output, $this->retval);
+        echo "\n-------------------------  Execution: $script  ------------------------\n\n";
         echo (!empty($this->output[1]) ? $this->output[1] : $this->output[0]);
     }
+
+    public function run()
+    {
+        $compile = '';
+        if ($this->isInputCli() && array_key_exists('create', $this->cli)) {
+            foreach ($this->cli as $cli => $option) {
+                if (array_key_exists($cli, self::$longOptions)) {
+                    if ($cli === 'create' && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null) {
+                        $compile = file_get_contents(self::$BASE_MKY . "/$cli/$option.mky");
+                        break;
+                    }
+                } else {
+                    throw new Exception("L'option $cli est invalide.");
+                }
+            }
+            $this->compileExec($compile);
+            $this->executeMKY();
+            $this->compileExec();
+        }
+    }
+
+
+    // DEBUT COMPILE
+
+    public function start_mky()
+    {
+        return "<?php\n";
+    }
+
+    public function require_mky()
+    {
+        return "require_once 'vendor/autoload.php';\nuse Core\MickyCLI;\n";
+    }
+
+    public function compileExec(string $compile = '')
+    {
+        $exec = fopen(self::$BASE_MKY . "/exec.php", "w");
+        if ($compile) {
+            $compile = $this->start_mky() . $this->require_mky() . $compile;
+        }
+        fwrite($exec, $compile ? $compile : "");
+    }
+
+    // FIN COMPILE
 }

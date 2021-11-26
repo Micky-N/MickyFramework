@@ -1,0 +1,13 @@
+if (php_sapi_name() === "cli") {
+    $cli = getopt('', MickyCLI::cliLongOptions());
+    $option = $cli['create'];
+    $middlewareName = ucfirst($cli['name']);
+    $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
+    $template = str_replace('!name', $middlewareName, $template);
+    if (file_exists("app/Http/Middlewares/$middlewareName.php")) {
+        throw new Exception("Le middleware $middlewareName existe déjà.");
+    }
+    $middleware = fopen("app/Http/Middlewares/$middlewareName.php", "w") or die("Impossible d'ouvre le fichier $middlewareName.");
+    fwrite($middleware, $template);
+    print("Le middleware $middlewareName a été créé.");
+}

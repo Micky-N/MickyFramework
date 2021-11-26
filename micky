@@ -1,27 +1,10 @@
 <?php
 
+use Core\MickyCLI;
 
 if (php_sapi_name() === 'cli') {
-    require_once './MKYCommand/config.php';
-
-    $options = allOptions();
-    $compile = null;
-    if (isInputOptions(array_keys($options))) {
-        foreach (allKeyOptions() as $key) {
-            if (in_array($key, allKeyOptions())) {
-                $key = str_replace(':', '', $key);
-                if (in_array($options[$key], array_keys(COMMANDS['create']))) {
-                    $compile = file_get_contents(BASE_MKY . "/$key/{$options[$key]}.mky");
-                    break;
-                } else {
-                    throw new Exception("Le template {$key}.mky n'existe pas");
-                }
-            }else{
-                throw new Exception("L'option $key est invalide.");
-            }
-        }
-        compileExec($compile);
-        executeMKY($options);
-        compileExec();
-    }
+    require 'vendor/autoload.php';
+    $cli = getopt('', MickyCLI::cliLongOptions());
+    $mky = new MickyCLI($cli);
+    $mky->run();
 }

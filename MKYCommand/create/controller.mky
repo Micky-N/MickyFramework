@@ -1,14 +1,7 @@
 if (php_sapi_name() === "cli") {
-    if(!in_array('create', array_keys(allOptions())) || !allOptions()['create']){
-        throw new Exception("Saisir une action valide.");
-    }
-    foreach(COMMANDS['create']['controller'] as $key => $rule){
-        if($rule == 'required' && (!in_array($key, array_keys(allOptions())) || !allOptions()[$key])){
-            throw new Exception("le champ $key est obligatoire !");
-        }
-    }
-    $method = allOptions()['create'];
-    $controllerName = ucfirst(allOptions()['name']);
+    $cli = getopt('', MickyCLI::cliLongOptions());
+    $option = $cli['create'];
+    $controllerName = ucfirst($cli['name']);
     if (!strpos($controllerName, 'Controller')) {
         if (strpos($controllerName, 'controller')) {
             $controllerName = str_replace('controller', 'Controller', $controllerName);
@@ -16,12 +9,12 @@ if (php_sapi_name() === "cli") {
             throw new Exception("Le controller $controllerName doit avoir un suffix Controller.");
         }
     }
-    $template = file_get_contents(BASE_MKY."/templates/$method.mky");
+    $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
     $template = str_replace('!name', $controllerName, $template);
     if (file_exists("app/Http/Controllers/$controllerName.php")) {
         throw new Exception("Le controller $controllerName existe déjà.");
     }
-    $controller = fopen("app/Http/Controllers/$controllerName.php", "w") or die("Impossible d'ouvre le fichier $controllerName !");
+    $controller = fopen("app/Http/Controllers/$controllerName.php", "w") or die("Impossible d'ouvre le fichier $controllerName.");
     fwrite($controller, $template);
-    print("Le controller $controllerName a été créé");
+    print("Le controller $controllerName a été créé.");
 }

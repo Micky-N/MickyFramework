@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 use Core\Model;
 
+
 class !name extends Model
 {
     !table!pk

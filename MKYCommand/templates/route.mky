@@ -1,0 +1,1 @@
+Route::!request(!url, [!controller, !method])!middleware!routename;

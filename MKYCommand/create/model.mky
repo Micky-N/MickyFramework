@@ -1,24 +1,17 @@
 if (php_sapi_name() === "cli") {
-    if(!in_array('create', array_keys(allOptions())) || !allOptions()['create']){
-        throw new Exception("Saisir une action valide.");
-    }
-    foreach(COMMANDS['create']['model'] as $key => $rule){
-        if($rule == 'required' && (!in_array($key, array_keys(allOptions())) || !allOptions()[$key])){
-            throw new Exception("le champ $key est obligatoire !");
-        }
-    }
-    $method = allOptions()['create'];
-    $modelName = ucfirst(allOptions()['name']);
-    $table = !empty(allOptions()['table']) ? allOptions()['table'] : null;
-    $pk = !empty(allOptions()['pk']) ? allOptions()['pk'] : null;
-    $template = file_get_contents(BASE_MKY."/templates/$method.mky");
-    $template = str_replace('!name', $modelName, $template);
+    $cli = getopt('', MickyCLI::cliLongOptions());
+    $options = $cli['create'];
+    $name = ucfirst($cli['name']);
+    $table = !empty($cli['table']) ? $cli['table'] : null;
+    $pk = !empty($cli['pk']) ? $cli['pk'] : null;
+    $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$options.mky");
+    $template = str_replace('!name', $name, $template);
     $template = str_replace('!table', $table ? "protected string \$table = '$table';\n\t" : '' , $template);
     $template = str_replace('!pk', $pk ? "protected string \$primaryKey = '$pk';" : '', $template);
-    if (file_exists("app/Models/$modelName.php")) {
-        throw new Exception("Le model $modelName existe déjà.");
+    if (file_exists("app/Models/$name.php")) {
+        throw new Exception("Le model $name existe déjà.");
     }
-    $model = fopen("app/Models/$modelName.php", "w") or die("Impossible d'ouvre le fichier $modelName !");
+    $model = fopen("app/Models/$name.php", "w") or die("Impossible d'ouvre le fichier $name !");
     fwrite($model, $template);
-    print("Le model $modelName a été créé !");
+    print("Le model $name a été créé !");
 }
