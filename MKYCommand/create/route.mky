@@ -14,8 +14,11 @@ if (php_sapi_name() === "cli") {
     $routename = !empty($cli['routename']) ? $cli['routename'] : null;
     $middleware = !empty($cli['middleware']) ? $cli['middleware'] : null;
     if(isset($cli['routename']) && $routename == null){
+        $plural = json_decode(file_get_contents('lang/plural_word.json'), true);
         $name = str_replace('Controller', '', $controller);
-        $routename = $routename == false ? strtolower($name).".".$method : $routename;
+        if(isset($plural[strtolower($name)])){
+            $routename = $routename == false ? $plural[strtolower($name)].".".$method : $routename;
+        }
     }
     $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
     $template = str_replace('!request', $request, $template);

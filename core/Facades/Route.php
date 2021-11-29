@@ -2,6 +2,7 @@
 
 namespace Core\Facades;
 
+use Core\MickyCLI;
 use Core\Route as CoreRoute;
 
 class Route{

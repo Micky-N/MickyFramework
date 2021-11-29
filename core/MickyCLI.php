@@ -29,14 +29,17 @@ class MickyCLI
         'api' => 'novalue',
         'url' => 'required',
         'routename' => 'optional',
-        'middleware' => 'required'
+        'middleware' => 'required',
+        'show' => 'required',
+        'routes' => 'required',
     ];
 
     private static $required = [
         'create' => [
             'controller' => [
                 'name' => 'required',
-                'crud' => 'optional'
+                'crud' => 'optional',
+                'model' => 'optional'
             ],
             'model' => [
                 'name' => 'required',
@@ -56,6 +59,12 @@ class MickyCLI
                 'name' => 'required',
             ]
         ],
+        'show' => [
+            'routes' => [
+                'request' => 'required',
+                'controller' => 'required'
+            ]
+        ]
     ];
 
     public function __construct(array $cli)
@@ -93,7 +102,7 @@ class MickyCLI
         $res = self::$required;
         foreach ($args as $key) {
             if ($this->isFieldExist($key)) {
-                $res = $res[$key];
+                $res = isset($res[$key]) ? $res[$key] : $key;
             }
         }
         return $res;
@@ -151,17 +160,17 @@ class MickyCLI
     {
         $cliOption = $this->cli[$cliKey];
         unset($this->cli[$cliKey]);
-        if (!empty($this->cli)) {
-            foreach ($this->cli as $cli => $option) {
-                $req = $this->getCommandBy($cliKey, $cliOption);
-                if (!isset($req[$cli])) {
-                    unset($this->cli[$cli]);
-                } elseif ($req[$cli] == 'required' && empty($this->cli[$cli])) {
-                    throw new Exception("La commande $cli est requie.");
+        if (!empty(self::$required[$cliKey][$cliOption])) {
+            if (!empty($this->cli)) {
+                foreach ($this->cli as $cli => $option) {
+                    $req = $this->getCommandBy($cliKey, $cliOption);
+                    if (!isset($req[$cli])) {
+                        unset($this->cli[$cli]);
+                    } elseif ($req[$cli] == 'required' && empty($this->cli[$cli])) {
+                        throw new Exception("La commande $cli est requie.");
+                    }
                 }
             }
-        } else {
-            throw new Exception("Saisir des paramètres pour la commande $cliKey::$cliOption.");
         }
         $this->cli[$cliKey] = $cliOption;
         return true;
@@ -172,16 +181,16 @@ class MickyCLI
         $script = $this->sendOptions();
         exec("php " . self::$BASE_MKY . "/exec.php $script", $this->output, $this->retval);
         echo "\n-------------------------  Execution: $script  ------------------------\n\n";
-        echo (!empty($this->output[1]) ? $this->output[1] : $this->output[0]);
+        echo join("\n", $this->output);
     }
 
     public function run()
     {
         $compile = '';
-        if ($this->isInputCli() && array_key_exists('create', $this->cli)) {
+        if ($this->isInputCli() && (array_key_exists('create', $this->cli) || array_key_exists('show', $this->cli))) {
             foreach ($this->cli as $cli => $option) {
                 if (array_key_exists($cli, self::$longOptions)) {
-                    if ($cli === 'create' && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null) {
+                    if (array_key_exists($cli, self::$required) && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null) {
                         $compile = file_get_contents(self::$BASE_MKY . "/$cli/$option.mky");
                         break;
                     }
@@ -218,4 +227,29 @@ class MickyCLI
     }
 
     // FIN COMPILE
+
+    public static function table($data)
+    {
+        // Find longest string in each column
+        $columns = [];
+        foreach ($data as $row_key => $row) {
+            foreach ($row as $cell_key => $cell) {
+                $length = strlen($cell);
+                if (empty($columns[$cell_key]) || $columns[$cell_key] || $length) {
+                    $columns[$cell_key] = 20;
+                }
+            }
+        }
+
+        // Output table, padding columns
+        $table = '';
+        foreach ($data as $row_key => $row) {
+            $table .= str_pad('', $columns[$cell_key] * count($row), '-') . "\n";
+            foreach ($row as $cell_key => $cell) {
+                $table .= "|" . str_pad($cell, $columns[$cell_key]);
+            }
+            $table .= PHP_EOL;
+        }
+        return $table;
+    }
 }

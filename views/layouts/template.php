@@ -15,18 +15,18 @@
 <body class="d-flex flex-column h-100">
     <header class="mb-5">
         <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-            <a class="navbar-brand" href="?action=index">TPBOOTSTRAP</a>
+            <a class="navbar-brand" href="<?= route('home.index') ?>">TPBOOTSTRAP</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <?php foreach ([
-                        'Accueil' => 'index',
-                        'Categories' => 'categories'
+                        'Accueil' => 'home.index',
+                        'Categories' => 'categories.index'
                     ] as $titre => $href) : ?>
-                        <li class="nav-item <?= strpos($_GET['action'], $href) === 0 ? 'active' : '' ?>">
-                            <a class="nav-link" href="?action=<?= $href ?>"><?= $titre ?></a>
+                        <li class="nav-item <?= currentRoute(route($href)) ? 'active' : '' ?>">
+                            <a class="nav-link" href="<?= route($href) ?>"><?= $titre ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>

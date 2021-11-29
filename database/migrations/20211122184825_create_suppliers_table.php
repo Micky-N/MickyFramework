@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-final class CreateSuppliesTable extends AbstractMigration
+final class CreateSuppliersTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -20,7 +20,7 @@ final class CreateSuppliesTable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('supplies', ['id' => 'code_supply']);
+        $table = $this->table('suppliers', ['id' => 'code_supplier']);
         $table->addColumn('name', 'string', ['limit' => 25])
             ->addColumn('informations', 'string', ['limit' => 100])
             ->addColumn('num_street', 'string', ['limit' => 10])

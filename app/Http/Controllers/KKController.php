@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Core\Controller;
 use Core\Facades\View;
-!model
+use App\Models\User;
 
 
-class !name extends Controller
+class KKController extends Controller
 {
-    !crud
+    
 }

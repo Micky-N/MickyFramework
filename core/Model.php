@@ -147,8 +147,7 @@ class Model
             foreach ($all as $a) {
                 if (strpos($a->{"Tables_in_" . config('connection.mysql.name')}, "_")) {
                     $atest = explode('_', $a->{"Tables_in_" . config('connection.mysql.name')});
-                    if ((in_array($first, $atest) || in_array(get_plural($first), $atest)) 
-                    && (in_array($second, $atest) || in_array(get_plural($second), $atest))) {
+                    if (in_array($first, $atest) && in_array($second, $atest)) {
                         $pivot = $a->{"Tables_in_" . config('connection.mysql.name')};
                     }
                 }
@@ -199,6 +198,9 @@ class Model
     public function __get($key)
     {
         if(empty($this->$key)){
+            if(method_exists($this, 'get'.ucfirst($key))){
+                return $this->{'get'.ucfirst($key)}();
+            }
             return $this->$key();
         };
     }

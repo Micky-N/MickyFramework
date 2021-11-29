@@ -4,7 +4,7 @@ declare(strict_types=1);
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-final class CreateProductSuppliesTable extends AbstractMigration
+final class CreateProductStockTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -19,12 +19,12 @@ final class CreateProductSuppliesTable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('product_supplies');
+        $table = $this->table('product_stock');
         $table->addColumn('code_product', MysqlAdapter::PHINX_TYPE_INTEGER)
-            ->addColumn('code_supply', MysqlAdapter::PHINX_TYPE_INTEGER)
-            ->addColumn('price', MysqlAdapter::PHINX_TYPE_DOUBLE, ['limit' => MysqlAdapter::TEXT_LONG])
-            ->addForeignKey('code_product', 'products', 'code_product', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
-            ->addForeignKey('code_supply', 'supplies', 'code_supply', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
-            ->create();
+              ->addColumn('code_stock', MysqlAdapter::PHINX_TYPE_INTEGER)
+              ->addColumn('quantity', MysqlAdapter::PHINX_TYPE_INTEGER)
+              ->addForeignKey('code_product', 'products', 'code_product', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
+              ->addForeignKey('code_stock', 'stocks', 'code_stock', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
+              ->create();
     }
 }

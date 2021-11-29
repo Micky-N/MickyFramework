@@ -22,9 +22,11 @@ class Route
      * @param string $name
      * 
      */
-    public function get(string $path, $action, string $name = '')
+    public function get(string $path, $action)
     {
-        $this->routes['GET'][] = new Router($path, $action, $name);
+        $route = new Router($path, $action);
+        $this->routes['GET'][] = $route;
+        return $route;
     }
 
     /**
@@ -33,9 +35,23 @@ class Route
      * @param string $name
      * 
      */
-    public function post(string $path, $action, string $name = '')
+    public function post(string $path, $action)
     {
-        $this->routes['POST'][] = new Router($path, $action, $name);
+        $route = new Router($path, $action);
+        $this->routes['POST'][] = $route;
+        return $route;
+    }
+
+    public function crud(string $namespace, $controller){
+        $controllerName = str_replace('App\\Http\\Controllers\\', '', $controller);
+        $controllerName = strtolower(str_replace('Controller', '', $controllerName));
+        $this->get("$namespace", [$controller, 'index'])->name($controllerName.".index");
+        $this->get("$namespace/:$controllerName", [$controller, 'show'])->name($controllerName.".show");
+        $this->get("$namespace", [$controller, 'new'])->name($controllerName.".new");
+        $this->post("$namespace", [$controller, 'create'])->name($controllerName.".create");
+        $this->get("$namespace/:$controllerName", [$controller, 'edit'])->name($controllerName.".edit");
+        $this->post("$namespace/:$controllerName", [$controller, 'update'])->name($controllerName.".update");
+        $this->get("$namespace/:$controllerName", [$controller, 'delete'])->name($controllerName.".delete");
     }
 
     public function routeNeedParams($path){
@@ -54,11 +70,12 @@ class Route
         return $path;
     }
 
-    public function generateUrlByName(string $routerName, $params = []){
+    public function generateUrlByName(string $routeName, $params = []){
         $path = '';
-        foreach($this->routes as $method => $routers){
-            foreach($routers as $router){
-                if($router->name === $routerName){
+        $err = 0;
+        foreach($this->routes as $method => $routes){
+            foreach($routes as $router){
+                if($router->name === $routeName){
                     $path = $router->path;
                     if(!empty($params)){
                         $path = explode('/', $path);
@@ -74,8 +91,13 @@ class Route
                         }
                         $path = implode('/', $path);
                     }
+                }else{
+                    $err += 1;
                 }
             }
+        }
+        if($err == count($routes)){
+            throw new Exception("La route '$routeName' n'existe pas.", 13);
         }
         return $this->routeNeedParams($path);
     }
@@ -95,9 +117,9 @@ class Route
 
     public function run(ServerRequestInterface $request)
     {
-        foreach ($this->routes[$request->getMethod()] as $router) {
-            if($router->match($request)){
-                return $router->execute($request);
+        foreach ($this->routes[$request->getMethod()] as $route) {
+            if($route->match($request)){
+                return $route->execute($request);
             }
         }
     }
@@ -111,5 +133,26 @@ class Route
     {
         $path = $this->generateUrlByName($name);
         header("Location: $path");
+    }
+
+    public function toArray()
+    {
+        includeAll('routes');
+        $routes = [];
+        $namespace = "/";
+        $currentPath = "\t";
+        foreach ($this->routes as $method => $routers) {
+            foreach ($routers as $router) {
+                $paths = explode('/', $router->path);
+                if(in_array($namespace, $paths)){
+                    $currentPath = "\t/".(isset($paths[1]) ? $paths[1] : '');
+                }else{
+                    $namespace = $paths[0];
+                    $currentPath = $router->path;
+                }
+                $routes[] = [$method, $currentPath, str_replace('App\\Http\\Controllers\\','',$router->action[0]), $router->action[1], $router->name, $router->middleware];
+            }
+        }
+        return $routes;
     }
 }
