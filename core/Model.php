@@ -62,7 +62,7 @@ class Model
 
     public static function create(array $data)
     {
-        if (!isset($data['created_at']) && !isset($data['updated_at'])) {
+        if (isset($data['created_at']) && isset($data['updated_at'])) {
             $data = self::setDatetime($data);
         }
         $keys = [];
@@ -83,7 +83,9 @@ class Model
     {
         $keys = [];
         $values = [];
-        $data['updated_at'] = date('Y-m-d H:i:s');
+        if(isset($data['updated_at'])){
+            $data['updated_at'] = date('Y-m-d H:i:s');
+        }
         foreach ($data as $k => $v) {
             $keys[] = sprintf('%s = ?', $k);
             $values[] = $v;

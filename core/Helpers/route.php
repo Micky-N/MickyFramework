@@ -17,3 +17,9 @@ if(!function_exists('currentRoute')){
         return Route::currentRoute($route);
     }
 }
+
+if(!function_exists('namespaceRoute')){
+    function namespaceRoute($route = ''){
+        return Route::namespaceRoute($route);
+    }
+}

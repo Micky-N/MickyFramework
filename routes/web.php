@@ -7,3 +7,6 @@ use App\Http\Controllers\CategoryController;
 
 Route::get('/', [HomeController::class, 'index'])->middleware('auth')->name('home.index');
 Route::crud('categories', CategoryController::class);
+Route::crud('products', 'App\\Http\\Controllers\\ProductController');
+Route::crud('suppliers', 'App\\Http\\Controllers\\SupplierController');
+Route::crud('stocks', 'App\\Http\\Controllers\\StockController');

@@ -44,14 +44,15 @@ class Route
 
     public function crud(string $namespace, $controller){
         $controllerName = str_replace('App\\Http\\Controllers\\', '', $controller);
-        $controllerName = strtolower(str_replace('Controller', '', $controllerName));
-        $this->get("$namespace", [$controller, 'index'])->name($controllerName.".index");
-        $this->get("$namespace/:$controllerName", [$controller, 'show'])->name($controllerName.".show");
-        $this->get("$namespace", [$controller, 'new'])->name($controllerName.".new");
-        $this->post("$namespace", [$controller, 'create'])->name($controllerName.".create");
-        $this->get("$namespace/:$controllerName", [$controller, 'edit'])->name($controllerName.".edit");
-        $this->post("$namespace/:$controllerName", [$controller, 'update'])->name($controllerName.".update");
-        $this->get("$namespace/:$controllerName", [$controller, 'delete'])->name($controllerName.".delete");
+        $id = strtolower(str_replace('Controller', '', $controllerName));
+        $controllerName = get_plural($id);
+        $this->get("/$namespace", [$controller, 'index'])->name($controllerName.".index");
+        $this->get("/$namespace/:$id", [$controller, 'show'])->name($controllerName.".show");
+        $this->get("/$namespace/new", [$controller, 'new'])->name($controllerName.".new");
+        $this->post("/$namespace", [$controller, 'create'])->name($controllerName.".create");
+        $this->get("/$namespace/edit/:$id", [$controller, 'edit'])->name($controllerName.".edit");
+        $this->post("/$namespace/update/:$id", [$controller, 'update'])->name($controllerName.".update");
+        $this->get("/$namespace/delete/:$id", [$controller, 'delete'])->name($controllerName.".delete");
     }
 
     public function routeNeedParams($path){
@@ -115,6 +116,20 @@ class Route
         return $currentRoute;
     }
 
+    /**
+     * @param string $route
+     * 
+     * @return [type]
+     */
+    public function namespaceRoute(string $route = ''){
+        $currentRoute = ServerRequest::fromGlobals()->getUri()->getPath();
+        $currentRouteArray = explode('/', trim($currentRoute, '/'));
+        if($route){
+            return $currentRouteArray[0] === $route;
+        }
+        return false;
+    }
+
     public function run(ServerRequestInterface $request)
     {
         foreach ($this->routes[$request->getMethod()] as $route) {
@@ -143,9 +158,10 @@ class Route
         $currentPath = "\t";
         foreach ($this->routes as $method => $routers) {
             foreach ($routers as $router) {
-                $paths = explode('/', $router->path);
+                $paths = explode('/', trim($router->path, '/'));
                 if(in_array($namespace, $paths)){
-                    $currentPath = "\t/".(isset($paths[1]) ? $paths[1] : '');
+                    unset($paths[0]);
+                    $currentPath = "\t/".join('/', $paths);
                 }else{
                     $namespace = $paths[0];
                     $currentPath = $router->path;

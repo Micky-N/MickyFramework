@@ -32,6 +32,7 @@ class MickyCLI
         'middleware' => 'required',
         'show' => 'required',
         'routes' => 'required',
+        'namespace' => 'required'
     ];
 
     private static $required = [
@@ -53,7 +54,8 @@ class MickyCLI
                 'method' => 'required',
                 'routename' => 'optional',
                 'api' => 'optional',
-                'middleware' => 'optional'
+                'middleware' => 'optional',
+                'namespace' => 'required'
             ],
             'middleware' => [
                 'name' => 'required',
@@ -244,12 +246,13 @@ class MickyCLI
         // Output table, padding columns
         $table = '';
         foreach ($data as $row_key => $row) {
-            $table .= str_pad('', $columns[$cell_key] * count($row), '-') . "\n";
+            $table .= str_pad('', $columns[$cell_key] * count($row), '-') .PHP_EOL;
             foreach ($row as $cell_key => $cell) {
                 $table .= "|" . str_pad($cell, $columns[$cell_key]);
             }
             $table .= PHP_EOL;
         }
+        $table .= PHP_EOL.PHP_EOL;
         return $table;
     }
 }

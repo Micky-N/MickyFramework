@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -21,20 +22,27 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
-                    <?php foreach ([
-                        'Accueil' => 'home.index',
-                        'Categories' => 'categories.index'
-                    ] as $titre => $href) : ?>
-                        <li class="nav-item <?= currentRoute(route($href)) ? 'active' : '' ?>">
-                            <a class="nav-link" href="<?= route($href) ?>"><?= $titre ?></a>
-                        </li>
-                    <?php endforeach; ?>
+                    <li class="nav-item <?= currentRoute() == '/' ? 'active' : '' ?>">
+                        <a class="nav-link" href="<?= route('home.index') ?>">Accueil</a>
+                    </li>
+                    <li class="nav-item <?= namespaceRoute('categories') ? 'active' : '' ?>">
+                        <a class="nav-link" href="<?= route('categories.index') ?>">Categorie</a>
+                    </li>
+                    <li class="nav-item <?= namespaceRoute('products') ? 'active' : '' ?>">
+                        <a class="nav-link" href="<?= route('products.index') ?>">Produit</a>
+                    </li>
+                    <li class="nav-item <?= namespaceRoute('suppliers') ? 'active' : '' ?>">
+                        <a class="nav-link" href="<?= route('suppliers.index') ?>">Producteur</a>
+                    </li>
+                    <li class="nav-item <?= namespaceRoute('stocks') ? 'active' : '' ?>">
+                        <a class="nav-link" href="<?= route('stocks.index') ?>">Stock</a>
+                    </li>
                 </ul>
             </div>
         </nav>
     </header>
     <main role="main" class="flex-shrink-0">
-        <?php if(!empty($_GET['error'])): ?>
+        <?php if (!empty($_GET['error'])) : ?>
             <div class="alert alert-danger"><?= $_GET['error'] ?></div>
         <?php endif; ?>
         <div class="container">
@@ -49,9 +57,6 @@
             <span class="text-muted">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate debitis sint dolores, facere nisi fuga explicabo similique modi ea inventore qui ipsa autem minus, ab non, mollitia dolorem cumque repellat.</span>
         </div>
     </footer>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Core\Controller;
 use Core\Facades\View;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $product = Product::find(2);
-        return View::render('welcome', compact('product'));
+        $categories = Category::all();
+        return View::render('welcome', compact('categories'));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Core\Controller;
 use Core\Facades\View;
+use Core\Facades\Route;
 use App\Models\Category;
 
 
@@ -13,12 +14,13 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return View::render('categories', compact('categories'));
+        return View::render('categories.index', compact('categories'));
     }
 
-    public function show($id)
+    public function show($category)
     {
-        // show
+        $category = Category::find($category);
+        return View::render('categories.show', compact('category'));
     }
 
     public function new()
@@ -28,21 +30,24 @@ class CategoryController extends Controller
 
     public function create(array $data)
     {
-        // create
+        Category::create($data);
+        return Route::redirectName('categories.index');
     }
 
-    public function edit($id)
+    public function edit($category)
     {
         // edit
     }
 
-    public function update($id, array $data)
+    public function update($category, array $data)
     {
-        // update
+        Category::update($category, $data);
+        return Route::redirectName('categories.index');
     }
     
-    public function delete($id)
+    public function delete($category)
     {
-        // delete
+        Category::delete($category);
+        return Route::redirectName('categories.index');
     }
 }
