@@ -9,4 +9,3 @@ Route::get('/', [HomeController::class, 'index'])->middleware('auth')->name('hom
 Route::crud('categories', CategoryController::class);
 Route::crud('products', 'App\\Http\\Controllers\\ProductController');
 Route::crud('suppliers', 'App\\Http\\Controllers\\SupplierController');
-Route::crud('stocks', 'App\\Http\\Controllers\\StockController');

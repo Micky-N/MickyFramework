@@ -17,13 +17,13 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'code_category');
     }
 
-    public function stocks()
+    public function stock()
     {
-        return $this->belongsToMany(Stock::class,'','code_product', 'code_stock');
+        return $this->hasOne(Stock::class, 'code_stock');
     }
 
     public function suppliers()
     {
-        return $this->belongsToMany(Supplier::class,'','code_product', 'code_supplier');
+        return $this->belongsToMany(Supplier::class, '', 'code_product', 'code_supplier');
     }
 }

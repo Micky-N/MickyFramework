@@ -34,9 +34,6 @@
                     <li class="nav-item <?= namespaceRoute('suppliers') ? 'active' : '' ?>">
                         <a class="nav-link" href="<?= route('suppliers.index') ?>">Producteur</a>
                     </li>
-                    <li class="nav-item <?= namespaceRoute('stocks') ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= route('stocks.index') ?>">Stock</a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -46,7 +43,7 @@
             <div class="alert alert-danger"><?= $_GET['error'] ?></div>
         <?php endif; ?>
         <div class="container">
-            <div class="container my-5">
+            <div class="container my-1">
                 <!-- Toutes les vues seront dans cette variable -->
                 <?= $content ?>
             </div>
@@ -60,6 +57,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/print/bootstrap-table-print.min.js"></script>
     <script src="../../public/js/script.js"></script>
 </body>
 

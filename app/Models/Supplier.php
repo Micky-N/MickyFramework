@@ -12,4 +12,9 @@ class Supplier extends Model
     {
         return sprintf('%d %s, %s %s', $this->num_street, $this->name_street, $this->postcode, $this->city);
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, '', 'code_supplier', 'code_product');
+    }
 }

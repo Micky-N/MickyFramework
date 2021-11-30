@@ -36,6 +36,6 @@ class SupplySeeder extends AbstractSeed
             ];
         }
 
-        $this->table('supplies')->insert($data)->saveData();
+        $this->table('suppliers')->insert($data)->saveData();
     }
 }

@@ -1,50 +1,79 @@
-<div class="col mb-5">
-    <h1>Crud products</h1>
-    <p>Liste :</p>
-    <?php foreach ($products as $product) : ?>
-        <li><?= $product->code_product ?> : <?= $product->name ?></li>
-        <form class="inline-block d-flex flex-row p-0" action="<?= route('product.update', ['products' => $product->code_product]) ?>" method="post">
-            <div class="form-group">
-                <label for="name">Nom</label>
-                <input type="text" name="name" id="name" value="<?= $product->name ?>">
-            </div>
-            <div class="form-group mx-2">
-                <label for="description">Photo</label>
-                <input type="text" name="description" id="description" value="Photo indisponible"> <!-- Photo a ajouter plus tard cf: Issues #2 -->
-            </div>
-            <div class="form-group mx-2">
-                <label for="categorie">Categorie</label>
-                <p><?= $product->category->name ?></p>
-            </div>
-            <button type="submit" class="btn btn-sm py-0 px-3 m-0 btn-primary">Edit</button>
-            <a href="<?= route('products.delete', ['product' => $product->code_product]) ?>" class="btn btn-sm px-3 ml-2 btn-danger">Delete</a>
-            <a href="<?= route('products.show', ['product' => $product->code_product]) ?>" class="btn btn-sm px-3 ml-2 btn-success">Show</a>
-        </form>
-    <?php endforeach; ?>
-</div>
-
 <div class="col">
-    <h2>Créer un product</h2>
-    <form class="inline-block d-flex flex-row p-0" action="<?= route('products.create') ?>" method="post">
-        <div class="form-group">
-            <label for="name">Nom</label>
-            <input type="text" name="name" id="name" required>
+    <h2>Créer un produit</h2>
+    <form class="needs-validation row" action="<?= route('products.create') ?>" method="POST">
+        <div class="col-md-8 row">
+            <div class="col-md-4">
+                <label for="name">Nom</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="col-md-6">
+                <label for="num_street">Lien photo</label>
+                <input type="text" class="form-control" name="num_street" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Créer</button>
         </div>
-        <div class="form-group mx-2">
-            <label for="photo">Lien Photo</label>
-            <input type="text" name="photo" id="photo">
-        </div>
-        <div class="form-group mx-2">
-
-            <p>Categorie<br>
-                <select name="code_category" id="code_category">
-                    <option value="" selected>Aucune catégorie selectionner </option>
-                    <?php foreach ($categories as $category) : ?>
-                        <option value="<?= $category->code_categorie ?> "> <?= $category->name ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
-        </div>
-        <button type="submit" class="btn btn-sm py-0 px-3 m-0 btn-primary">Create</button>
     </form>
 </div>
+
+<table id="table"></table>
+
+<script>
+    var $table = $('#table')
+    var products = JSON.parse('<?= json_encode($products); ?>')
+
+    function productsTable($el, products) {
+        products.forEach(p => {
+            delete Object.assign(p, {
+                ['quantity']: p['stock_quantity']
+            })['stock_quantity'];
+        })
+        var productsCells = Object.keys(products[0]).filter(c => !['products'].includes(c))
+        var i;
+        var j;
+        var row
+        var columns = []
+        var data = []
+
+        for (i = 0; i < productsCells.length; i++) {
+            columns.push({
+                field: productsCells[i],
+                title: productsCells[i],
+                sortable: true
+            })
+        }
+
+        columns.push({
+            field: 'Actions',
+            title: 'Actions',
+        })
+        for (i = 0; i < products.length; i++) {
+            row = {}
+            for (j = 0; j < productsCells.length; j++) {
+                row[productsCells[j]] = products[i][productsCells[j]]
+            }
+            row['Actions'] = `
+            <div class='d-flex flex-row justify-content-center'>
+                <a href="products/${products[i].code_product}" class='btn btn-outline-success mr-1'><i class='fa fa-eye'></i></a>
+                <a href="products/delete/${products[i].code_product}" class='btn btn-outline-danger'><i class='fa fa-trash'></i></a>
+            </div>
+            `
+            data.push(row)
+        }
+        $el.bootstrapTable({
+            classes: 'table table-bordered text-center table-sm',
+            theadClasses: 'table-primary',
+            columns,
+            data,
+            pagination: true,
+            paginationParts: ['pageList', 'pageSize'],
+            pageList: ['5', '10', '15'],
+            pageSize: "5",
+            showPrint: true,
+            showFullscreen: true,
+        })
+    }
+
+    $(function() {
+        productsTable($table, products)
+    })
+</script>

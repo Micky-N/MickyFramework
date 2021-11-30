@@ -159,12 +159,25 @@ class Model
         $foreignKeyOne = $foreignKeyOne ?: $first . "_" . $this->getPrimaryKey();
         $foreignKeyTwo = $foreignKeyTwo ?: $second . "_" . $secondInstance->getPrimaryKey();
         return MysqlDatabase::prepare("
-		SELECT {$table}.*
+		SELECT {$table}.*, {$pivot}.*
 		FROM {$table}
 		LEFT JOIN {$pivot}
 		ON {$pivot}.{$foreignKeyTwo} = {$table}.{$secondInstance->getPrimaryKey()}
 		WHERE {$pivot}.{$foreignKeyOne} = ?
 		", [$this->{$this->getPrimaryKey()}], $model);
+    }
+
+    public function hasOne(string $model, string $foreignKey = ''){
+        $table = (new $model())->getTable();
+        $second = strtolower((new \ReflectionClass($this))->getShortName());
+        $foreignKey = $foreignKey ?: $second . "_" . $this->primaryKey;
+        return MysqlDatabase::prepare("
+		SELECT {$table}.*
+		FROM {$table}
+		LEFT JOIN {$this->getTable()}
+		ON {$table}.{$foreignKey} = " . $this->getTable() . "." . $this->primaryKey .
+            " WHERE " . $this->getTable() . "." . $this->primaryKey . " = ? LIMIT 1
+		", [$this->{$this->primaryKey}], $model, true);
     }
 
     public function with(string $relation, array $properties = [])

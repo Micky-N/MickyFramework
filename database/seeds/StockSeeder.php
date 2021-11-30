@@ -1,9 +1,9 @@
 <?php
 
 
-use Faker\Factory;
+use App\Models\Product;
+use App\Models\Stock;
 use Phinx\Seed\AbstractSeed;
-use Bezhanov\Faker\Provider\Team;
 
 class StockSeeder extends AbstractSeed
 {
@@ -17,18 +17,17 @@ class StockSeeder extends AbstractSeed
      */
     public function run()
     {
-        $faker = Factory::create();
-        $faker->addProvider(new Team($faker));
         $data = [];
-        $stok = [];
-        for ($i = 0; $i < 20; $i++) {
-            $fs = $faker->team;
-            while(!empty($stok) && in_array($fs, $stok)){
-                $fs = $faker->team;
+        $ps = [];
+        for ($i = 0; $i < 100; $i++) {
+            $faker = Product::shuffleId();
+            while(!empty($ps) && in_array($faker, $ps)){
+                $faker = Product::shuffleId();
             }
-            $stok[] = $fs;
+            $ps[] = $faker;
             $data[] = [
-                'name'  => $fs
+                'code_product'  => $faker,
+                'quantity' => rand(50, 250)
             ];
         }
 
