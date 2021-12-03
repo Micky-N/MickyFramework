@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\Supply;
 use App\Models\Product;
+use App\Models\Supplier;
 use Phinx\Seed\AbstractSeed;
 
-class ProductSupplySeeder extends AbstractSeed
+class ProductSupplierSeeder extends AbstractSeed
 {
     /**
      * Run Method.
@@ -19,18 +19,18 @@ class ProductSupplySeeder extends AbstractSeed
         $data = [];
         $ps = [];
         for ($i = 0; $i < 200; $i++) {
-            $faker = [Product::shuffleId(), Supply::shuffleId()];
+            $faker = [Product::shuffleId(), Supplier::shuffleId()];
             while(!empty($ps) && in_array($faker, $ps)){
-                $faker = [Product::shuffleId(), Supply::shuffleId()];
+                $faker = [Product::shuffleId(), Supplier::shuffleId()];
             }
             $ps[] = $faker;
             $data[] = [
                 'code_product'  => $faker[0],
-                'code_supply'  => $faker[1],
-                'price' => rand(20000, 60000)/100
+                'code_supplier'  => $faker[1],
+                'purchase_price' => rand(20000, 60000)/100
             ];
         }
 
-        $this->table('product_supplies')->insert($data)->saveData();
+        $this->table('product_supplier')->insert($data)->saveData();
     }
 }

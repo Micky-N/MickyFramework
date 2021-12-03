@@ -20,10 +20,11 @@ final class CreateProductsTable extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('products', ['id' => 'code_product']);
-        $table->addColumn('code_category', MysqlAdapter::PHINX_TYPE_INTEGER)
+        $table->addColumn('code_category', MysqlAdapter::PHINX_TYPE_INTEGER, ['null' => true])
               ->addColumn('name', 'string', ['limit' => 100])
+              ->addColumn('selling_price', MysqlAdapter::PHINX_TYPE_DOUBLE, ['limit' => MysqlAdapter::TEXT_LONG])
               ->addColumn('photo', 'text', ['limit' => 100])
-              ->addForeignKey('code_category', 'categories', 'code_category', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
+              ->addForeignKey('code_category', 'categories', 'code_category', ['delete'=> 'SET_NULL', 'update'=> 'CASCADE'])
               ->create();
     }
 }

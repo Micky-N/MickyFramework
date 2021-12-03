@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Facades;
+namespace Core\Traits;
 
 use Core\QueryBuilderMysql;
 

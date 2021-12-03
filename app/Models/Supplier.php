@@ -17,4 +17,8 @@ class Supplier extends Model
     {
         return $this->belongsToMany(Product::class, '', 'code_supplier', 'code_product');
     }
+
+    public function getPurchase_price(){
+        return number_format($this->purchase_price, 2, ',', ''). '€';
+    }
 }

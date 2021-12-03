@@ -14,8 +14,8 @@ return
                 'adapter' => 'mysql',
                 'host' => 'localhost',
                 'name' => config('connection.mysql.name'),
-                'user' => 'root',
-                'password' => '',
+                'user' => config('connection.mysql.user'),
+                'password' => config('connection.mysql.password'),
             ]
         ],
         'version_order' => 'creation'

@@ -5,7 +5,7 @@ use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 use Bezhanov\Faker\Provider\Educator;
 
-class SupplySeeder extends AbstractSeed
+class SupplierSeeder extends AbstractSeed
 {
     /**
      * Run Method.

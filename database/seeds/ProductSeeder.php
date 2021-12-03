@@ -30,7 +30,8 @@ class ProductSeeder extends AbstractSeed
             $data[] = [
                 'code_category' => rand(1, 5),
                 'name'  => $fp,
-                'photo'   => 'photo_'.$fp
+                'selling_price' => rand(20000, 80000)/100,
+                'photo'   => $faker->imageUrl(640, 480, 'product', true, $fp)
             ];
         }
 

@@ -22,7 +22,7 @@ final class CreateProductSupplierTable extends AbstractMigration
         $table = $this->table('product_supplier');
         $table->addColumn('code_product', MysqlAdapter::PHINX_TYPE_INTEGER)
             ->addColumn('code_supplier', MysqlAdapter::PHINX_TYPE_INTEGER)
-            ->addColumn('price', MysqlAdapter::PHINX_TYPE_DOUBLE, ['limit' => MysqlAdapter::TEXT_LONG])
+            ->addColumn('purchase_price', MysqlAdapter::PHINX_TYPE_DOUBLE, ['limit' => MysqlAdapter::TEXT_LONG])
             ->addForeignKey('code_product', 'products', 'code_product', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
             ->addForeignKey('code_supplier', 'suppliers', 'code_supplier', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
             ->create();

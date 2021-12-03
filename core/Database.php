@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class Database {
+abstract class Database {
 
     protected static $connection;
 

@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Route
 {
-
     private array $routes;
 
     public function __construct($routes = [])
@@ -20,7 +19,7 @@ class Route
      * @param string $path
      * @param Callable|array $action
      * @param string $name
-     * 
+     *
      */
     public function get(string $path, $action)
     {
@@ -33,7 +32,7 @@ class Route
      * @param string $path
      * @param Callable|string $action
      * @param string $name
-     * 
+     *
      */
     public function post(string $path, $action)
     {
@@ -55,24 +54,84 @@ class Route
 
     public function crud(string $namespace, $controller, array $only = [])
     {
-        $controllerName = str_replace('App\\Http\\Controllers\\', '', $controller);
-        $id = strtolower(str_replace('Controller', '', $controllerName));
-        $controllerName = get_plural($id);
+        $path = '';
+        $action = '';
+        $controllerName = get_plural(strtolower(str_replace('Controller', '', str_replace('App\\Http\\Controllers\\', '', $controller))));
+        $id = "/:" . strtolower(str_replace('Controller', '', get_singular($controllerName)));
+        if (strpos($namespace, '.')) {
+            $namespaces = explode('.', $namespace);
+            $namespace = end($namespaces);
+            foreach ($namespaces as $key => $name) {
+                if ($key < count($namespaces) - 1) {
+                    $path .= "$name/:" . get_singular($name) . '/';
+                }
+            }
+            $controllerName = join('.', array_map(function ($n) {
+                return strtolower($n);
+            }, $namespaces));
+            array_shift($namespaces);
+            $action = join('', array_map(function ($n) {
+                return ucfirst(get_singular($n));
+            }, $namespaces));
+            $id = "/:" . get_singular($namespace);
+        }
+
         $crudActions = [
-            'index' => ['request' => 'get', 'path' => "/$namespace", 'action' => [$controller, 'index'], 'name' => "$controllerName.index"],
-            'show' => ['request' => 'get', 'path' => "/$namespace/:$id", 'action' => [$controller, 'show'], 'name' => "$controllerName.show"],
-            'new' => ['request' => 'get', 'path' => "/$namespace/new", 'action' => [$controller, 'new'], 'name' => "$controllerName.new"],
-            'create' => ['request' => 'post', 'path' => "/$namespace", 'action' => [$controller, 'create'], 'name' => "$controllerName.create"],
-            'edit' => ['request' => 'get', 'path' => "/$namespace/edit/:$id", 'action' => [$controller, 'edit'], 'name' => "$controllerName.edit"],
-            'update' => ['request' => 'post', 'path' => "/$namespace/update/:$id", 'action' => [$controller, 'update'], 'name' => "$controllerName.update"],
-            'delete' => ['request' => 'get', 'path' => "/$namespace/delete/:$id", 'action' => [$controller, 'delete'], 'name' => "$controllerName.delete"],
+            'index' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace",
+                'action' => [$controller, 'index' . $action],
+                'name' => "$controllerName.index",
+            ],
+            'show' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace{$id}",
+                'action' => [$controller, 'show' . $action],
+                'name' => "$controllerName.show",
+            ],
+            'new' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace/new",
+                'action' => [$controller, 'new' . $action],
+                'name' => "$controllerName.new",
+            ],
+            'create' => [
+                'request' => 'post',
+                'path' => "{$path}$namespace",
+                'action' => [$controller, 'create' . $action],
+                'name' => "$controllerName.create",
+            ],
+            'edit' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace/edit{$id}",
+                'action' => [$controller, 'edit' . $action],
+                'name' => "$controllerName.edit",
+            ],
+            'update' => [
+                'request' => 'post',
+                'path' => "{$path}$namespace/update{$id}",
+                'action' => [$controller, 'update' . $action],
+                'name' => "$controllerName.update",
+            ],
+            'delete' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace/delete{$id}",
+                'action' => [$controller, 'delete' . $action],
+                'name' => "$controllerName.delete",
+            ],
         ];
         foreach ($crudActions as $key => $crudAction) {
             if (!empty($only) && in_array($key, $only)) {
-                $router = call_user_func_array([$this, $crudAction['request']], [$crudAction['path'], $crudAction['action']]);
+                $router = call_user_func_array(
+                    [$this, $crudAction['request']],
+                    [$crudAction['path'], $crudAction['action']]
+                );
                 call_user_func_array([$router, 'name'], [$crudAction['name']]);
             } elseif (empty($only)) {
-                $router = call_user_func_array([$this, $crudAction['request']], [$crudAction['path'], $crudAction['action']]);
+                $router = call_user_func_array(
+                    [$this, $crudAction['request']],
+                    [$crudAction['path'], $crudAction['action']]
+                );
                 call_user_func_array([$router, 'name'], [$crudAction['name']]);
             }
         }
@@ -86,7 +145,7 @@ class Route
             if (strpos($p, ':') === 0) {
                 $p = str_replace(':', '', $p);
                 return $p;
-            };
+            }
         }, $pathArray);
         $needed = array_filter($needed);
         if (!empty($needed)) {
@@ -111,7 +170,10 @@ class Route
                                 if (isset($params[$value])) {
                                     $path[$key] = $params[$value];
                                 } else {
-                                    throw new Exception("Le paramètre '$value' est requie", 13);
+                                    throw new Exception(
+                                        "Le paramètre '$value' est requie",
+                                        13
+                                    );
                                 }
                             }
                         }
@@ -130,12 +192,14 @@ class Route
 
     /**
      * @param string $route
-     * 
+     *
      * @return [type]
      */
     public function currentRoute(string $route = '')
     {
-        $currentRoute = ServerRequest::fromGlobals()->getUri()->getPath();
+        $currentRoute = ServerRequest::fromGlobals()
+            ->getUri()
+            ->getPath();
         if ($route) {
             return $currentRoute === $route;
         }
@@ -144,12 +208,14 @@ class Route
 
     /**
      * @param string $route
-     * 
+     *
      * @return [type]
      */
     public function namespaceRoute(string $route = '')
     {
-        $currentRoute = ServerRequest::fromGlobals()->getUri()->getPath();
+        $currentRoute = ServerRequest::fromGlobals()
+            ->getUri()
+            ->getPath();
         $currentRouteArray = explode('/', trim($currentRoute, '/'));
         if ($route) {
             return $currentRouteArray[0] === $route;
@@ -177,11 +243,16 @@ class Route
         header("Location: $path");
     }
 
+    public function back()
+    {
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+
     public function toArray()
     {
         includeAll('routes');
         $routes = [];
-        $namespace = "/";
+        $namespace = '/';
         $currentPath = "\t";
         foreach ($this->routes as $method => $routers) {
             foreach ($routers as $router) {
@@ -193,7 +264,18 @@ class Route
                     $namespace = $paths[0];
                     $currentPath = $router->path;
                 }
-                $routes[] = [$method, $currentPath, str_replace('App\\Http\\Controllers\\', '', $router->action[0]), $router->action[1], $router->name, $router->middleware];
+                $routes[] = [
+                    $method,
+                    $currentPath,
+                    str_replace(
+                        'App\\Http\\Controllers\\',
+                        '',
+                        $router->action[0]
+                    ),
+                    $router->action[1],
+                    $router->name,
+                    $router->middleware,
+                ];
             }
         }
         return $routes;

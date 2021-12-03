@@ -19,7 +19,7 @@ class Router
      */
     public function __construct(string $path, $action)
     {
-        $this->path = $path;
+        $this->path = '/'.trim($path, '/');
         $this->action = $action;
     }
 
