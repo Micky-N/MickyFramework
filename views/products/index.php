@@ -27,10 +27,6 @@
                 <input type="text" name="name" class="form-control" id="name" required>
               </div>
               <div class="col form-group">
-                <label for="quantity">Quantité</label>
-                <input type="number" class="form-control" min="0" name="quantity" id="quantity" required>
-              </div>
-              <div class="col form-group">
                 <label for="selling_price">Prix de vente</label>
                 <input type="number" step="0.01" class="form-control" name="selling_price" id="selling_price" required>
               </div>
@@ -67,7 +63,7 @@
   var products = JSON.parse('<?= json_encode($products) ?>')
 
   function productsTable($el, products) {
-    var productsCells = Object.keys(products[0]).filter(p => !['categorie'].includes(p))
+    var productsCells = Object.keys(products[0]).filter(p => !['categorie', 'code_category'].includes(p))
     var i;
     var j;
     var row
@@ -107,6 +103,8 @@
     $el.bootstrapTable({
       columns: columns,
       data: data,
+      classes: 'table table-sm',
+      theadClasses: 'table-warning',
       exportDataType: 'selected',
       exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'pdf'],
       exportOptions: {

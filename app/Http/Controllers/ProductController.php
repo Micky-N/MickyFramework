@@ -20,8 +20,11 @@ class ProductController extends Controller
         $products = Product::all();
         foreach ($products as $product) {
             $product->with('stock', ['quantity']);
+            $product->selling_price =  $product->getSelling_price();
+            $product->with('category', ['name']);
         }
-        return View::render('products.index', compact('products'));
+        $categories = Category::all();
+        return View::render('products.index', compact('products', 'categories'));
     }
 
     public function show($product)

@@ -74,6 +74,8 @@
     $el.bootstrapTable({
       columns: columns,
       data: data,
+      classes: 'table table-sm',
+      theadClasses: 'table-primary',
       exportDataType: 'selected',
       exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'pdf'],
       exportOptions: {
@@ -88,8 +90,8 @@
       clickToSelect: true,
       pagination: true,
       paginationParts: ['pageList', 'pageSize'],
-      pageList: ['5', '10', '15'],
-      pageSize: '10',
+      pageList: ['5', '15', '25'],
+      pageSize: '5',
     })
   }
 
