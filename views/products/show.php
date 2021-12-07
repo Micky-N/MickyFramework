@@ -30,6 +30,12 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
+                        <h6 class="my-0">Vendeur</h6>
+                        <small class="text-muted"><?= $product->seller ?></small>
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
                         <h6 class="my-0">Catégorie</h6>
                         <small class="text-muted"><?= $product->category->name ?></small>
                     </div>

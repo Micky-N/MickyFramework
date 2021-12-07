@@ -20,13 +20,17 @@ final class CreateSuppliersTable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('suppliers', ['id' => 'code_supplier']);
-        $table->addColumn('name', 'string', ['limit' => 25])
-            ->addColumn('informations', 'string', ['limit' => 100])
-            ->addColumn('num_street', 'string', ['limit' => 10])
-            ->addColumn('name_street', 'string', ['limit' => 50])
-            ->addColumn('postcode', 'string', ['limit' => 6])
-            ->addColumn('city', 'string', ['limit' => 50])
-            ->create();
+        $exists = $this->hasTable('suppliers');
+        if (!$exists) {
+            $table = $this->table('suppliers', ['id' => 'code_supplier']);
+            $table->addColumn('name', 'string', ['limit' => 25])
+                ->addColumn('informations', 'string', ['limit' => 100])
+                ->addColumn('num_street', 'string', ['limit' => 10])
+                ->addColumn('name_street', 'string', ['limit' => 50])
+                ->addColumn('postcode', 'string', ['limit' => 6])
+                ->addColumn('city', 'string', ['limit' => 50])
+                ->addIndex('name', ['unique' => true])
+                ->create();
+        }
     }
 }

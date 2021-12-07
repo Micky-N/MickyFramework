@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Phinx\Db\Adapter\MysqlAdapter;
@@ -19,10 +20,14 @@ final class CreateStocksTable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('stocks', ['id' => 'code_stock']);
-        $table->addColumn('code_product', MysqlAdapter::PHINX_TYPE_INTEGER)
-              ->addColumn('quantity', MysqlAdapter::PHINX_TYPE_INTEGER)
-              ->addForeignKey('code_product', 'products', 'code_product', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
-              ->create();
+        $exists = $this->hasTable('stocks');
+        if (!$exists) {
+            $table = $this->table('stocks', ['id' => 'code_stock']);
+            $table->addColumn('code_product', MysqlAdapter::PHINX_TYPE_INTEGER)
+                ->addColumn('quantity', MysqlAdapter::PHINX_TYPE_INTEGER)
+                ->addForeignKey('code_product', 'products', 'code_product', ['delete' => 'CASCADE', 'update' => 'CASCADE'])
+                ->addIndex('code_product', ['unique' => true])
+                ->create();
+        }
     }
 }

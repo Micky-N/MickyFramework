@@ -63,7 +63,7 @@
   var products = JSON.parse('<?= json_encode($products) ?>')
 
   function productsTable($el, products) {
-    var productsCells = Object.keys(products[0]).filter(p => !['categorie', 'code_category'].includes(p))
+    var productsCells = Object.keys(products[0]).filter(p => !['categorie', 'code_category', 'user_id'].includes(p))
     var i;
     var j;
     var row

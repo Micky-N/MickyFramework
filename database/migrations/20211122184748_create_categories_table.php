@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Phinx\Db\Adapter\MysqlAdapter;
@@ -19,10 +20,13 @@ final class CreateCategoriesTable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('categories', ['id' => 'code_category']);
-        $table->addColumn('name', 'string', ['limit' => 25])
-              ->addColumn('description', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
-              ->create();
-
+        $exists = $this->hasTable('categories');
+        if (!$exists) {
+            $table = $this->table('categories', ['id' => 'code_category']);
+            $table->addColumn('name', 'string', ['limit' => 25])
+                ->addColumn('description', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
+                ->addIndex('name', ['unique' => true])
+                ->create();
+        }
     }
 }

@@ -27,6 +27,11 @@ class Product extends Model
         return $this->belongsToMany(Supplier::class, '', 'code_product', 'code_supplier');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getSelling_price(){
         return number_format($this->selling_price, 2, ',', ''). '€';
     }

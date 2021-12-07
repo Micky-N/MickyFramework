@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Phinx\Db\Adapter\MysqlAdapter;
@@ -19,12 +20,16 @@ final class CreateProductSupplierTable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('product_supplier');
-        $table->addColumn('code_product', MysqlAdapter::PHINX_TYPE_INTEGER)
-            ->addColumn('code_supplier', MysqlAdapter::PHINX_TYPE_INTEGER)
-            ->addColumn('purchase_price', MysqlAdapter::PHINX_TYPE_DOUBLE, ['limit' => MysqlAdapter::TEXT_LONG])
-            ->addForeignKey('code_product', 'products', 'code_product', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
-            ->addForeignKey('code_supplier', 'suppliers', 'code_supplier', ['delete'=> 'CASCADE', 'update'=> 'CASCADE'])
-            ->create();
+        $exists = $this->hasTable('product_supplier');
+        if (!$exists) {
+            $table = $this->table('product_supplier');
+            $table->addColumn('code_product', MysqlAdapter::PHINX_TYPE_INTEGER)
+                ->addColumn('code_supplier', MysqlAdapter::PHINX_TYPE_INTEGER)
+                ->addColumn('purchase_price', MysqlAdapter::PHINX_TYPE_DOUBLE, ['limit' => MysqlAdapter::TEXT_LONG])
+                ->addForeignKey('code_product', 'products', 'code_product', ['delete' => 'CASCADE', 'update' => 'CASCADE'])
+                ->addForeignKey('code_supplier', 'suppliers', 'code_supplier', ['delete' => 'CASCADE', 'update' => 'CASCADE'])
+                ->addIndex(['code_product', 'code_supplier'], ['unique' => true])
+                ->create();
+        }
     }
 }

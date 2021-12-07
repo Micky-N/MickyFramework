@@ -11,7 +11,11 @@ if (php_sapi_name() === "cli") {
     if (file_exists("app/Models/$name.php")) {
         throw new Exception("Le model $name existe déjà.");
     }
+    if (!is_dir("app/Models")) {
+        mkdir("app/Models", 0777, true); // true for recursive create
+    }
     $model = fopen("app/Models/$name.php", "w") or die("Impossible d'ouvre le fichier $name !");
-    fwrite($model, $template);
+    $start = "<"."?"."php\n\n";
+    fwrite($model, $start.$template);
     print("Le model $name a été créé !");
 }

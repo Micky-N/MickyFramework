@@ -7,8 +7,6 @@ define('ROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 require ROOT . 'vendor/autoload.php';
 
-$app = new App();
-
 if (php_sapi_name() != 'cli') {
-    $app->run(ServerRequest::fromGlobals());
+    App::run(ServerRequest::fromGlobals());
 }

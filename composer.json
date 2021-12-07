@@ -1,5 +1,5 @@
 {
-    "name": "nding/MickyFramework",
+    "name": "nding/micky-framework",
     "description": "Framework MVC",
     "authors": [{
         "name": "Ndinga Mickael",
@@ -8,7 +8,8 @@
     "require": {
         "guzzlehttp/guzzle": "^7.3",
         "symfony/dotenv": "^5.3",
-        "nesbot/carbon": "^2.54"
+        "nesbot/carbon": "^2.54",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
@@ -20,7 +21,8 @@
             "core/Helpers/config.php",
             "core/Helpers/route.php",
             "core/Helpers/view.php",
-            "core/Helpers/lang.php"
+            "core/Helpers/lang.php",
+            "core/Helpers/generate.php"
         ]
     },
     "require-dev": {
@@ -28,6 +30,7 @@
         "symfony/var-dumper": "^5.3",
         "robmorgan/phinx": "^0.12.7",
         "fakerphp/faker": "^1.15",
-        "mbezhanov/faker-provider-collection": "^2.0"
+        "mbezhanov/faker-provider-collection": "^2.0",
+        "spatie/phpunit-watcher": "^1.23"
     }
 }

@@ -7,6 +7,9 @@ use Core\Model;
 
 class User extends Model
 {
-    protected string $table = 'users';
-	protected string $primaryKey = 'code_user';
+
+    public function fullName()
+    {
+        return sprintf("%s %s", $this->first_name, $this->last_name);
+    }
 }

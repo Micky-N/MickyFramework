@@ -30,7 +30,7 @@
 <body class="d-flex flex-column h-100">
     <header class="mb-5">
         <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <a class="navbar-brand" href="?action=index"><?= config('app_name') ?></a>
+            <a class="navbar-brand" href="<?= route('home.index') ?>"><?= config('app_name') ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -50,12 +50,21 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav mr-4">
-                    <li class="mr-3">
-                        <a class="btn btn-warning" href="<?= route('users.new') ?>">Inscription</a>
-                    </li>
-                    <li class="">
-                        <a class="btn btn-primary" href="<?= route('auth.signin') ?>">Connexion</a>
-                    </li>
+                    <?php if(!auth()): ?>
+                        <li class="mr-3">
+                            <a class="btn btn-warning" href="<?= route('users.new') ?>">Inscription</a>
+                        </li>
+                        <li class="">
+                            <a class="btn btn-primary" href="<?= route('auth.signin') ?>">Connexion</a>
+                        </li>
+                    <?php elseif(auth()): ?>
+                        <li class="mr-3">
+                            <a class="btn btn-success" href=""><?= auth()->fullName ?></a>
+                        </li>
+                        <li class="">
+                            <a class="btn btn-info" href="<?= route('auth.logout') ?>">Déconnexion</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </nav>

@@ -42,7 +42,7 @@ if (php_sapi_name() === "cli") {
     }
     $path = isset($cli['api']) ? 'api' : 'web';
     if (!file_exists("routes/$path.php")) {
-        $template = "<?php\n\nuse Core\Facades\Route;\n\n\n".$template;
+        $template = "<"."?"."php\n\n"."use Core\Facades\Route;\n\n\n".$template;
         $model = fopen("routes/$path.php", "w");
         fwrite($model, $template);
     }else{

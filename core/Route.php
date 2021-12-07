@@ -209,7 +209,7 @@ class Route
     /**
      * @param string $route
      *
-     * @return [type]
+     * @return array|boolean
      */
     public function namespaceRoute(string $route = '')
     {
@@ -230,6 +230,7 @@ class Route
                 return $route->execute($request);
             }
         }
+        throw new Exception("La route {$request->getUri()->getPath()} n'existe pas.");
     }
 
     public function redirect(string $url)

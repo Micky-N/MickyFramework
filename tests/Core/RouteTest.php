@@ -6,6 +6,7 @@ use Core\Route;
 use Core\Router;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
+use Tests\Core\Helpers\Route\TestController;
 
 class RouteTest extends TestCase
 {
@@ -19,7 +20,7 @@ class RouteTest extends TestCase
     public function testMatchRoute()
     {
         $request = new ServerRequest('GET', '/go');
-        $router = new Router('/go', function(){},'GET');
+        $router = new Router('go', [TestController::class, 'index']);
 
         $this->assertTrue($router->match($request));
     }
@@ -27,19 +28,19 @@ class RouteTest extends TestCase
     public function testRunRoute()
     {
         $request = new ServerRequest('GET', '/go');
-        $this->route->get('/go', function(){return 'go';});
+        $this->route->get('/go', [TestController::class, 'index']);
         
 
-        $this->assertEquals('go', $this->route->run($request));
+        $this->assertEquals('green', $this->route->run($request));
     }
 
     public function testRunWithParams()
     {
         $request = new ServerRequest('GET', '/go/5');
-        $this->route->get('/go/:id', function($id){return $id;});
+        $this->route->get('go/:id', [TestController::class, 'show']);
         
 
-        $this->assertEquals('5', $this->route->run($request));
+        $this->assertEquals('green5', $this->route->run($request));
     }
 
     

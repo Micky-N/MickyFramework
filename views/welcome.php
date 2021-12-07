@@ -63,7 +63,7 @@
   }
 
   function productsTable($el, products) {
-    var cells = Object.keys(products[0]).filter(p => !['suppliers'].includes(p))
+    var cells = Object.keys(products[0]).filter(p => !['suppliers', 'user_id'].includes(p))
     var i;
     var j;
     var row

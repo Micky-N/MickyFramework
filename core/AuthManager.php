@@ -9,9 +9,9 @@ use App\Models\User;
 class AuthManager
 {
     /**
-     * @var User|null
+     * @var string|null
      */
-    private ?User $auth;
+    private $auth;
 
     public function __construct()
     {
@@ -23,6 +23,14 @@ class AuthManager
      */
     public function getAuth(): ?User
     {
-       return $this->auth;
+        if($this->isLoggin()){
+            return User::find($this->auth);
+        }
+        return null;
+    }
+
+    public function isLoggin()
+    {
+        return $this->auth !== null;
     }
 }

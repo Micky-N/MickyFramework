@@ -40,10 +40,10 @@ abstract class Model
 
     /**
      * Récupere l'enregistrement de l'id
-     * @param int $id
+     * @param mixed $id
      * @return Model
      */
-    public static function find(int $id): Model
+    public static function find($id): Model
     {
         return self::where(
             self::getCurrentModel()->getPrimaryKey(),
@@ -92,7 +92,7 @@ abstract class Model
         return self::last();
     }
 
-    public static function update(int $id, array $data)
+    public static function update($id, array $data)
     {
         $keys = [];
         $values = [];

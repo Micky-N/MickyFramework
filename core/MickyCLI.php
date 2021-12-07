@@ -32,7 +32,9 @@ class MickyCLI
         'middleware' => 'required',
         'show' => 'required',
         'routes' => 'required',
-        'namespace' => 'required'
+        'namespace' => 'required',
+        'voter' => 'required',
+        'action' => 'required'
     ];
 
     private static $required = [
@@ -59,6 +61,11 @@ class MickyCLI
             ],
             'middleware' => [
                 'name' => 'required',
+            ],
+            'voter' => [
+                'name' => 'required',
+                'model' => 'required',
+                'action' => 'optional'
             ]
         ],
         'show' => [
