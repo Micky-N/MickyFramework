@@ -4,9 +4,19 @@ namespace Core\Facades;
 
 use Core\View as CoreView;
 
-class View {
 
-    public static $view;
+/**
+ * @method static \Core\View render(string $view, array $params = [])
+ *
+ * @see \Core\View
+ */
+class View
+{
+
+    /**
+     * @var CoreView|null
+     */
+    public static ?CoreView $view = null;
 
     public static function __callStatic($method, $arguments)
     {

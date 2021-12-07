@@ -27,7 +27,7 @@ class Product extends Model
         return $this->belongsToMany(Supplier::class, '', 'code_product', 'code_supplier');
     }
 
-    public function user()
+    public function seller()
     {
         return $this->belongsTo(User::class);
     }

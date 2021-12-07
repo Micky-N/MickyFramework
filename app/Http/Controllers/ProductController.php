@@ -22,7 +22,7 @@ class ProductController extends Controller
         foreach ($products as $product) {
             $product->with('stock', ['quantity']);
             $product->selling_price =  $product->getSelling_price();
-            $product->seller = $product->user->fullname;
+            $product->seller = $product->seller->fullname;
             $product->with('category', ['name']);
         }
         $categories = Category::all();
@@ -32,8 +32,7 @@ class ProductController extends Controller
     public function show($product)
     {
         $product = Product::find($product);
-        dump(Permission::can('edit', $product));
-        $product->seller = $product->user->fullname;
+        $product->seller = $product->seller->fullname;
         $categories = Category::all();
         $suppliers = Supplier::all();
         return View::render('products.show', compact('product', 'categories', 'suppliers'));

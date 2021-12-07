@@ -1,8 +1,7 @@
 <?php
 
-use Core\Asset;
 
-if (!function_exists('asset')) {
+if(!function_exists('asset')){
     function asset($path)
     {
         $newPath = (defined('ROOT') ? ROOT : './') . 'public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path;
@@ -15,5 +14,12 @@ if(!function_exists('auth')){
     function auth()
     {
         return (new \Core\AuthManager())->getAuth();
+    }
+}
+
+if(!function_exists('authorize')){
+    function authorize(string $permission, $subject)
+    {
+        return \Core\Facades\Permission::can($permission, $subject);
     }
 }

@@ -24,7 +24,7 @@
         };
         firebase.initializeApp(firebaseConfig);
     </script>
-    <script src="./public/js/script.js"></script>
+    <script src="./public/assets/js/script.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">

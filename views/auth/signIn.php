@@ -1,12 +1,12 @@
 <div>
     <form class="w-50 p-4 bg-light rounded mx-auto" method="post" action="">
         <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" name="username" class="form-control" id="username">
+            <small id="emailHelp" class="invalid text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">Mot de passe</label>
             <input type="password" name="password" class="form-control" id="password">
         </div>
         <div class="form-group form-check">

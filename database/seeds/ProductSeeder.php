@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Models\User;
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 use Bezhanov\Faker\Provider\Commerce;
@@ -26,11 +27,13 @@ class ProductSeeder extends AbstractSeed
             while(!empty($prod) && in_array($fp, $prod)){
                 $fp = $faker->productName;
             }
+            $users = User::where('role_id', '!=', 3)->get();
+            $user_id = $users[array_rand($users)]->id;
             $prod[] = $fp;
             $data[] = [
                 'code_category' => rand(1, 5),
                 'name'  => $fp,
-                'user_id' => rand(1, 7),
+                'user_id' => $user_id,
                 'selling_price' => rand(20000, 80000)/100,
                 'photo'   => $faker->imageUrl(640, 480, 'product', true, $fp)
             ];

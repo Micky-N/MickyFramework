@@ -3,6 +3,7 @@
 namespace Core;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Core\Facades\Permission;
 
 class Router
 {
@@ -19,17 +20,37 @@ class Router
      */
     public function __construct(string $path, $action)
     {
-        $this->path = '/'.trim($path, '/');
+        $this->path = '/' . trim($path, '/');
         $this->action = $action;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return void
+     */
     public function execute(ServerRequestInterface $request)
     {
         $params = [];
-        if ($this->matches) {
+        if($this->matches){
             $params = $this->matches;
         }
-        if ($request->getParsedBody()) {
+        if(!empty($this->middleware)){
+            $middlewares = is_array($this->middleware) ? $this->middleware : [$this->middleware];
+            foreach ($middlewares as $middleware) {
+                if(stripos($middleware, 'can') !== false){
+                    $middlewares = explode(':', $middleware);
+                    $args = explode(',', $middlewares[1]);
+                    $permission = $args[0];
+                    $subject = $args[1];
+                    $model = "\\App\\Models\\" . ucfirst($subject);
+                    $subject = $model::find($this->matches[$subject]);
+                    call_user_func([Permission::class, $middlewares[0]], $permission, $subject);
+                }else{
+
+                }
+            }
+        }
+        if($request->getParsedBody()){
             $params[] = $request->getParsedBody();
         }
         $controller = new $this->action[0]();
@@ -41,9 +62,18 @@ class Router
     {
         $url = trim($request->getUri()->getPath(), '/');
         $path = preg_replace('#(:[\w]+)#', '([^/]+)', trim($this->path, '/'));
+
         $pathToMatch = "#^$path$#";
-        if (preg_match($pathToMatch, $url, $matches)) {
+        if(preg_match($pathToMatch, $url, $matches)){
+            $key = array_map(function ($pa) {
+                if(strpos($pa, ':') == 0){
+                    $pa = str_replace(':', '', $pa);
+                }
+                return $pa;
+            }, explode('/', trim($this->path, '/')));
+            array_shift($key);
             array_shift($matches);
+            $matches = array_combine($key, $matches);
             $this->matches = $matches;
             return true;
         }
@@ -79,7 +109,7 @@ class Router
 
     /**
      * Set a new middleware to $this->middleware
-     * @param string $name
+     * @param string $middleware
      * @return Router
      */
     public function middleware(string $middleware): Router
@@ -106,7 +136,7 @@ class Router
 
     public function __get($name)
     {
-        if (isset($this->{$name})) {
+        if(isset($this->{$name})){
             return $this->{'get' . ucfirst($name)}();
         }
     }

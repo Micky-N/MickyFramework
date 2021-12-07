@@ -14,7 +14,7 @@ class HomeController extends Controller
         foreach ($categories as $category) {
             $category->products = array_map(function($product){
                 $product->selling_price = $product->getSelling_price();
-                $product->seller = $product->user->fullname;
+                $product->seller = $product->seller->fullname;
                 $product->suppliers = array_map(function($supplier){
                     $supplier->purchase_price = $supplier->getPurchase_price();
                     return $supplier;

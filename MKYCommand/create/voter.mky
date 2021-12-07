@@ -3,6 +3,7 @@ if (php_sapi_name() === "cli") {
     $option = $cli['create'];
     $model = ucfirst($cli['model']);
     $modelName = "App\\Models\\".$model;
+    $modellower = strtolower($model);
     $name = ucfirst($cli['name']);
     $action = isset($cli['action']) ? strtoupper($cli['action']): null;
     $actionlower = $action ? strtolower($action) : null;
@@ -12,8 +13,8 @@ if (php_sapi_name() === "cli") {
     $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
     $template = str_replace('!name', $name, $template);
     $template = str_replace('!modelName', "use $modelName;", $template);
+    $template = str_replace('!modellower', "\$$modellower", $template);
     $template = str_replace('!model', $model, $template);
-    $template = str_replace('!actioncheck', $action ? "(\$permission === self::$action) && " : '' , $template);
     $template = str_replace('!action', $action ? "const $action = '$actionlower';" : '', $template);
     if (file_exists("app/Voters/$name.php")) {
         throw new Exception("Le voter $name existe déjà.");

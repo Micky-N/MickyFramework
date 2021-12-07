@@ -9,14 +9,15 @@ class !name implements VoterInterface
 {
     !action
 
-    public function canVote(string $permission, $subject = null): bool
+    public function canVote(string $permission, !modellower = null): bool
     {
-        return !actioncheck($subject instanceof !model);
+        $constants = (new \ReflectionClass($this))->getConstants();
+        return !empty($constants) && in_array($permission, $constants) && (!modellower instanceof !model);
     }
 
-    public function vote(User $user, string $permission, $subject = null): bool
+    public function vote(User $user, string $permission, !modellower = null): bool
     {
-        if(!$subject instanceof !model){
+        if(!!modellower instanceof !model){
             throw new RuntimeException('le sujet doit être une instance de !model.');
         }
     }

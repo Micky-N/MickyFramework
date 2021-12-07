@@ -2,9 +2,16 @@
 
 namespace Core;
 
+use Exception;
+
 class View
 {
-    public function render(string $view, array $params = [])
+    /**
+     * @param string $view
+     * @param array $params
+     * @throws Exception
+     */
+    public function render(string $view, array $params = []): void
     {
         $layout = 'template';
         if(strpos($view, '/')){
@@ -26,7 +33,7 @@ class View
 
             $content = ob_get_clean();
             require_once ROOT . "views/layouts/$layout.php";
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }

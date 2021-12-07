@@ -3,8 +3,15 @@
 
 namespace Core\Facades;
 
+use Core\Interfaces\VoterInterface;
 use Core\Permission as CorePermission;
 
+/**
+ * @method static \Core\Permission can(string $permission, $subject = null)
+ * @method static \Core\Permission addVoter(VoterInterface $voter)
+ *
+ * @see \Core\Permission
+ */
 class Permission
 {
     /**

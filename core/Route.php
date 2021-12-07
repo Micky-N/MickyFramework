@@ -8,6 +8,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Route
 {
+    /**
+     * @var Router[]
+     */
     private array $routes;
 
     public function __construct($routes = [])
@@ -18,10 +21,9 @@ class Route
     /**
      * @param string $path
      * @param Callable|array $action
-     * @param string $name
-     *
+     * @return Router
      */
-    public function get(string $path, $action)
+    public function get(string $path, $action): Router
     {
         $route = new Router($path, $action);
         $this->routes['GET'][] = $route;
@@ -30,18 +32,20 @@ class Route
 
     /**
      * @param string $path
-     * @param Callable|string $action
-     * @param string $name
-     *
+     * @param array $action
+     * @return Router
      */
-    public function post(string $path, $action)
+    public function post(string $path, array $action): Router
     {
         $route = new Router($path, $action);
         $this->routes['POST'][] = $route;
         return $route;
     }
 
-    public function routesByName()
+    /**
+     * @return array
+     */
+    public function routesByName(): array
     {
         $routes = [];
         foreach ($this->routes as $request => $routers) {
@@ -52,17 +56,23 @@ class Route
         return $routes;
     }
 
-    public function crud(string $namespace, $controller, array $only = [])
+    /**
+     * @param string $namespace
+     * @param string $controller
+     * @param array $only
+     * @return void
+     */
+    public function crud(string $namespace, string $controller, array $only = []): void
     {
         $path = '';
         $action = '';
         $controllerName = get_plural(strtolower(str_replace('Controller', '', str_replace('App\\Http\\Controllers\\', '', $controller))));
         $id = "/:" . strtolower(str_replace('Controller', '', get_singular($controllerName)));
-        if (strpos($namespace, '.')) {
+        if(strpos($namespace, '.')){
             $namespaces = explode('.', $namespace);
             $namespace = end($namespaces);
             foreach ($namespaces as $key => $name) {
-                if ($key < count($namespaces) - 1) {
+                if($key < count($namespaces) - 1){
                     $path .= "$name/:" . get_singular($name) . '/';
                 }
             }
@@ -121,13 +131,13 @@ class Route
             ],
         ];
         foreach ($crudActions as $key => $crudAction) {
-            if (!empty($only) && in_array($key, $only)) {
+            if(!empty($only) && in_array($key, $only)){
                 $router = call_user_func_array(
                     [$this, $crudAction['request']],
                     [$crudAction['path'], $crudAction['action']]
                 );
                 call_user_func_array([$router, 'name'], [$crudAction['name']]);
-            } elseif (empty($only)) {
+            } elseif(empty($only)) {
                 $router = call_user_func_array(
                     [$this, $crudAction['request']],
                     [$crudAction['path'], $crudAction['action']]
@@ -137,37 +147,48 @@ class Route
         }
     }
 
-    public function routeNeedParams($path)
+    /**
+     * @param string $path
+     * @return string
+     * @throws Exception
+     */
+    public function routeNeedParams(string $path): string
     {
         $needed = [];
         $pathArray = explode('/', $path);
         $needed = array_map(function ($p) use ($needed) {
-            if (strpos($p, ':') === 0) {
+            if(strpos($p, ':') === 0){
                 $p = str_replace(':', '', $p);
                 return $p;
             }
         }, $pathArray);
         $needed = array_filter($needed);
-        if (!empty($needed)) {
+        if(!empty($needed)){
             throw new Exception('need params');
         }
         return $path;
     }
 
-    public function generateUrlByName(string $routeName, $params = [])
+    /**
+     * @param string $routeName
+     * @param array $params
+     * @return string
+     * @throws Exception
+     */
+    public function generateUrlByName(string $routeName, array $params = []): string
     {
         $path = '';
         $err = 0;
         foreach ($this->routes as $method => $routes) {
             foreach ($routes as $router) {
-                if ($router->name === $routeName) {
+                if($router->name === $routeName){
                     $path = $router->path;
-                    if (!empty($params)) {
+                    if(!empty($params)){
                         $path = explode('/', $path);
                         foreach ($path as $key => $value) {
-                            if (strpos($value, ':') === 0) {
+                            if(strpos($value, ':') === 0){
                                 $value = str_replace(':', '', $value);
-                                if (isset($params[$value])) {
+                                if(isset($params[$value])){
                                     $path[$key] = $params[$value];
                                 } else {
                                     throw new Exception(
@@ -184,7 +205,7 @@ class Route
                 }
             }
         }
-        if ($err == count($routes)) {
+        if($err == count($routes)){
             throw new Exception("La route '$routeName' n'existe pas.", 13);
         }
         return $this->routeNeedParams($path);
@@ -193,14 +214,14 @@ class Route
     /**
      * @param string $route
      *
-     * @return [type]
+     * @return bool|string
      */
     public function currentRoute(string $route = '')
     {
         $currentRoute = ServerRequest::fromGlobals()
             ->getUri()
             ->getPath();
-        if ($route) {
+        if($route){
             return $currentRoute === $route;
         }
         return $currentRoute;
@@ -209,7 +230,7 @@ class Route
     /**
      * @param string $route
      *
-     * @return array|boolean
+     * @return boolean
      */
     public function namespaceRoute(string $route = '')
     {
@@ -217,39 +238,57 @@ class Route
             ->getUri()
             ->getPath();
         $currentRouteArray = explode('/', trim($currentRoute, '/'));
-        if ($route) {
+        if($route){
             return $currentRouteArray[0] === $route;
         }
         return false;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return void
+     * @throws Exception
+     */
     public function run(ServerRequestInterface $request)
     {
         foreach ($this->routes[$request->getMethod()] as $route) {
-            if ($route->match($request)) {
+            if($route->match($request)){
                 return $route->execute($request);
             }
         }
         throw new Exception("La route {$request->getUri()->getPath()} n'existe pas.");
     }
 
-    public function redirect(string $url)
+    /**
+     * @param string $url
+     */
+    public function redirect(string $url): void
     {
         header("Location: $url");
     }
 
-    public function redirectName(string $name)
+    /**
+     * @param string $name
+     * @throws Exception
+     */
+    public function redirectName(string $name): void
     {
         $path = $this->generateUrlByName($name);
         header("Location: $path");
     }
 
-    public function back()
+    /**
+     *
+     */
+    public function back(): void
     {
         header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
-    public function toArray()
+    /**
+     * @return array
+     */
+    public function toArray(): array
     {
         includeAll('routes');
         $routes = [];
@@ -258,7 +297,7 @@ class Route
         foreach ($this->routes as $method => $routers) {
             foreach ($routers as $router) {
                 $paths = explode('/', trim($router->path, '/'));
-                if (in_array($namespace, $paths)) {
+                if(in_array($namespace, $paths)){
                     unset($paths[0]);
                     $currentPath = "\t/" . join('/', $paths);
                 } else {
