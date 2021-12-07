@@ -60,7 +60,7 @@
                 <span class="text-muted">Modifier le produit <?= $product->name ?></span>
                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus"></i> Ajouter un fournisseur</button>
             </h4>
-            <form id="update" method="post" action="<?= route('products.update', ['product' => $product->code_product]) ?>">
+            <form id="update" method="post" action="<?= route('admin.products.update', ['product' => $product->code_product]) ?>">
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label for="name">Nom</label>

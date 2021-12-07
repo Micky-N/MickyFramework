@@ -21,12 +21,21 @@ class QueryBuilderMysql
         return $this;
     }
 
-    public function query(string $statement)
+    /**
+     * @param string $statement
+     * @return array
+     */
+    public function query(string $statement): array
     {
         return MysqlDatabase::query($statement);
     }
 
-    public function prepare(string $statement, array $attribute)
+    /**
+     * @param string $statement
+     * @param array $attribute
+     * @return array
+     */
+    public function prepare(string $statement, array $attribute): array
     {
         return MysqlDatabase::prepare($statement, $attribute);
     }
@@ -37,7 +46,12 @@ class QueryBuilderMysql
         return $this;
     }
 
-    public function from($table, $alias = null)
+    /**
+     * @param string $table
+     * @param null $alias
+     * @return $this
+     */
+    public function from(string $table, $alias = null): QueryBuilderMysql
     {
         if (is_null($alias)) {
             $this->from[] = "$table";
@@ -47,7 +61,10 @@ class QueryBuilderMysql
         return $this;
     }
 
-    public function where()
+    /**
+     * @return $this
+     */
+    public function where(): QueryBuilderMysql
     {
         if (count(func_get_args()) === 2)
             $this->conditions[] = sprintf('%s = "%s"', ...func_get_args());
@@ -56,7 +73,10 @@ class QueryBuilderMysql
         return $this;
     }
 
-    public function orderBy()
+    /**
+     * @return $this
+     */
+    public function orderBy(): QueryBuilderMysql
     {
         foreach (func_get_args() as $arg) {
             if (count(explode(' ', $arg)) == 1) {
@@ -67,7 +87,10 @@ class QueryBuilderMysql
         return $this;
     }
 
-    public function limit()
+    /**
+     * @return $this
+     */
+    public function limit(): QueryBuilderMysql
     {
         if (count(func_get_args()) === 2)
             $this->limit[] = join(' OFFSET ', func_get_args());
@@ -76,13 +99,25 @@ class QueryBuilderMysql
         return $this;
     }
 
-    public function groupBy()
+    /**
+     * @return $this
+     */
+    public function groupBy(): QueryBuilderMysql
     {
         $this->group[] = join(', ', func_get_args());
         return $this;
     }
 
-    public function join(string $join_table, string $on, string $operation, string $to, string $aliasFirstTable = '')
+    /**
+     * @param string $join_table
+     * @param string $on
+     * @param string $operation
+     * @param string $to
+     * @param string $aliasFirstTable
+     * @return $this
+     * @throws \Exception
+     */
+    public function join(string $join_table, string $on, string $operation, string $to, string $aliasFirstTable = ''): QueryBuilderMysql
     {
         if (!strpos($on, '.')) {
             $on = empty($alias) ? $this->instance->getTable() . ".$on" : "$aliasFirstTable.$on";
@@ -97,16 +132,16 @@ class QueryBuilderMysql
 
     /**
      * Crée un tableau avec les champs
-     * @param string $value
      * @param string $key
-     * @return Array
+     * @param string $value
+     * @return array
      */
-    public function map(string $key = '', string $value = '*'): Array
+    public function map(string $key = '', string $value = '*'): array
     {
         $valuemap = $value !== "*" ? $this->mapping($value) : $this->get();
         if ($key) {
             $keymap = $key ? $this->mapping($key) : range(1, count($this->get()));
-            $valuemap = array_combine($keymap, $valuemap);
+            $valuemap = array_combine($keymap, (array)$valuemap);
         }
         return $valuemap;
     }
@@ -153,7 +188,7 @@ class QueryBuilderMysql
         }
     }
 
-    public function hasJoin()
+    private function hasJoin()
     {
         $syntax = '';
         if (!empty($this->joins)) {
@@ -164,7 +199,7 @@ class QueryBuilderMysql
         return $syntax;
     }
 
-    public function hasGroup()
+    private function hasGroup()
     {
         if (!empty($this->group))
             return ' GROUP BY ' . implode(', ', $this->group);
@@ -174,9 +209,9 @@ class QueryBuilderMysql
 
     /**
      * Récupere les enregistrement
-     * @return Array
+     * @return array
      */
-    public function get(): Array
+    public function get(): array
     {
         return MysqlDatabase::query($this->stringify(), get_class($this->instance));
     }
@@ -202,7 +237,10 @@ class QueryBuilderMysql
         return MysqlDatabase::query($this->stringify(), get_class($this->instance), true);
     }
 
-    public function stringify()
+    /**
+     * @return string
+     */
+    public function stringify(): string
     {
         return $this->hasFields()
             . $this->hasFrom()
@@ -217,9 +255,9 @@ class QueryBuilderMysql
      * Récupere les données du champ $key 
      * sous forme de tableau 
      * @param string $key
-     * @return Array
+     * @return array
      */
-    private function mapping(string $key): Array
+    private function mapping(string $key): array
     {
         $keymap = array_map(function ($k) use ($key) {
             return $k->$key;
@@ -236,7 +274,12 @@ class QueryBuilderMysql
         return $this->instance;
     }
 
-    public function setDatetime(array $data, int $dateInt = null)
+    /**
+     * @param array $data
+     * @param int|null $dateInt
+     * @return array
+     */
+    public function setDatetime(array $data, int $dateInt = null): array
     {
         $date = is_null($dateInt) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $dateInt);
         $data['created_at'] = $date;

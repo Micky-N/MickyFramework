@@ -10,7 +10,10 @@ class Router
     private string $path;
     private array $action;
     private string $name;
-    private string $middleware;
+    /**
+     * @var string|array
+     */
+    private $middleware;
     private array $matches;
 
 
@@ -70,10 +73,10 @@ class Router
                     $pa = str_replace(':', '', $pa);
                 }
                 return $pa;
-            }, explode('/', trim($this->path, '/')));
+            }, explode('/:', trim($this->path, '/')));
             array_shift($key);
             array_shift($matches);
-            $matches = array_combine($key, $matches);
+            $matches = $matches != [] ?array_combine($key, $matches) : $matches;
             $this->matches = $matches;
             return true;
         }
@@ -109,10 +112,10 @@ class Router
 
     /**
      * Set a new middleware to $this->middleware
-     * @param string $middleware
+     * @param string|array $middleware
      * @return Router
      */
-    public function middleware(string $middleware): Router
+    public function middleware($middleware): Router
     {
         $this->middleware = $middleware;
         return $this;

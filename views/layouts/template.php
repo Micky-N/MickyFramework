@@ -11,19 +11,6 @@
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
     <link rel="stylesheet" href="./public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBir9SJomBBQfvruGX5HWldMBj4MRg-xdY",
-            authDomain: "mickyframework-23.firebaseapp.com",
-            projectId: "mickyframework-23",
-            storageBucket: "mickyframework-23.appspot.com",
-            messagingSenderId: "1013072914840",
-            appId: "1:1013072914840:web:1f5e1b38aa6f327b2123ed"
-        };
-        firebase.initializeApp(firebaseConfig);
-    </script>
     <script src="./public/assets/js/script.js"></script>
 </head>
 
@@ -59,7 +46,7 @@
                         </li>
                     <?php elseif(auth()): ?>
                         <li class="mr-3">
-                            <a class="btn btn-success" href=""><?= auth()->fullName ?></a>
+                            <a class="btn btn-success" href="<?= route('admin.products.index') ?>">Admin</a>
                         </li>
                         <li class="">
                             <a class="btn btn-info" href="<?= route('auth.logout') ?>">Déconnexion</a>

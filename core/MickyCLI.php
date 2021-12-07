@@ -34,15 +34,18 @@ class MickyCLI
         'routes' => 'required',
         'namespace' => 'required',
         'voter' => 'required',
-        'action' => 'required'
+        'action' => 'required',
+        'path' => 'required',
+        'permission' => 'required'
     ];
 
-    private static $required = [
+    private static array $required = [
         'create' => [
             'controller' => [
                 'name' => 'required',
                 'crud' => 'optional',
-                'model' => 'optional'
+                'model' => 'optional',
+                'path' => 'optional'
             ],
             'model' => [
                 'name' => 'required',
@@ -57,7 +60,8 @@ class MickyCLI
                 'routename' => 'optional',
                 'api' => 'optional',
                 'middleware' => 'optional',
-                'namespace' => 'required'
+                'namespace' => 'required',
+                'permission' => 'optional'
             ],
             'middleware' => [
                 'name' => 'required',

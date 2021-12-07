@@ -41,6 +41,6 @@ class ProductVoter implements VoterInterface
 
     private function canDelete(User $user, Product $product)
     {
-        return true;
+        return $user->id === $product->seller->id;
     }
 }

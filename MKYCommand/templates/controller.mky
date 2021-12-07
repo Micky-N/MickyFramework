@@ -1,4 +1,4 @@
-namespace App\Http\Controllers;
+namespace App\Http\Controllers!path;
 
 use Core\Controller;
 use Core\Facades\View;

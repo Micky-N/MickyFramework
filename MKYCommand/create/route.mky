@@ -10,11 +10,12 @@ if (php_sapi_name() === "cli") {
         }
         $url = $cli['url'];
         $controller = $cli['controller'];
-        if(!strpos($controller, 'Controller')){
+        if(stripos($controller, 'Controller') == false){
             throw new \Exception("Le controller doit avoir un suffix Controller.");
         }
         $method = $cli['method'];
         $routename = !empty($cli['routename']) ? $cli['routename'] : null;
+        $permission = isset($cli['permission']) ? "can:".$cli['permission'] : null;
         $middleware = !empty($cli['middleware']) ? $cli['middleware'] : null;
         if(isset($cli['routename']) && $routename == null){
             $plural = json_decode(file_get_contents('lang/plural_word.json'), true);
@@ -26,10 +27,10 @@ if (php_sapi_name() === "cli") {
         $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
         $template = str_replace('!request', $request, $template);
         $template = str_replace('!url', "'$url'", $template);
-        $template = str_replace('!controller', "'App\\\Http\\\Controllers\\\\$controller'", $template);
+        $template = str_replace('!controller', "\App\\Http\\Controllers\\".$controller."::class", $template);
         $template = str_replace('!method', "'$method'", $template);
         $template = str_replace('!routename', $routename ? "->name('$routename')" : '' , $template);
-        $template = str_replace('!middleware', $middleware ? "->middleware('$middleware')" : '' , $template);
+        $template = str_replace('!middleware', $middleware ? ($permission ? "->middleware(['$middleware','$permission'])" : "->middleware('$middleware')") : '' , $template);
     }else{
         $controller = $cli['controller'];
         if(!strpos($controller, 'Controller')){
@@ -37,7 +38,7 @@ if (php_sapi_name() === "cli") {
         }
         $namespace = $cli['namespace'];
         $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/route/crud.mky");
-        $template = str_replace('!controller', "'App\\\Http\\\Controllers\\\\$controller'", $template);
+        $template = str_replace('!controller', "\App\\Http\\Controllers\\".$controller."::class", $template);
         $template = str_replace('!namespace', $namespace, $template);
     }
     $path = isset($cli['api']) ? 'api' : 'web';

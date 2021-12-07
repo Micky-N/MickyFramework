@@ -93,8 +93,8 @@
       }
       row['Actions'] = `
             <div class='d-flex flex-row justify-content-center'>
-                <a href="products/${products[i].code_product}" class='btn btn-outline-success mr-1'><i class='fa fa-eye'></i></a>
-                <a href="products/delete/${products[i].code_product}" class='btn btn-outline-danger'><i class='fa fa-trash'></i></a>
+                <a href="/admin/products/${products[i].code_product}" class='btn btn-outline-success mr-1'><i class='fa fa-eye'></i></a>
+                <a href="/admin/products/delete/${products[i].code_product}" class='btn btn-outline-danger'><i class='fa fa-trash'></i></a>
             </div>
             `
       data.push(row)
