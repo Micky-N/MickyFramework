@@ -17,6 +17,7 @@ if(!function_exists('auth')){
     }
 }
 
+
 if(!function_exists('authorize')){
     function authorize(string $permission, $subject)
     {

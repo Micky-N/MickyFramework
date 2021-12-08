@@ -4,20 +4,15 @@ namespace Core;
 
 use Core\Facades\Permission;
 use Core\Facades\Route;
+use Core\Interfaces\MiddlewareInterface;
 use Core\Interfaces\VoterInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class App
 {
 
-    public static function Providers(string $key = '')
-    {
-        $provider = include (defined('ROOT') ? ROOT : './') . 'core/Provider.php';
-        return $key && isset($key) ? $provider[$key] : $provider;
-    }
-
     /**
-     * @var Middleware[]
+     * @var MiddlewareInterface[]
      */
     private static array $middlewares;
 
@@ -25,6 +20,12 @@ class App
      * @var VoterInterface[]
      */
     private static array $voters;
+
+    public static function Providers(string $key = '')
+    {
+        $provider = include (defined('ROOT') ? ROOT : './') . 'core/Provider.php';
+        return $key && isset($key) ? $provider[$key] : $provider;
+    }
 
     public static function setMiddlewares()
     {
@@ -62,11 +63,23 @@ class App
     }
 
     /**
-     * @return Middleware[]
+     * @return MiddlewareInterface[]
      */
     public static function getMiddlewares(): array
     {
         return self::$middlewares;
+    }
+
+    /**
+     * @param string $middleware
+     * @return MiddlewareInterface|null
+     */
+    public static function getMiddleware(string $middleware)
+    {
+        if(isset(self::$middlewares[$middleware])){
+            return self::$middlewares[$middleware];
+        }
+        return null;
     }
 
 

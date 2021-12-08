@@ -16,12 +16,11 @@ class Router
     private $middleware;
     private array $matches;
 
-
     /**
      * @param string $path
-     * @param Callable|string $action
+     * @param array $action
      */
-    public function __construct(string $path, $action)
+    public function __construct(string $path, array $action)
     {
         $this->path = '/' . trim($path, '/');
         $this->action = $action;
@@ -38,6 +37,7 @@ class Router
             $params = $this->matches;
         }
         if(!empty($this->middleware)){
+            $appMiddlewares = [];
             $middlewares = is_array($this->middleware) ? $this->middleware : [$this->middleware];
             foreach ($middlewares as $middleware) {
                 if(stripos($middleware, 'can') !== false){
@@ -47,18 +47,20 @@ class Router
                     $subject = $args[1];
                     $model = "\\App\\Models\\" . ucfirst($subject);
                     $subject = $model::find($this->matches[$subject]);
-                    call_user_func([Permission::class, $middlewares[0]], $permission, $subject);
-                }else{
-
+                    return call_user_func([Permission::class, $middlewares[0]], $permission, $subject);
+                } else {
+                    $appMiddlewares[] = App::getMiddleware($middleware);
                 }
             }
+            $routerMiddleware = new RouterMiddleware($appMiddlewares);
+            $routerMiddleware->process($request);
         }
         if($request->getParsedBody()){
             $params[] = $request->getParsedBody();
         }
         $controller = new $this->action[0]();
         $method = $this->action[1];
-        return call_user_func_array([$controller, $method], $params);
+        call_user_func_array([$controller, $method], $params);
     }
 
     public function match(ServerRequestInterface $request)
@@ -76,7 +78,7 @@ class Router
             }, explode('/:', trim($this->path, '/')));
             array_shift($key);
             array_shift($matches);
-            $matches = $matches != [] ?array_combine($key, $matches) : $matches;
+            $matches = $matches != [] ? array_combine($key, $matches) : $matches;
             $this->matches = $matches;
             return true;
         }

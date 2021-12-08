@@ -1,9 +1,19 @@
 namespace App\Http\Middlewares;
 
-use Core\Middleware;
+use Core\Interfaces\MiddlewareInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 
-class !name extends Middleware
+class !name implements MiddlewareInterface
 {
 
+    /**
+    * @param callable $next
+    * @param ServerRequestInterface $request
+    * @return callable|void
+    */
+    public function process(callable $next, ServerRequestInterface $request)
+    {
+        return $next($request);
+    }
 }
