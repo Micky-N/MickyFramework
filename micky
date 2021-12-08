@@ -6,5 +6,5 @@ if (php_sapi_name() === 'cli') {
     require 'vendor/autoload.php';
     $cli = getopt('', MickyCLI::cliLongOptions());
     $mky = new MickyCLI($cli);
-    $mky->run();
+    $mky->run(); 
 }
