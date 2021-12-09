@@ -36,11 +36,11 @@ class ProductVoter implements VoterInterface
 
     private function canEdit(User $user, Product $product)
     {
-        return $user->id === $product->seller->id;
+        return $user->id === $product->user_id;
     }
 
     private function canDelete(User $user, Product $product)
     {
-        return $user->id === $product->seller->id;
+        return $user->id === $product->user_id;
     }
 }

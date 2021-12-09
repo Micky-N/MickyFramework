@@ -23,3 +23,9 @@ if(!function_exists('namespaceRoute')){
         return Route::namespaceRoute($route);
     }
 }
+
+if(!function_exists('redirectBack')){
+    function redirectBack(){
+        return 'javascript:history.back()';
+    }
+}

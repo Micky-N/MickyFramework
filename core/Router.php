@@ -37,22 +37,7 @@ class Router
             $params = $this->matches;
         }
         if(!empty($this->middleware)){
-            $appMiddlewares = [];
-            $middlewares = is_array($this->middleware) ? $this->middleware : [$this->middleware];
-            foreach ($middlewares as $middleware) {
-                if(stripos($middleware, 'can') !== false){
-                    $middlewares = explode(':', $middleware);
-                    $args = explode(',', $middlewares[1]);
-                    $permission = $args[0];
-                    $subject = $args[1];
-                    $model = "\\App\\Models\\" . ucfirst($subject);
-                    $subject = $model::find($this->matches[$subject]);
-                    return call_user_func([Permission::class, $middlewares[0]], $permission, $subject);
-                } else {
-                    $appMiddlewares[] = App::getMiddleware($middleware);
-                }
-            }
-            $routerMiddleware = new RouterMiddleware($appMiddlewares);
+            $routerMiddleware = new RouterMiddleware($this->middleware, $this->matches);
             $routerMiddleware->process($request);
         }
         if($request->getParsedBody()){

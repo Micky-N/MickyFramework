@@ -21,6 +21,6 @@ if(!function_exists('auth')){
 if(!function_exists('authorize')){
     function authorize(string $permission, $subject)
     {
-        return \Core\Facades\Permission::can($permission, $subject);
+        return \Core\Facades\Permission::test($permission, $subject);
     }
 }

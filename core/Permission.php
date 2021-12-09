@@ -23,7 +23,25 @@ class Permission
      */
     public function can(string $permission, $subject = null)
     {
-        foreach ($this->voters as $voter){
+        if($this->test($permission, $subject) === false){
+            return Controller::forbidden();
+        }
+    }
+
+    public function addVoter(VoterInterface $voter): void
+    {
+        $this->voters[] = $voter;
+    }
+
+    /**
+     * @param string $permission
+     * @param null $subject
+     * @return bool
+     * @throws Exception
+     */
+    public function test(string $permission, $subject = null): bool
+    {
+        foreach ($this->voters as $voter) {
             if($voter->canVote($permission, $subject)){
                 $auth = new AuthManager();
                 if($auth->getAuth()){
@@ -41,11 +59,6 @@ class Permission
                 }
             }
         }
-        return Controller::forbidden();
-    }
-
-    public function addVoter(VoterInterface $voter): void
-    {
-        $this->voters[] = $voter;
+        return false;
     }
 }
