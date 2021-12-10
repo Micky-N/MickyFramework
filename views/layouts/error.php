@@ -40,7 +40,7 @@
 <body class="bg-dark d-flex align-items-center justify-content-center overflow-hidden">
 <h1 id="mky_error" class="d-flex justify-content-center align-items-center">MKY</h1>
 <main id="main" class="d-flex align-items-center">
-    <?= $content ?>
+    <?= content('body') ?>
 </main>
 </body>
 

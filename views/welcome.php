@@ -1,3 +1,6 @@
+<?php layout('template') ?>
+
+<?php section('body') ?>
 <table id="table"></table>
 <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -8,7 +11,9 @@
         </div>
     </div>
 </div>
+<?php endsection() ?>
 
+<?php section('js') ?>
 <script>
   var $table = $('#table')
   var categories = JSON.parse('<?= json_encode($categories) ?>')
@@ -163,3 +168,4 @@
     categories_Table($table, categories)
   })
 </script>
+<?php endsection() ?>

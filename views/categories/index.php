@@ -1,3 +1,6 @@
+<?php layout('template') ?>
+
+<?php section('body') ?>
 <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter une catégorie</button>
 <table id="table"></table>
 <div class="modal fade" id="createModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -28,7 +31,9 @@
     </div>
   </div>
 </div>
+<?php endsection() ?>
 
+<?php section('js') ?>
 <script>
   var $table = $('#table')
   var categories = JSON.parse('<?= json_encode($categories) ?>')
@@ -100,3 +105,4 @@
     categoriesTable($table, categories)
   })
 </script>
+<?php endsection() ?>

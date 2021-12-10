@@ -205,8 +205,8 @@ class Route
                 }
             }
         }
-        if($err == count($routes)){
-            throw new Exception("La route '$routeName' n'existe pas.", 13);
+        if($err == count((array) $routes)){
+            throw new Exception("La route '$routeName' n'existe pas dans la méthode $method.", 13);
         }
         return $this->routeNeedParams($path);
     }

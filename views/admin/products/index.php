@@ -1,3 +1,6 @@
+<?php layout('template') ?>
+
+<?php section('body') ?>
 <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un produit</button>
 <table id="table"></table>
 <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -57,7 +60,9 @@
     </div>
   </div>
 </div>
+<?php endsection() ?>
 
+<?php section('js') ?>
 <script>
   var $table = $('#table')
   var products = JSON.parse('<?= json_encode($products); ?>');
@@ -134,3 +139,4 @@
     productsTable($table, products)
   })
 </script>
+<?php endsection() ?>

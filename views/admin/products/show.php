@@ -1,3 +1,6 @@
+<?php layout('template') ?>
+
+<?php section('body') ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 ml-md-2 order-md-2 mb-4">
@@ -157,7 +160,9 @@
         </div>
     </div>
 </div>
+<?php endsection() ?>
 
+<?php section('js') ?>
 <script>
     function showProModal(e) {
         var product = JSON.parse('<?= json_encode($product->with('suppliers')); ?>')
@@ -171,3 +176,4 @@
         $('input#prodPrixProduction').attr('value', supplier.purchase_price)
     }
 </script>
+<?php endsection() ?>

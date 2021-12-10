@@ -45,7 +45,7 @@ class Router
         }
         $controller = new $this->action[0]();
         $method = $this->action[1];
-        call_user_func_array([$controller, $method], $params);
+        return call_user_func_array([$controller, $method], $params);
     }
 
     public function match(ServerRequestInterface $request)

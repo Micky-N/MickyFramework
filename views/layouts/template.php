@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
     <link rel="stylesheet" href="./public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="./public/assets/js/script.js"></script>
+    <script src="<?= asset('js/script.js') ?>"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -63,7 +63,7 @@
         <div class="container">
             <div class="container my-5">
                 <!-- Toutes les vues seront dans cette variable -->
-                <?= $content ?>
+                <?= content('body') ?>
             </div>
         </div>
     </main>
@@ -81,5 +81,5 @@
 <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
-
+<?php content('js') ?>
 </html>

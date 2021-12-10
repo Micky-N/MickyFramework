@@ -12,7 +12,7 @@ class ErrorController extends Controller
 
     public static function error($code)
     {
-        return \Core\Facades\View::render('error/general.errors', self::getStatut($code));
+        return \Core\Facades\View::render('general.errors', self::getStatut($code));
     }
 
     private static function getStatut(int $code)

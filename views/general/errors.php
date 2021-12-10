@@ -1,3 +1,6 @@
+<?php layout('error') ?>
+
+<?php section('body') ?>
 <div class="error_div text-white z-100 d-flex flex-column">
     <div class="d-flex justify-content-center align-items-center">
         <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center"><?= $code ?></h1>
@@ -10,3 +13,4 @@
         <a class="btn btn-outline-light" href="<?= redirectBack() ?>">Retour en arrière</a>
     </div>
 </div>
+<?php endsection() ?>

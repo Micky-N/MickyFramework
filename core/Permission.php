@@ -26,6 +26,7 @@ class Permission
         if($this->test($permission, $subject) === false){
             return Controller::forbidden();
         }
+        return true;
     }
 
     public function addVoter(VoterInterface $voter): void

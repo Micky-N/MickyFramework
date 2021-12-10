@@ -1,3 +1,6 @@
+<?php layout('template') ?>
+
+<?php section('body') ?>
 <div>
     <form class="w-50 p-4 bg-light rounded mx-auto" method="post" action="">
         <div class="form-group">
@@ -16,3 +19,4 @@
         <button type="submit" class="btn btn-primary">Se connecter</button>
     </form>
 </div>
+<?php endsection() ?>

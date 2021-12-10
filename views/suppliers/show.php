@@ -1,3 +1,6 @@
+<?php layout('template') ?>
+
+<?php section('body') ?>
 <div class="container">
     <div class="row">
         <div class="col-md-3 ml-md-2 order-md-2 mb-4">
@@ -67,3 +70,4 @@
         </div>
     </div>
 </div>
+<?php endsection() ?>

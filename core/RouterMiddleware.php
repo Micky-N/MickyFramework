@@ -55,6 +55,6 @@ class RouterMiddleware
         $subject = $args[1];
         $model = "\\App\\Models\\" . ucfirst($subject);
         $subject = $model::find($matches[$subject]);
-        return call_user_func([Permission::class, $middlewares[0]], $permission, $subject);
+        return call_user_func([Permission::class, 'can'], $permission, $subject);
     }
 }
