@@ -8,11 +8,13 @@ use Core\Template as CoreTemplate;
  * @method static string escape(string $data)
  * @method static array _templateParams(array $params = [])
  * @method static bool layout(string $path = '')
- * @method static content(string $name)
+ * @method static mixed content(string $name)
  * @method static bool section(string $name)
  * @method static bool endsection()
+ * @method static bool authorize(string $permission, $subject = null)
+ * @method static bool endauthorize()
  *
- * @see Core\Template
+ * @see \Core\Template
  */
 class Template
 {

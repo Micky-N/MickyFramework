@@ -9,8 +9,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "symfony/dotenv": "^5.3",
         "nesbot/carbon": "^2.54",
-      "ext-json": "*",
-        "maximebf/debugbar": "^1.17"
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
@@ -22,6 +21,7 @@
             "core/Helpers/config.php",
             "core/Helpers/route.php",
             "core/Helpers/view.php",
+            "core/Helpers/template.php",
             "core/Helpers/lang.php",
             "core/Helpers/generate.php"
         ]

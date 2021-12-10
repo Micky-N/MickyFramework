@@ -1,7 +1,13 @@
 <?php layout('template') ?>
 
 <?php section('body') ?>
-<button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un fournisseur</button>
+
+<?php authorize('seller'); ?>
+<button class="btn btn-success" data-toggle="modal" data-target="#createModal">
+  <i class="fas fa-plus"></i> 
+  Ajouter un fournisseur
+</button>
+<?php endauthorize() ?>
 <table id="table"></table>
 <div class="modal fade" id="createModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">

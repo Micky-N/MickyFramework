@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Facades\Permission;
 use Core\Facades\View;
 
 
@@ -13,6 +14,10 @@ class Template
     private array $endsections = [];
     private array $content = [];
     private array $value = [];
+    private array $authorizes = [];
+    private array $endauthorizes = [];
+    private array $permissions = [];
+    private array $permissionsSub = [];
 
     public function escape(string $data): string
     {
@@ -35,12 +40,17 @@ class Template
         }
     }
 
+    /**
+     * @param string $name
+     * 
+     * @return mixed
+     */
     public function content(string $name)
     {
-        if(empty($this->content[$name])){
+        if (empty($this->content[$name])) {
             $this->content[] = $name;
         }
-        return $this->content[$name] ?? false;
+        return $this->content[$name] ?? null;
     }
 
     public function section(string $name): bool
@@ -69,5 +79,26 @@ class Template
     public function getLayoutPath(): string
     {
         return $this->layoutPath;
+    }
+
+    public function authorize(string $permission, $subject = null)
+    {
+        if (!isset($this->authorizes[$permission])) {
+            $this->permissions[$permission] = $subject;
+            return $this->authorizes[$permission] = ob_start();
+        }
+    }
+
+    public function endauthorize()
+    {
+        $this->endauthorizes[] = !empty($this->endauthorizes) ? count($this->endauthorizes) : 0;
+        $index = !empty($this->authorizes) ? array_keys($this->authorizes)[count($this->endauthorizes) - 1] : null;
+        if (!empty($this->authorizes[$index])) {
+            $this->permissionsSub[$index] = trim(ob_get_clean());
+            if (Permission::test($index, $this->permissions[$index])) {
+                echo $this->permissionsSub[$index];
+            }
+        }
+        return false;
     }
 }
