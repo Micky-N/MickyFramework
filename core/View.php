@@ -4,6 +4,7 @@ namespace Core;
 
 use Exception;
 use Core\Facades\Template;
+use DebugBar\StandardDebugBar;
 
 class View
 {
@@ -17,9 +18,9 @@ class View
     {
         try {
             extract(Template::_templateParams($params), EXTR_SKIP);
-            $this->slashPath($view) ? require_once ROOT . "views/".$this->slashPath($view).".php" : false;
+            $this->slashPath($view) ? require_once ROOT . "views/" . $this->slashPath($view) . ".php" : false;
             extract(Template::_templateParams(), EXTR_SKIP);
-            $this->slashPath(Template::getLayoutPath()) ? require(ROOT."views/".$this->slashPath(Template::getLayoutPath()).".php") : false;
+            $this->slashPath(Template::getLayoutPath()) ? require(ROOT . "views/" . $this->slashPath(Template::getLayoutPath()) . ".php") : false;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -27,7 +28,7 @@ class View
 
     public function slashPath($view): string
     {
-        if(!empty($view)){
+        if (!empty($view)) {
             if (stripos($view, '.') !== false) {
                 $view = str_replace('.', '/', $view);
             }

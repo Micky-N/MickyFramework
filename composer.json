@@ -9,13 +9,15 @@
         "guzzlehttp/guzzle": "^7.3",
         "symfony/dotenv": "^5.3",
         "nesbot/carbon": "^2.54",
-        "ext-json": "*"
+        "ext-json": "*",
+      "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {
             "Core\\": "core/",
             "Tests\\": "tests/",
-            "App\\": "app/"
+            "App\\": "app/",
+            "DebugBar\\": "core/DebugBar/"
         },
         "files": [
             "core/Helpers/config.php",

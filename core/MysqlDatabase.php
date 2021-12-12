@@ -17,6 +17,9 @@ class MysqlDatabase extends Database implements DatabaseInterface
             $pdo = new PDO($dsn, $config['user'], $config['password']);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$connection = $pdo;
+            if(config('env') == 'local'){
+                self::$connection = new \DebugBar\DataCollector\PDO\TraceablePDO(self::$connection);
+            }
         }
         return self::$connection;
     }

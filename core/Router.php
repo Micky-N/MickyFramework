@@ -3,7 +3,6 @@
 namespace Core;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Core\Facades\Permission;
 
 class Router
 {
@@ -45,6 +44,7 @@ class Router
         }
         $controller = new $this->action[0]();
         $method = $this->action[1];
+        $this->routesDebugBar($request, $params, $controller, $method);
         return call_user_func_array([$controller, $method], $params);
     }
 
@@ -122,6 +122,16 @@ class Router
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function routesDebugBar(ServerRequestInterface $request, array $params, Controller $controller, string $method)
+    {
+        \Core\Facades\StandardDebugBar::addMessage('Routes', [
+            'url' => $request->getUri()->getPath(),
+            'params' => $params,
+            'controller' => get_class($controller),
+            'method' => $method
+        ]);
     }
 
     public function __get($name)

@@ -1,51 +1,51 @@
 <!DOCTYPE html>
-<html lang="en_US">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= config('app_name') ?></title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="./public/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="<?= asset('js/script.js') ?>"></script>
-</head>
-
-<body class="d-flex flex-column h-100">
-    <header class="mb-5">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <a class="navbar-brand" href="<?= route('home.index') ?>"><?= config('app_name') ?></a>
+<html lang="fr_FR>
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?= config('app_name') ?></title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+        <link rel="stylesheet" href="<?= assets('css/style.css') ?>">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        
+    </head>
+    
+    <body class="d-flex flex-column h-100">
+        <header class="mb-5">
+            <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <a class="navbar-brand" href="<?= route('home.index') ?>"><?= config('app_name') ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item <?= currentRoute() == '/' ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= route('home.index') ?>">Accueil</a>
+                    <a class="nav-link" href="<?= route('home.index') ?>">Accueil</a>
                     </li>
                     <li class="nav-item <?= namespaceRoute('categories') ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= route('categories.index') ?>">Categorie</a>
+                        <a class="nav-link" href="<?= route('categories.index') ?>">Categories</a>
                     </li>
                     <li class="nav-item <?= namespaceRoute('products') ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= route('products.index') ?>">Produit</a>
+                        <a class="nav-link" href="<?= route('products.index') ?>">Produits</a>
                     </li>
                     <li class="nav-item <?= namespaceRoute('suppliers') ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= route('suppliers.index') ?>">Producteur</a>
+                        <a class="nav-link" href="<?= route('suppliers.index') ?>">Fournisseurs</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav mr-4">
-                    <?php if(!auth()): ?>
+                    <?php if(!isLoggin()): ?>
                         <li class="mr-3">
                             <a class="btn btn-warning" href="<?= route('users.new') ?>">Inscription</a>
                         </li>
                         <li class="">
                             <a class="btn btn-primary" href="<?= route('auth.signin') ?>">Connexion</a>
                         </li>
-                    <?php elseif(auth()): ?>
-                        <li class="mr-3">
+                    <?php elseif(isLoggin()): ?>
+                            <li class="mr-3">
                             <a class="btn btn-success" href="<?= route('admin.products.index') ?>">Admin</a>
                         </li>
                         <li class="">

@@ -33,7 +33,7 @@
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">Modifier le fournisseur <?= $supplier->name ?></span>
             </h4>
-            <form action="<?= route('suppliers.update', ['code_supplier' => $supplier->code_supplier]) ?>" method="post">
+            <form action="<?= route('suppliers.update', ['supplier' => $supplier->code_supplier]) ?>" method="post">
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="name">Nom</label>

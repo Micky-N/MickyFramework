@@ -230,7 +230,7 @@ class Route
     /**
      * @param string $route
      *
-     * @return boolean
+     * @return bool
      */
     public function namespaceRoute(string $route = '')
     {

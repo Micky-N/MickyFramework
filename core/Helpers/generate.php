@@ -1,7 +1,7 @@
 <?php
 
 
-if(!function_exists('exportToArray')){
+if (!function_exists('exportToArray')) {
     function exportToArray($expression)
     {
         $export = var_export($expression, TRUE);
@@ -15,12 +15,19 @@ if(!function_exists('exportToArray')){
     }
 }
 
-if(!function_exists('_readLine')){
+if (!function_exists('_readLine')) {
     function _readLine(string $file)
     {
         $ptr = fopen($file, "r");
         $content = fread($ptr, filesize($file));
         fclose($ptr);
         return explode("\n", $content);
+    }
+}
+
+if (!function_exists('_debugRender')) {
+    function _debugRender()
+    {
+        return \Core\Facades\StandardDebugBar::render();
     }
 }

@@ -3,6 +3,7 @@
 return [
     'app_name' => _env('APP_NAME', 'MICKYFRAMEWORK'),
     'env' => _env('ENV', 'local'),
+    'debugMode' => true,
     'connection' => [
         'mysql' => [
             'user' => _env('DB_USER', 'root'),

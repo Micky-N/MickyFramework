@@ -52,6 +52,7 @@ class App
         self::setVoters();
         self::setRoutes();
         Route::run($request);
+        self::debugMode();
     }
 
     /**
@@ -82,5 +83,10 @@ class App
         return null;
     }
 
-
+    public static function debugMode()
+    {
+        if(config('debugMode')){
+            echo _debugRender();
+        }
+    }
 }

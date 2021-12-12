@@ -6,19 +6,19 @@ use Core\Route as CoreRoute;
 
 
 /**
- * @method static \Core\Route get(string $path, $action)
- * @method static \Core\Route post(string $path, $action)
- * @method static \Core\Route namespaceRoute(string $route = '')
- * @method static \Core\Route routesByName()
- * @method static \Core\Route crud(string $namespace, $controller, array $only = [])
- * @method static \Core\Route routeNeedParams(string $path)
- * @method static \Core\Route generateUrlByName(string $routeName, array $params = [])
- * @method static \Core\Route currentRoute(string $route = '')
- * @method static \Core\Route run(\Psr\Http\Message\ServerRequestInterface $request)
- * @method static \Core\Route redirectName(string $name)
- * @method static \Core\Route redirect(string $url)
- * @method static \Core\Route back()
- * @method static \Core\Route toArray()
+ * @method static \Core\Router get(string $path, $action)
+ * @method static \Core\Router post(string $path, $action)
+ * @method static bool namespaceRoute(string $route = '')
+ * @method static array routesByName()
+ * @method static void crud(string $namespace, $controller, array $only = [])
+ * @method static string routeNeedParams(string $path)
+ * @method static string generateUrlByName(string $routeName, array $params = [])
+ * @method static bool|string currentRoute(string $route = '')
+ * @method static void run(\Psr\Http\Message\ServerRequestInterface $request)
+ * @method static void redirectName(string $name)
+ * @method static void redirect(string $url)
+ * @method static void back()
+ * @method static array toArray()
  *
  * @see \Core\Route
  */

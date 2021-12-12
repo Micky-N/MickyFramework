@@ -4,9 +4,9 @@
 namespace Core;
 
 
-use App\Models\User;
-use Core\Interfaces\VoterInterface;
 use Exception;
+use Core\Facades\StandardDebugBar;
+use Core\Interfaces\VoterInterface;
 
 class Permission
 {
@@ -45,15 +45,9 @@ class Permission
         foreach ($this->voters as $voter) {
             if($voter->canVote($permission, $subject)){
                 $auth = new AuthManager();
-                if($auth->getAuth()){
+                if($auth->isLoggin()){
                     $vote = $voter->vote($auth->getAuth(), $permission, $subject);
-                    try {
-                        if(config('env') === 'local'){
-                            ConsoleDebugger::permissionDebug($voter, $vote, $permission, $auth->getAuth(), $subject);
-                        }
-                    } catch (Exception $e) {
-                        throw new Exception($e->getMessage());
-                    }
+                    $this->voterDebugBar($voter, $vote, $permission);
                     if($vote === true){
                         return true;
                     }
@@ -61,5 +55,12 @@ class Permission
             }
         }
         return false;
+    }
+
+    private function voterDebugBar(VoterInterface $voter, bool $vote, string $permission){
+        $className = get_class($voter);
+        $type = $vote ? 'info' : 'error';
+        $message = "$className : ".($vote ? "yes" : "no")." on $permission";
+        StandardDebugBar::addMessage('Voters', $message, $type);
     }
 }

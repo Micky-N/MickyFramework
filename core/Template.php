@@ -3,7 +3,6 @@
 namespace Core;
 
 use Core\Facades\Permission;
-use Core\Facades\View;
 
 
 class Template
