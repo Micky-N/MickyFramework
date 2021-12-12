@@ -7,7 +7,7 @@ use Exception;
 class MickyCLI
 {
 
-    public static string $BASE_MKY = 'MKYCommand';
+    public static string $BASE_MKY = 'core/MKYCommand';
 
     private array $cli = [];
 
