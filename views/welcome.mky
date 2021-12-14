@@ -45,7 +45,7 @@
                 }
                 row['show'] = `
         <div class="d-flex justify-content-center">
-        <a href="categories/${categories[i].code_category}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
+        <a href="/categories/${categories[i].code_category}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
         </div>
         `
                 data.push(row)
@@ -96,7 +96,7 @@
                 }
                 row['show'] = `
       <div class="d-flex justify-content-center">
-      <a href="products/${products[i].code_product}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
+      <a href="/products/${products[i].code_product}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
       </div>
       `
                 data.push(row)
@@ -154,7 +154,7 @@
                 }
                 row['show'] = `
       <div class="d-flex justify-content-center">
-      <a href="suppliers/${suppliers[i].code_supplier}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
+      <a href="/suppliers/${suppliers[i].code_supplier}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
       </div>
       `
                 data.push(row)

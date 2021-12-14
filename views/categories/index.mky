@@ -72,8 +72,8 @@
                 }
                 row['Actions'] = `
             <div class='d-flex flex-row justify-content-center'>
-                <a href="categories/${categories[i].code_category}" class='btn btn-outline-success mr-1'><i class='fa fa-eye'></i></a>
-                <a href="categories/delete/${categories[i].code_category}" class='btn btn-outline-danger'><i class='fa fa-trash'></i></a>
+                <a href="/categories/${categories[i].code_category}" class='btn btn-outline-success mr-1'><i class='fa fa-eye'></i></a>
+                <a href="/categories/delete/${categories[i].code_category}" class='btn btn-outline-danger'><i class='fa fa-trash'></i></a>
             </div>
             `
                 data.push(row)
