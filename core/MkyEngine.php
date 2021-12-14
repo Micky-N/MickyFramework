@@ -38,14 +38,13 @@ class MkyEngine
      */
     public function view(string $viewName, array $data = [], $extends = false)
     {
-        extract($data);
         $viewPath = $this->getConfig('views') . DIRECTORY_SEPARATOR . $this->parseViewName($viewName);
         if(!$extends){
             $this->viewName = $viewName;
             $this->data = $data;
             $this->viewPath = $viewPath;
         }
-
+        
         if(!file_exists($viewPath)){
             throw new Exception(sprintf('la view %s n\'existe pas', $viewPath));
         }
@@ -68,6 +67,7 @@ class MkyEngine
 
         if(!$extends){
             ob_start();
+            extract($data);
             require $cachePath;
             echo ob_get_clean();
         }
@@ -135,8 +135,8 @@ class MkyEngine
 
     public function parseSections(): void
     {
-        $this->view = preg_replace_callback('/@section\(\'(.*?)\', \'(.*?)\'\)/', function ($sectionDetail) {
-            $this->sections[$sectionDetail[1]] = $sectionDetail[2];
+        $this->view = preg_replace_callback('/@section\(\'(.*?)\', (\"(.*?)\"|\'(.*?)\')\)/', function ($sectionDetail) {
+            $this->sections[$sectionDetail[1]] = $sectionDetail[3] != "" ? $sectionDetail[3] : $sectionDetail[4];
             return '';
         }, $this->view);
 

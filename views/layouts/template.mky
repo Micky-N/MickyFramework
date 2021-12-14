@@ -38,22 +38,22 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav mr-4">
-                    @auth
+                    @guest
                         <li class="mr-3">
                             <a class="btn btn-warning" href="{{ route('users.new') }}">Inscription</a>
                         </li>
                         <li class="">
                             <a class="btn btn-primary" href="{{ route('auth.signin') }}">Connexion</a>
                         </li>
-                    @endauth
-                    @guest
+                    @endguest
+                    @auth
                         <li class="mr-3">
                             <a class="btn btn-success" href="{{ route('admin.products.index') }}">Admin</a>
                         </li>
                         <li class="">
                             <a class="btn btn-info" href="{{ route('auth.logout') }}">Déconnexion</a>
                         </li>
-                    @endguest
+                    @endauth
                 </ul>
             </div>
         </nav>

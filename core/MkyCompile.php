@@ -202,7 +202,7 @@ class MkyCompile
             ],
             'permission' => [
                 function ($expression) {
-                    return '<?php if(authorize(' . $expression . ')): ?>';
+                    return '<?php if(permission(' . $expression . ')): ?>';
                 },
                 function () {
                     return '<?php else: ?>';
@@ -213,7 +213,7 @@ class MkyCompile
             ],
             'notauthorize' => [
                 function ($expression) {
-                    return '<?php if(!authorize(' . $expression . ')): ?>';
+                    return '<?php if(!permission(' . $expression . ')): ?>';
                 },
                 function () {
                     return '<?php else: ?>';
@@ -259,9 +259,9 @@ class MkyCompile
     }
 
     /**
-     * @return string[]
+     * @return array
      */
-    public function getDirectives()
+    public function getDirectives(): array
     {
         return $this->directives;
     }

@@ -4,6 +4,7 @@
 namespace Core;
 
 
+use Core\Facades\View;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\ServerRequest;
 
@@ -12,7 +13,7 @@ class ErrorController extends Controller
 
     public static function error($code)
     {
-        return \Core\Facades\View::render('general.errors', self::getStatut($code));
+        return View::render('general.errors', self::getStatut($code));
     }
 
     private static function getStatut(int $code)

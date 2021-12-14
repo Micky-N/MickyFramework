@@ -24,8 +24,8 @@ if (!function_exists('isLoggin')) {
     }
 }
 
-if (!function_exists('authorize')) {
-    function authorize(string $permission, $subject = null)
+if (!function_exists('permission')) {
+    function permission(string $permission, $subject = null)
     {
         return \Core\Facades\Permission::test($permission, $subject);
     }

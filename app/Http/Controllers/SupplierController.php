@@ -19,6 +19,7 @@ class SupplierController extends Controller
 
     public function show($supplier)
     {
+        \Core\Facades\Permission::can('admin');
         $supplier = Supplier::find($supplier);
         return View::render('suppliers.show', compact('supplier'));
     }
