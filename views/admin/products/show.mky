@@ -11,7 +11,7 @@
                     Liste des fournisseurs
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach ($product->suppliers as $supplier)
+                    @foreach($product->suppliers as $supplier)
                         <button onclick="showProModal(this)" class="dropdown-item"
                             data-pro="{{ $supplier->code_supplier }}" data-toggle="modal" data-target="#prodModal">
                             {{ $supplier->name }}
@@ -20,7 +20,7 @@
                 </div>
             </h4>
             <ul class="list-group mb-3">
-                @if ($product->photo)
+                @if($product->photo)
                     <li class="list-group-item p-0 overflow-hidden">
                         <div>
                             <img id="photo" class="w-100 mx-auto p-0" alt="{{ $product->photo }}"
@@ -96,8 +96,8 @@
                         <div class="col form-group">
                             <label for="code_category">Catégorie</label>
                             <select class="form-control" name="code_category" id="code_category">
-                                @foreach ($categories as $category)
-                                    <option @if ($category->code_category == $product->code_category) selected @endif value="{{ $category->code_category }}">
+                                @foreach($categories as $category)
+                                    <option @if($category->code_category == $product->code_category) selected @endif value="{{ $category->code_category }}">
                                         {{ $category->name }}</option>
                                 @endforeach
                             </select>
@@ -155,7 +155,7 @@
                                     <label for="code_supplier">Fournisseur</label>
                                     <select class="form-control" name="code_supplier" id="code_supplier">
                                         <option value="" selected>Aucun fournisseur séléctionné</option>
-                                        @foreach ($suppliers as $supplier)
+                                        @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier->code_supplier }}">{{ $supplier->name }}
                                             </option>
                                         @endforeach
@@ -182,7 +182,7 @@
 @section('js')
 <script>
     function showProModal(e) {
-        var product = JSON.parse('@json($product->with('suppliers'))')
+        var product = JSON.parse('@json($product)')
         var suppliers = product.suppliers
         var supplier = suppliers.find(s => s.code_supplier == e.getAttribute('data-pro'))
         var action = `/products/${product.code_product}/suppliers/update/${supplier.code_supplier}`

@@ -30,6 +30,7 @@ class ProductController extends Controller
     {
         $product = Product::find($product);
         $product->seller = $product->seller->fullname;
+        $product->with('suppliers');
         $categories = Category::all();
         $suppliers = Supplier::all();
         return View::render('admin.products.show', compact('product', 'categories', 'suppliers'));
