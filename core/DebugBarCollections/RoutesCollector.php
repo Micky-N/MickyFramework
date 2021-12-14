@@ -263,10 +263,6 @@ class RoutesCollector extends AbstractLogger implements DataCollectorInterface, 
                 "widget" => "PhpDebugBar.Widgets.MessagesWidget",
                 "map" => "$name.messages",
                 "default" => "[]"
-            ),
-            "$name:badge" => array(
-                "map" => "$name.count",
-                "default" => 0
             )
         );
     }

@@ -11,5 +11,10 @@ return [
             'name' => _env('DB_NAME', 'mickyframework'),
             'host' => _env('DB_HOST', 'localhost')
         ]
+    ],
+    'mkyengine' => [
+        'views' => ROOT . '/views',
+        'cache' => ROOT . '/cache/views',
+        'layouts' => 'layouts'
     ]
 ];

@@ -23,3 +23,10 @@ if (!function_exists('isLoggin')) {
         return (new \Core\AuthManager())->isLoggin();
     }
 }
+
+if (!function_exists('authorize')) {
+    function authorize(string $permission, $subject = null)
+    {
+        return \Core\Facades\Permission::test($permission, $subject);
+    }
+}

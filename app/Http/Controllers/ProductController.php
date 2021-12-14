@@ -10,6 +10,7 @@ use Core\Facades\Route;
 use App\Models\Category;
 use App\Models\ProductSupplier;
 use App\Models\Supplier;
+use App\Models\User;
 use Cake\Database\Query;
 use Core\Facades\Permission;
 
@@ -19,14 +20,9 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
-        foreach ($products as $product) {
-            $product->with('stock', ['quantity']);
-            $product->selling_price =  $product->getSelling_price();
-            $product->seller = $product->seller->fullname;
-            $product->with('category', ['name']);
-        }
+        $users = User::select('username, id')->where('role_id', '!=', 3)->get();
         $categories = Category::all();
-        return View::render('products.index', compact('products', 'categories'));
+        return View::render('products.index', compact('products', 'categories', 'users'));
     }
 
     public function show($product)

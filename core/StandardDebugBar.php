@@ -37,9 +37,9 @@ class StandardDebugBar
     {
         $this->debugbar = new DebugBar();
         $this->debugbar->addCollector(new RequestDataCollector());
+        $this->debugbar->addCollector(new RoutesCollector());
         $this->debugbar->addCollector(new PDOCollector(MysqlDatabase::getConnection()));
         $this->debugbar->addCollector(new VotersCollector());
-        $this->debugbar->addCollector(new RoutesCollector());
         $this->debugbar->addCollector(new PhpInfoCollector());
         $this->debugbar->addCollector(new MemoryCollector());
         return $this->debugbar;

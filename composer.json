@@ -23,7 +23,6 @@
             "core/Helpers/config.php",
             "core/Helpers/route.php",
             "core/Helpers/view.php",
-            "core/Helpers/template.php",
             "core/Helpers/lang.php",
             "core/Helpers/generate.php"
         ]

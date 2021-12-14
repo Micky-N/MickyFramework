@@ -1,6 +1,6 @@
-<?php layout('template') ?>
+@extends('template')
 
-<?php section('body') ?>
+@section('content')
 <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un produit</button>
 <table id="table"></table>
 <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -23,7 +23,7 @@
               <span class="text-muted">Créer un produit</span>
             </h4>
           </div>
-          <form action="<?= route('products/create') ?>" class="px-2 pt-4">
+          <form action="{{ route('products/create') }}" class="px-2 pt-4">
             <div class="row">
               <div class="col-md-6 form-group">
                 <label for="name">Nom</label>
@@ -44,9 +44,9 @@
                   <label for="code_category">Catégorie</label>
                   <select class="form-control" name="code_category" id="code_category" required>
                     <option value="" selected>Aucune catégorie selectionner</option>
-                    <?php foreach ($categories as $category): ?>
-                      <option value="<?= $category->code_category ?> "> <?= $category->name ?></option>
-                    <?php endforeach; ?>
+                    @foreach($categories as $category)
+                      <option value="{{ $category->code_category }}">{{ $category->name }}</option>
+                    @endforeach
                   </select>
                 </div>
               </div>
@@ -60,12 +60,12 @@
     </div>
   </div>
 </div>
-<?php endsection() ?>
+@endsection
 
-<?php section('js') ?>
+@section('js')
 <script>
   var $table = $('#table')
-  var products = JSON.parse('<?= json_encode($products); ?>');
+  var products = JSON.parse('@json($products)');
 
   function productsTable($el, products) {
     var productsCells = Object.keys(products[0]).filter(p => !['categorie', 'code_category', 'user_id'].includes(p))
@@ -139,4 +139,4 @@
     productsTable($table, products)
   })
 </script>
-<?php endsection() ?>
+@endsection
