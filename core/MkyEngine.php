@@ -3,6 +3,7 @@
 namespace Core;
 
 use Exception;
+use Core\Facades\Cache;
 
 class MkyEngine
 {
@@ -38,14 +39,14 @@ class MkyEngine
      */
     public function view(string $viewName, array $data = [], $extends = false)
     {
-        $viewPath = $this->getConfig('views') . DIRECTORY_SEPARATOR . $this->parseViewName($viewName);
-        if(!$extends){
+        $viewPath = $this->getConfig('views') . '/' . $this->parseViewName($viewName);
+        if (!$extends) {
             $this->viewName = $viewName;
             $this->data = $data;
             $this->viewPath = $viewPath;
         }
-        
-        if(!file_exists($viewPath)){
+
+        if (!file_exists($viewPath)) {
             throw new Exception(sprintf('la view %s n\'existe pas', $viewPath));
         }
 
@@ -53,35 +54,34 @@ class MkyEngine
         $this->parse();
 
 
-        $cachePath = $this->getConfig('cache') . DIRECTORY_SEPARATOR . md5($this->viewName) . self::CACHE_SUFFIX;
-        if(!file_exists($cachePath)){
-            file_put_contents($cachePath, $this->view);
+        $cachePath = $this->getConfig('cache') . '/' . md5($this->viewName) . self::CACHE_SUFFIX;
+        if (!file_exists($cachePath)) {
+            Cache::addCache($cachePath, $this->view);
         }
 
-        if(filemtime($cachePath) < filemtime($viewPath) ||
+        if (
+            filemtime($cachePath) < filemtime($viewPath) ||
             filemtime($cachePath) < filemtime($this->viewPath)
-        ){
+        ) {
             echo '<!-- cache modifié -->';
-            file_put_contents($cachePath, $this->view);
+            Cache::addCache($cachePath, $this->view);
         }
 
-        if(!$extends){
+        if (!$extends) {
             ob_start();
             extract($data);
             require $cachePath;
             echo ob_get_clean();
         }
-
     }
 
     public function withError($message)
     {
-
     }
 
     private function parseViewName(string $viewName): string
     {
-        $viewName = str_replace('.', DIRECTORY_SEPARATOR, $viewName);
+        $viewName = str_replace('.', '/', $viewName);
         return $viewName . self::VIEW_SUFFIX;
     }
 
@@ -115,22 +115,22 @@ class MkyEngine
     public function parseIncludes(): void
     {
         $this->view = preg_replace_callback('/@include\(\'(.*?)\'\)/', function ($viewName) {
-            return file_get_contents($this->getConfig('views') . DIRECTORY_SEPARATOR . $this->parseViewName($viewName[1]));
-        }, $this->view);
+            return file_get_contents($this->getConfig('views') . '/' . $this->parseViewName($viewName[1]));
+        }, str_replace(' (', '(', $this->view));
     }
 
     public function parseExtends(): void
     {
         $this->view = preg_replace_callback('/@extends\(\'(.*?)\'\)/', function ($viewName) {
-            return $this->view($this->getConfig('layouts') . DIRECTORY_SEPARATOR . $viewName[1], $this->data, true);
-        }, $this->view);
+            return $this->view($this->getConfig('layouts') . '/' . $viewName[1], $this->data, true);
+        }, str_replace(' (', '(', $this->view));
     }
 
     public function parseYields(): void
     {
         $this->view = preg_replace_callback('/@yield\(\'(.*?)\'\)/s', function ($yieldName) {
             return $this->sections[$yieldName[1]] ?? '';
-        }, $this->view);
+        }, str_replace(' (', '(', $this->view));
     }
 
     public function parseSections(): void
@@ -138,12 +138,12 @@ class MkyEngine
         $this->view = preg_replace_callback('/@section\(\'(.*?)\', (\"(.*?)\"|\'(.*?)\')\)/', function ($sectionDetail) {
             $this->sections[$sectionDetail[1]] = $sectionDetail[3] != "" ? $sectionDetail[3] : $sectionDetail[4];
             return '';
-        }, $this->view);
+        }, str_replace(' (', '(', $this->view));
 
         $this->view = preg_replace_callback('/@section\(\'(.*?)\'\)(.*?)@endsection/s', function ($sectionName) {
             $this->sections[$sectionName[1]] = $sectionName[2];
             return '';
-        }, $this->view);
+        }, str_replace(' (', '(', $this->view));
     }
 
     public function directive(string $key, $callback): void
@@ -163,7 +163,7 @@ class MkyEngine
                 $callback = $this->directives->getCallbacks($key, $index);
                 $this->view = preg_replace_callback('/@' . $directive . '(\((.*?)?\))?/', function ($expression) use ($callback) {
                     return call_user_func($callback, $expression[2] ?? null);
-                }, $this->view);
+                }, str_replace(' (', '(', $this->view));
             }
         }
     }

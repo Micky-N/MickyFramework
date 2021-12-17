@@ -1,0 +1,43 @@
+@extends('template')
+
+@section('content')
+    <div>
+        {{ HTML\Form::open('', 'POST') }}
+        <div class="row">
+            <div class="col form-group">
+                {{ HTML\Form::label('Prénom', 'first_name') }}
+                {{ HTML\Form::text('first_name', '', ['class' => 'form-control']) }}
+            </div>
+            <div class="col form-group">
+                {{ HTML\Form::label('Nom', 'last_name') }}
+                {{ HTML\Form::text('last_name', '', ['class' => 'form-control']) }}
+            </div>
+            <div class="col form-group">
+                {{ HTML\Form::label("Nom d'utilisateur", 'username') }}
+                {{ HTML\Form::text('username', '', ['class' => 'form-control']) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                {{ HTML\Form::label('Email', 'email') }}
+                {{ HTML\Form::email('email', '', ['class' => 'form-control']) }}
+            </div>
+            <div class="col form-group">
+                {{ HTML\Form::label('Role', 'role_id') }}
+                {{ HTML\Form::select('role_id', $roles, null, '-- Selectionner le rôle --', ['class' => 'form-control']) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                {{ HTML\Form::label('Mot de passe', 'password') }}
+                {{ HTML\Form::password('password', ['class' => 'form-control']) }}
+            </div>
+            <div class="col form-group">
+                {{ HTML\Form::label('Confirmer mot de passe', 'confirme_password') }}
+                {{ HTML\Form::password('confirme_password', ['class' => 'form-control']) }}
+            </div>
+        </div>
+        {{ HTML\Form::submit("S'inscrire", ['class' => 'btn btn-primary']) }}
+        {{ HTML\Form::close() }}
+    </div>
+@endsection

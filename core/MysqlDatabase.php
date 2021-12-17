@@ -27,7 +27,7 @@ class MysqlDatabase extends Database implements DatabaseInterface
     public static function query($statement, $class_name = null, $one = false)
     {
         $req = self::getConnection()->query($statement);
-        $class_name === null ? $req->setFetchMode(PDO::FETCH_OBJ) : $req->setFetchMode(PDO::FETCH_CLASS, $class_name);
+        $class_name === null ? $req->setFetchMode(PDO::FETCH_ASSOC) : $req->setFetchMode(PDO::FETCH_CLASS, $class_name);
         return $one ? $req->fetch() : $req->fetchAll();
     }
 

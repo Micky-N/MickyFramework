@@ -36,7 +36,9 @@ class MickyCLI
         'voter' => 'required',
         'action' => 'required',
         'path' => 'required',
-        'permission' => 'required'
+        'permission' => 'required',
+        'cache' => 'required',
+        'clear' => 'novalue',
     ];
 
     private static array $required = [
@@ -76,6 +78,14 @@ class MickyCLI
             'routes' => [
                 'request' => 'required',
                 'controller' => 'required'
+            ]
+        ],
+        'cache' => [
+            'clear' => [
+                'path' => 'optional'
+            ],
+            'create' => [
+                'path' => 'required',
             ]
         ]
     ];
@@ -200,7 +210,12 @@ class MickyCLI
     public function run()
     {
         $compile = '';
-        if ($this->isInputCli() && (array_key_exists('create', $this->cli) || array_key_exists('show', $this->cli))) {
+        if ($this->isInputCli() && 
+        (array_key_exists('create', $this->cli) ||
+        array_key_exists('show', $this->cli) ||
+        array_key_exists('cache', $this->cli)
+        )
+        ) {
             foreach ($this->cli as $cli => $option) {
                 if (array_key_exists($cli, self::$longOptions)) {
                     if (array_key_exists($cli, self::$required) && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null) {
@@ -257,13 +272,13 @@ class MickyCLI
         // Output table, padding columns
         $table = '';
         foreach ($data as $row_key => $row) {
-            $table .= str_pad('', $columns[$cell_key] * count($row), '-') .PHP_EOL;
+            $table .= str_pad('', $columns[$cell_key] * count($row), '-') . PHP_EOL;
             foreach ($row as $cell_key => $cell) {
                 $table .= "|" . str_pad($cell, $columns[$cell_key]);
             }
             $table .= PHP_EOL;
         }
-        $table .= PHP_EOL.PHP_EOL;
+        $table .= PHP_EOL . PHP_EOL;
         return $table;
     }
 }

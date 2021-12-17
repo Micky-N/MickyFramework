@@ -2,6 +2,7 @@
 
 return [
     'app_name' => _env('APP_NAME', 'MICKYFRAMEWORK'),
+    'cache' => ROOT . 'cache',
     'env' => _env('ENV', 'local'),
     'debugMode' => true,
     'connection' => [
@@ -13,8 +14,8 @@ return [
         ]
     ],
     'mkyengine' => [
-        'views' => ROOT . '/views',
-        'cache' => ROOT . '/cache/views',
+        'views' => ROOT . 'views',
+        'cache' => ROOT . 'cache/views',
         'layouts' => 'layouts'
     ]
 ];

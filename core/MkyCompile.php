@@ -27,6 +27,10 @@ class MkyCompile
             'foreach' => ['foreach', 'endforeach'],
             'json' => ['json'],
             'if' => ['if', 'elseif', 'else', 'endif'],
+            'isset' => ['isset', 'else', 'endisset'],
+            'notisset' => ['notisset', 'else', 'endnotisset'],
+            'empty' => ['empty', 'else', 'endempty'],
+            'notempty' => ['notempty', 'else', 'endnotempty'],
             'auth' => ['auth', 'else', 'endauth'],
             'guest' => ['guest', 'else', 'endguest'],
             'dump' => ['dump'],
@@ -121,6 +125,50 @@ class MkyCompile
                     return '<?php endif; ?>';
                 }
             ],
+            'empty' => [
+                function ($expression) {
+                    return '<?php if(empty(' . $expression . ')): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ],
+            'notempty' => [
+                function ($expression) {
+                    return '<?php if(!empty(' . $expression . ')): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ],
+            'isset' => [
+                function ($expression) {
+                    return '<?php if(isset(' . $expression . ')): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ],
+            'notisset' => [
+                function ($expression) {
+                    return '<?php if(!isset(' . $expression . ')): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ],
             'auth' => [
                 function () {
                     return '<?php if(isLoggin()): ?>';
@@ -145,7 +193,7 @@ class MkyCompile
             ],
             'dump' => [
                 function ($expression) {
-                    return '<?php var_dump(' . $expression . ') ?>';
+                    return '<?php dump(' . $expression . ') ?>';
                 }
             ],
             'route' => [

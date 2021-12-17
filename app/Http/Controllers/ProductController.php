@@ -11,8 +11,7 @@ use App\Models\Category;
 use App\Models\ProductSupplier;
 use App\Models\Supplier;
 use App\Models\User;
-use Cake\Database\Query;
-use Core\Facades\Permission;
+use HTML\Paginate;
 
 class ProductController extends Controller
 {
@@ -22,6 +21,7 @@ class ProductController extends Controller
         $products = Product::all();
         $users = User::select('username, id')->where('role_id', '!=', 3)->get();
         $categories = Category::all();
+        $products = new Paginate($products, 10);
         return View::render('products.index', compact('products', 'categories', 'users'));
     }
 
@@ -31,6 +31,7 @@ class ProductController extends Controller
         $product->seller = $product->seller->fullname;
         $categories = Category::all();
         $suppliers = Supplier::all();
+        
         return View::render('products.show', compact('product', 'categories', 'suppliers'));
     }
 

@@ -3,7 +3,19 @@
 @section('content')
     <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un
         produit</button>
+        <ul class="d-flex flex-row">
+            <a class="btn btn-success mr-1" href="?max=5">5</a>
+            <a class="btn btn-success mr-1" href="?max=10">10</a>
+            <a class="btn btn-success mr-1" href="?max=15">15</a>
+            <a class="btn btn-success mr-1" href="?max=20">20</a>
+            <a class="btn btn-success mr-1" href="?max=25">25</a>
+        </ul>
     <table id="table"></table>
+    <ul class="d-flex flex-row">
+        @foreach($products->pages as $page)
+            <a class="btn btn-primary mr-1 @if($products->currentPage == $page)active @endif " href="?page={{ $page }}@notempty($_GET['max'])&max={{$_GET['max']}} @endnotempty">{{ $page }}</a>
+        @endforeach
+    </ul>
     <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -67,10 +79,11 @@
     </div>
 @endsection
 
+
 @section('js')
     <script>
         var $table = $('#table')
-        var products = JSON.parse('@json($products)');
+        var products = JSON.parse('@json($products->slice)');
         var users = JSON.parse('@json($users)');
         var categories = JSON.parse('@json($categories)');
 
@@ -78,7 +91,10 @@
             products.forEach(p => {
                 p.category = categories.find(c => c.code_category == p.code_category).name
                 p.seller = users.find(u => u.id == p.user_id).username
-                p.selling_price = new Intl.NumberFormat('fr-FR',{ style: 'currency', currency: 'EUR' }).format(p.selling_price)
+                p.selling_price = new Intl.NumberFormat('fr-FR', {
+                    style: 'currency',
+                    currency: 'EUR'
+                }).format(p.selling_price)
             })
 
             var productsCells = Object.keys(products[0]).filter(p => !['categorie', 'code_category', 'user_id'].includes(p))
@@ -135,10 +151,6 @@
                 exportHiddenColumns: false,
                 maintainMetaData: true,
                 clickToSelect: true,
-                pagination: true,
-                paginationParts: ['pageList', 'pageSize'],
-                pageList: ['5', '15', '25'],
-                pageSize: '5',
             })
         }
 

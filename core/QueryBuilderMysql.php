@@ -3,6 +3,7 @@
 namespace Core;
 
 use Core\MysqlDatabase;
+use stdClass;
 
 class QueryBuilderMysql
 {
@@ -133,17 +134,40 @@ class QueryBuilderMysql
     /**
      * Crée un tableau avec les champs
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      * @return array
      */
-    public function map(string $key = '', string $value = '*'): array
+    public function map(string $key = '', $value = null): array
     {
-        $valuemap = $value !== "*" ? $this->mapping($value) : $this->get();
+        $query = MysqlDatabase::query($this->stringify());
+        $value = str_replace(' ', '', $value);
+        $valuemap = !empty($value) ? $this->mapping($value, $query) : $query;
         if ($key) {
-            $keymap = $key ? $this->mapping($key) : range(1, count($this->get()));
-            $valuemap = array_combine($keymap, (array)$valuemap);
+            $keymap = $key ? $this->mapping($key, $query) : range(1, count($query));
+            $valuemap = array_combine($keymap, $valuemap);
         }
         return $valuemap;
+    }
+
+    /**
+     * Récupere les données du champ $key 
+     * sous forme de tableau 
+     * @param mixed $key
+     * @return array
+     */
+    private function mapping($key, array $query = []): array
+    {
+        $keymap = array_map(function ($km) use ($key) {
+            if(is_string($key)){
+                return $km[$key];
+            }
+            $map = [];
+            foreach ($key as $k => $v) {
+                $map[$v] = $km[$v];
+            }
+            return $map;
+        }, $query);
+        return $keymap;
     }
 
     private function hasFields()
@@ -217,6 +241,15 @@ class QueryBuilderMysql
     }
 
     /**
+     * Récupere les enregistrement
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return MysqlDatabase::query($this->stringify());
+    }
+
+    /**
      * Recupere le premier enregistrement de la requête
      * @return Model
      */
@@ -249,20 +282,6 @@ class QueryBuilderMysql
             . $this->hasGroup()
             . $this->hasOrder()
             . $this->hasLimit();
-    }
-
-    /**
-     * Récupere les données du champ $key 
-     * sous forme de tableau 
-     * @param string $key
-     * @return array
-     */
-    private function mapping(string $key): array
-    {
-        $keymap = array_map(function ($k) use ($key) {
-            return $k->$key;
-        }, $this->get());
-        return $keymap;
     }
 
     /**

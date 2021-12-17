@@ -39,7 +39,7 @@
                 <ul class="navbar-nav mr-4">
                     @guest
                         <li class="mr-3">
-                            <a class="btn btn-warning" href="{{ route('users.new') }}">Inscription</a>
+                            <a class="btn btn-warning" href="{{ route('auth.subscribe') }}">Inscription</a>
                         </li>
                         <li class="">
                             <a class="btn btn-primary" href="{{ route('auth.signin') }}">Connexion</a>

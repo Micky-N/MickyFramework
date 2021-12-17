@@ -10,14 +10,15 @@
         "symfony/dotenv": "^5.3",
         "nesbot/carbon": "^2.54",
         "ext-json": "*",
-      "ext-pdo": "*"
+        "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {
             "Core\\": "core/",
             "Tests\\": "tests/",
             "App\\": "app/",
-            "DebugBar\\": "core/DebugBar/"
+            "DebugBar\\": "core/DebugBar/",
+            "HTML\\": "core/HTML"
         },
         "files": [
             "core/Helpers/config.php",

@@ -16,10 +16,11 @@ use Core\QueryBuilderMysql;
  * @method static \Core\QueryBuilderMysql orderBy()
  * @method static \Core\QueryBuilderMysql limit()
  * @method static \Core\QueryBuilderMysql groupBy()
- * @method static \Core\QueryBuilderMysql map()
- * @method static \Core\QueryBuilderMysql get()
- * @method static \Core\QueryBuilderMysql last()
- * @method static \Core\QueryBuilderMysql stringify()
+ * @method static array map(string $key, $value = null)
+ * @method static array get()
+ * @method static array toArray()
+ * @method static Core\Model last()
+ * @method static string stringify()
  *
  * @see \Core\QueryBuilderMysql
  */
