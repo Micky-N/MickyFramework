@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Core\MKYCommand;
 
 use Exception;
 
@@ -242,7 +242,7 @@ class MickyCLI
 
     public function require_mky()
     {
-        return "require_once 'vendor/autoload.php';\nuse Core\MickyCLI;\n";
+        return "require_once 'vendor/autoload.php';\nuse Core\MKYCommand\MickyCLI;\n";
     }
 
     public function compileExec(string $compile = '')

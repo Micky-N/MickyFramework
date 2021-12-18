@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Core\Compiler;
 
 use Closure;
 
@@ -20,7 +20,7 @@ class MkyCompile
 
     public function __construct()
     {
-        $this->directives = $directives = [
+        $this->directives = [
             'style' => ['style', 'endstyle'],
             'script' => ['script', 'endscript'],
             'php' => ['php', 'endphp'],
@@ -48,7 +48,7 @@ class MkyCompile
 
         $this->formatEcho = [
             'echo' => ['{{', '}}'],
-            'escape' => ['{!', '!}']
+            'escape' => ['{!!', '!!}']
         ];
 
         $this->callbacks = [

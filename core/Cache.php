@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use function PHPUnit\Framework\directoryExists;
+
 class Cache
 {
 
@@ -18,10 +20,10 @@ class Cache
         $start = '';
         foreach ($array as $file) {
             $start .= $file;
-            if (!file_exists($start)) {
-                if (stripos($file, '.') != false) {
-                    file_put_contents($start, $data);
-                } else {
+            if (stripos($file, '.') != false) {
+                file_put_contents($start, $data);
+            } else {
+                if(!file_exists($start)){
                     mkdir($start, 1);
                 }
             }

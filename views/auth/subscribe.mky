@@ -33,10 +33,12 @@
                 {{ HTML\Form::password('password', ['class' => 'form-control']) }}
             </div>
             <div class="col form-group">
-                {{ HTML\Form::label('Confirmer mot de passe', 'confirme_password') }}
-                {{ HTML\Form::password('confirme_password', ['class' => 'form-control']) }}
+                {{ HTML\Form::label('Confirmer mot de passe', 'confirm_password') }}
+                {{ HTML\Form::password('confirm_password', ['class' => 'form-control']) }}
             </div>
         </div>
+        {{ HTML\Form::date("date_naissance", '', ['class' => 'form-control']) }}
+        {{ HTML\Form::number("age", '', ['class' => 'form-control', 'step' => '0.01']) }}
         {{ HTML\Form::submit("S'inscrire", ['class' => 'btn btn-primary']) }}
         {{ HTML\Form::close() }}
     </div>

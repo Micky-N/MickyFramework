@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Core\Compiler;
 
 use Exception;
 use Core\Facades\Cache;
@@ -60,8 +60,8 @@ class MkyEngine
         }
 
         if (
-            filemtime($cachePath) < filemtime($viewPath) ||
-            filemtime($cachePath) < filemtime($this->viewPath)
+            (filemtime($cachePath) < filemtime($viewPath)) ||
+            (filemtime($cachePath) < filemtime($this->viewPath))
         ) {
             echo '<!-- cache modifié -->';
             Cache::addCache($cachePath, $this->view);

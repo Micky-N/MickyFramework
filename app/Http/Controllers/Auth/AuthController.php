@@ -8,7 +8,7 @@ use Core\Facades\Route;
 use Core\Facades\View;
 use App\Models\User;
 use Core\Session;
-
+use Core\Validate\Validator;
 
 class AuthController extends Controller
 {
@@ -44,7 +44,9 @@ class AuthController extends Controller
     }
 
     public function create(array $data)
-    {
-        dd($data);
+    {  
+        dd(Validator::check($data, [
+            'password' => 'confirm:confirm_password',
+        ]));
     }
 }
