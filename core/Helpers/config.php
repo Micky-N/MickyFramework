@@ -20,7 +20,7 @@ if (!function_exists('config')) {
     function config($configName)
     {
         try {
-            $config = include (defined('ROOT') ? ROOT : './') . 'core/Config.php';
+            $config = include (defined('ROOT') ? ROOT : './') . 'bootstrap/Config.php';
             $configName = array_filter(explode('.', $configName));
             foreach ($configName as $c) {
                 if (isset($config[$c])) {

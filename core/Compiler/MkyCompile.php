@@ -7,12 +7,12 @@ use Closure;
 class MkyCompile
 {
 
+    /**
+     * @var array|MkyDirective[]
+     */
     private array $directives;
     private array $callbacks;
-    /**
-     * @var string[][]
-     */
-    private array $formatEcho;
+
     /**
      * @var bool[]
      */
@@ -20,39 +20,12 @@ class MkyCompile
 
     public function __construct()
     {
-        $this->directives = [
-            'style' => ['style', 'endstyle'],
-            'script' => ['script', 'endscript'],
-            'php' => ['php', 'endphp'],
-            'foreach' => ['foreach', 'endforeach'],
-            'json' => ['json'],
-            'if' => ['if', 'elseif', 'else', 'endif'],
-            'isset' => ['isset', 'else', 'endisset'],
-            'notisset' => ['notisset', 'else', 'endnotisset'],
-            'empty' => ['empty', 'else', 'endempty'],
-            'notempty' => ['notempty', 'else', 'endnotempty'],
-            'auth' => ['auth', 'else', 'endauth'],
-            'guest' => ['guest', 'else', 'endguest'],
-            'dump' => ['dump'],
-            'route' => ['route', 'else', 'endroute'],
-            'repeat' => ['repeat', 'endrepeat'],
-            'haserror' => ['haserror', 'else', 'endhaserror'],
-            'error' => ['error', 'else', 'enderror'],
-            'permission' => ['permission', 'else', 'endpermission'],
-            'switch' => ['switch', 'case', 'break', 'default', 'endswitch']
-        ];
-
         $this->conditions = [
             'firstCaseSwitch' => false
         ];
 
-        $this->formatEcho = [
-            'echo' => ['{{', '}}'],
-            'escape' => ['{!!', '!!}']
-        ];
-
-        $this->callbacks = [
-            'style' => [
+        $this->directives = [
+            'style' => new MkyDirective(['style', 'endstyle'], [
                 function ($href = null) {
                     if($href){
                         return '<link rel="stylesheet" type="text/css" href=' . $href . '/>';
@@ -62,8 +35,8 @@ class MkyCompile
                 function () {
                     return '</style>';
                 }
-            ],
-            'script' => [
+            ]),
+            'script' => new MkyDirective(['script', 'endscript'], [
                 function ($src = null) {
                     if($src){
                         return '<script type="text/javascript" src=' . $src . '></script>';
@@ -73,45 +46,29 @@ class MkyCompile
                 function () {
                     return '</script>';
                 }
-            ],
-            'php' => [
+            ]),
+            'php' => new MkyDirective(['php', 'endphp'], [
                 function () {
                     return '<?php';
                 },
                 function () {
                     return '?>';
                 }
-            ],
-            'foreach' => [
+            ]),
+            'foreach' => new MkyDirective(['foreach', 'endforeach'], [
                 function ($expression) {
                     return '<?php foreach(' . $expression . '): ?>';
                 },
                 function () {
                     return '<?php endforeach; ?>';
                 }
-            ],
-            'echo' => [
+            ]),
+            'json' => new MkyDirective(['json'], [
                 function ($expression) {
-                    return '<?=' . $expression;
-                },
-                function () {
-                    return '?>';
+                    return '<?= json_encode(' . $expression . ', JSON_UNESCAPED_UNICODE) ?>';
                 }
-            ],
-            'escape' => [
-                function ($expression) {
-                    return '<?php htmlspecialchars(' . $expression . ')';
-                },
-                function () {
-                    return '?>';
-                }
-            ],
-            'json' => [
-                function ($expression) {
-                    return '<?= json_encode(' . $expression . ') ?>';
-                }
-            ],
-            'if' => [
+            ]),
+            'if' => new MkyDirective(['if', 'elseif', 'else', 'endif'], [
                 function ($expression) {
                     return '<?php if(' . $expression . '): ?>';
                 },
@@ -124,30 +81,8 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'empty' => [
-                function ($expression) {
-                    return '<?php if(empty(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ],
-            'notempty' => [
-                function ($expression) {
-                    return '<?php if(!empty(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ],
-            'isset' => [
+            ]),
+            'isset' => new MkyDirective(['isset', 'else', 'endisset'], [
                 function ($expression) {
                     return '<?php if(isset(' . $expression . ')): ?>';
                 },
@@ -157,8 +92,8 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'notisset' => [
+            ]),
+            'notisset' => new MkyDirective(['notisset', 'else', 'endnotisset'], [
                 function ($expression) {
                     return '<?php if(!isset(' . $expression . ')): ?>';
                 },
@@ -168,8 +103,30 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'auth' => [
+            ]),
+            'empty' => new MkyDirective(['empty', 'else', 'endempty'], [
+                function ($expression) {
+                    return '<?php if(empty(' . $expression . ')): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ]),
+            'notempty' => new MkyDirective(['notempty', 'else', 'endnotempty'], [
+                function ($expression) {
+                    return '<?php if(!empty(' . $expression . ')): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ]),
+            'auth' => new MkyDirective(['auth', 'else', 'endauth'], [
                 function () {
                     return '<?php if(isLoggin()): ?>';
                 },
@@ -179,8 +136,8 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'guest' => [
+            ]),
+            'guest' => new MkyDirective(['guest', 'else', 'endguest'], [
                 function () {
                     return '<?php if(!isLoggin()): ?>';
                 },
@@ -190,13 +147,13 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'dump' => [
+            ]),
+            'dump' => new MkyDirective(['dump'], [
                 function ($expression) {
                     return '<?php dump(' . $expression . ') ?>';
                 }
-            ],
-            'route' => [
+            ]),
+            'route' => new MkyDirective(['route', 'else', 'endroute'], [
                 function ($expression) {
                     return '<?php if(currentRoute(' . $expression . ')): ?>';
                 },
@@ -206,8 +163,8 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'routenot' => [
+            ]),
+            'routenot' => new MkyDirective(['routenot', 'else', 'endroutenot'], [
                 function ($expression) {
                     return '<?php if(!currentRoute(' . $expression . ')): ?>';
                 },
@@ -217,27 +174,16 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'repeat' => [
+            ]),
+            'repeat' => new MkyDirective(['repeat', 'endrepeat'], [
                 function ($expression) {
                     return '<?php foreach(range(0, ' . ($expression - 1) . ') as $index): ?>';
                 },
                 function () {
                     return '<?php endforeach; ?>';
                 }
-            ],
-            'haserror' => [
-                function ($expression) {
-                    return '<?php if(isset($errors) && isset($errors[' . $expression . '])): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ],
-            'error' => [
+            ]),
+            'haserrors' => new MkyDirective(['haserrors', 'else', 'endhaserrors'], [
                 function () {
                     return '<?php if(isset($errors) && !empty($errors)): ?>';
                 },
@@ -247,8 +193,19 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'permission' => [
+            ]),
+            'error' => new MkyDirective(['error', 'else', 'enderror'], [
+                function ($expression) {
+                    return '<?php if(isset($errors) && isset($errors[' . $expression . '])): ?>';
+                },
+                function () {
+                    return '<?php else: ?>';
+                },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ]),
+            'permission' => new MkyDirective(['permission', 'else', 'endpermission'], [
                 function ($expression) {
                     return '<?php if(permission(' . $expression . ')): ?>';
                 },
@@ -258,8 +215,8 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'notauthorize' => [
+            ]),
+            'notpermission' => new MkyDirective(['notpermission', 'else', 'endnotpermission'], [
                 function ($expression) {
                     return '<?php if(!permission(' . $expression . ')): ?>';
                 },
@@ -269,8 +226,8 @@ class MkyCompile
                 function () {
                     return '<?php endif; ?>';
                 }
-            ],
-            'switch' => [
+            ]),
+            'switch' => new MkyDirective(['switch', 'case', 'break', 'default', 'endswitch'], [
                 function ($expression) {
                     $this->conditions['firstCaseSwitch'] = true;
                     return '<?php switch(' . $expression . '):';
@@ -291,18 +248,19 @@ class MkyCompile
                 function () {
                     return '<?php endswitch; ?>';
                 }
-            ]
+            ])
         ];
     }
 
     /**
      * @param string $key
      * @param string[] $directives
+     * @param callable[] $callbacks
      * @return MkyCompile
      */
-    public function setDirectives(string $key, array $directives): MkyCompile
+    public function setDirectives(string $key, array $directives, array $callbacks): MkyCompile
     {
-        $this->directives[$key] = $directives;
+        $this->directives[$key] = new MkyDirective($directives, $callbacks);
         return $this;
     }
 
@@ -312,29 +270,5 @@ class MkyCompile
     public function getDirectives(): array
     {
         return $this->directives;
-    }
-
-    /**
-     * @param string $key
-     * @param int $callback
-     * @return null|Closure[]
-     */
-    public function getCallbacks(string $key, int $callback = null)
-    {
-        if($callback !== null){
-            return $this->callbacks[$key][$callback] ?? null;
-        }
-        return $this->callbacks[$key] ?? null;
-    }
-
-    /**
-     * @param string $key
-     * @param Closure[] $callbacks
-     * @return MkyCompile
-     */
-    public function setCallbacks(string $key, array $callbacks): MkyCompile
-    {
-        $this->callbacks[$key] = $callbacks;
-        return $this;
     }
 }

@@ -4,12 +4,15 @@ namespace Core\Compiler;
 
 use Exception;
 use Core\Facades\Cache;
+use Core\Facades\Session;
 
 class MkyEngine
 {
 
     private const VIEW_SUFFIX = '.mky';
     private const CACHE_SUFFIX = '.cache.php';
+    private const ECHO = ['{{', '}}'];
+    private const HTML = ['{{', '}}'];
     private array $config;
     /**
      * @var null|string|false
@@ -70,6 +73,9 @@ class MkyEngine
         if (!$extends) {
             ob_start();
             extract($data);
+            $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
+            $success = Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS'));
+            $messages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));
             require $cachePath;
             echo ob_get_clean();
         }
@@ -146,21 +152,15 @@ class MkyEngine
         }, str_replace(' (', '(', $this->view));
     }
 
-    public function directive(string $key, $callback): void
-    {
-        $this->directives[$key] = $callback;
-    }
-
     /**
      * Compile directives
      * see MkyCompile
      */
     private function parseDirectives(): void
     {
-        foreach ($this->directives->getDirectives() as $key => $directives) {
-            foreach ($directives as $directive) {
-                $index = array_search($directive, $directives);
-                $callback = $this->directives->getCallbacks($key, $index);
+        foreach ($this->directives->getDirectives() as $key => $mkyDirective) {
+            foreach ($mkyDirective->encode as $index => $directive) {
+                $callback = $mkyDirective->callbacks[$index];
                 $this->view = preg_replace_callback('/@' . $directive . '(\((.*?)?\))?/', function ($expression) use ($callback) {
                     return call_user_func($callback, $expression[2] ?? null);
                 }, str_replace(' (', '(', $this->view));

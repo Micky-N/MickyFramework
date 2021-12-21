@@ -12,14 +12,19 @@ abstract class Model
 
     protected string $table;
     protected string $primaryKey = 'id';
+    /**
+     * ['creation' => colonne création, 'update' => colonne modifié]
+     * @var array
+     */
+    protected array $datetimes = [];
 
     public function getTable(): string
     {
         $class = get_called_class();
-        if (empty($this->table)) {
+        if(empty($this->table)){
             $table = explode('\\', $class);
             $table = strtolower(end($table));
-            if (get_plural($table)) {
+            if(get_plural($table)){
                 return get_plural($table);
             }
             throw new Exception("La table $table n'existe pas", 14);
@@ -41,9 +46,9 @@ abstract class Model
     /**
      * Récupere l'enregistrement de l'id
      * @param mixed $id
-     * @return Model
+     * @return self|bool
      */
-    public static function find($id): Model
+    public static function find($id)
     {
         return self::where(
             self::getCurrentModel()->getPrimaryKey(),
@@ -60,18 +65,22 @@ abstract class Model
     {
         $count = self::select(
             self::getCurrentModel()->getPrimaryKey() .
-                ', COUNT(' .
-                self::getCurrentModel()->getPrimaryKey() .
-                ') AS count'
+            ', COUNT(' .
+            self::getCurrentModel()->getPrimaryKey() .
+            ') AS count'
         )->map(self::getCurrentModel()->getPrimaryKey(), 'count');
-        return (int) array_shift($count);
+        return (int)array_shift($count);
     }
 
+    /**
+     * @param array $data
+     * @param string $table
+     * @return \Core\Model|bool
+     */
     public static function create(array $data, string $table = '')
     {
-        if (isset($data['created_at']) && isset($data['updated_at'])) {
-            $data = self::setDatetime($data);
-        }
+        $data = self::setDatetime($data);
+        $data = self::filterColumns($data);
         $table = $table ?: self::getCurrentModel()->getTable();
         $keys = [];
         $values = [];
@@ -96,9 +105,8 @@ abstract class Model
     {
         $keys = [];
         $values = [];
-        if (isset($data['updated_at'])) {
-            $data['updated_at'] = date('Y-m-d H:i:s');
-        }
+        $data = self::setUpdate($data);
+        $data = self::filterColumns($data);
         foreach ($data as $k => $v) {
             $keys[] = sprintf('%s = ?', $k);
             $values[] = $v;
@@ -144,7 +152,7 @@ abstract class Model
     {
         $pk = self::getCurrentModel()->getPrimaryKey();
         $ids = self::select($pk)->get();
-        return (int) $ids[array_rand($ids, 1)]->$pk;
+        return (int)$ids[array_rand($ids, 1)]->$pk;
     }
 
     public function hasMany(string $model, string $foreignKey = '')
@@ -158,14 +166,14 @@ abstract class Model
 		FROM {$table}
 		LEFT JOIN {$this->getTable()}
 		ON {$table}.{$foreignKey} = " .
-                $this->getTable() .
-                '.' .
-                $this->primaryKey .
-                ' WHERE ' .
-                $this->getTable() .
-                '.' .
-                $this->primaryKey .
-                " = ?
+            $this->getTable() .
+            '.' .
+            $this->primaryKey .
+            ' WHERE ' .
+            $this->getTable() .
+            '.' .
+            $this->primaryKey .
+            " = ?
 		",
             [$this->{$this->primaryKey}],
             $model
@@ -182,22 +190,22 @@ abstract class Model
 		SELECT {$table->getTable()}.*
 		FROM {$table->getTable()}
 		LEFT JOIN " .
-                $this->getTable() .
-                "
+            $this->getTable() .
+            "
 		ON " .
-                $table->getTable() .
-                '.' .
-                $table->primaryKey .
-                ' = ' .
-                $this->getTable() .
-                '.' .
-                $foreignKey .
-                "
+            $table->getTable() .
+            '.' .
+            $table->primaryKey .
+            ' = ' .
+            $this->getTable() .
+            '.' .
+            $foreignKey .
+            "
 		WHERE " .
-                $this->getTable() .
-                '.' .
-                $this->primaryKey .
-                " = ?
+            $this->getTable() .
+            '.' .
+            $this->primaryKey .
+            " = ?
 		",
             [$this->{$this->primaryKey}],
             $model,
@@ -214,22 +222,22 @@ abstract class Model
         $all = MysqlDatabase::query(
             'SHOW TABLES FROM ' . config('connection.mysql.name')
         );
-        if (empty($pivot)) {
+        if(empty($pivot)){
             foreach ($all as $a) {
-                if (
-                    strpos(
-                        $a->{'Tables_in_' . config('connection.mysql.name')},
-                        '_'
-                    )
-                ) {
+                if(
+                strpos(
+                    $a->{'Tables_in_' . config('connection.mysql.name')},
+                    '_'
+                )
+                ){
                     $atest = explode(
                         '_',
                         $a->{'Tables_in_' . config('connection.mysql.name')}
                     );
-                    if (in_array($first, $atest) && in_array($second, $atest)) {
+                    if(in_array($first, $atest) && in_array($second, $atest)){
                         $pivot =
                             $a->{'Tables_in_' .
-                                config('connection.mysql.name')};
+                            config('connection.mysql.name')};
                     }
                 }
             }
@@ -263,14 +271,14 @@ abstract class Model
 		FROM {$table}
 		LEFT JOIN {$this->getTable()}
 		ON {$table}.{$foreignKey} = " .
-                $this->getTable() .
-                '.' .
-                $this->primaryKey .
-                ' WHERE ' .
-                $this->getTable() .
-                '.' .
-                $this->primaryKey .
-                " = ? LIMIT 1
+            $this->getTable() .
+            '.' .
+            $this->primaryKey .
+            ' WHERE ' .
+            $this->getTable() .
+            '.' .
+            $this->primaryKey .
+            " = ? LIMIT 1
 		",
             [$this->{$this->primaryKey}],
             $model,
@@ -281,11 +289,11 @@ abstract class Model
     public function with(string $relation, array $properties = [])
     {
         $instance = $this->{$relation};
-        if (!is_array($instance)) {
-            if (!$properties) {
+        if(!is_array($instance)){
+            if(!$properties){
                 foreach ($instance as $key => $value) {
-                    if (!in_array($key, [$instance->getPrimaryKey()])) {
-                        if (property_exists($this, $key)) {
+                    if(!in_array($key, [$instance->getPrimaryKey()])){
+                        if(property_exists($this, $key)){
                             $this->{"{$relation}_{$key}"} = $value;
                         } else {
                             $this->{$key} = $value;
@@ -294,7 +302,7 @@ abstract class Model
                 }
             } else {
                 foreach ($properties as $property) {
-                    if (property_exists($this, $property)) {
+                    if(property_exists($this, $property)){
                         $this->{"{$relation}_{$property}"} = $instance->{$property};
                     } else {
                         $this->{$property} = $instance->{$property};
@@ -302,7 +310,7 @@ abstract class Model
                 }
             }
         } else {
-            if ($properties) {
+            if($properties){
                 foreach ($instance as $key => $model) {
                     $instance[$key] = new stdClass();
                     foreach ($properties as $property) {
@@ -319,9 +327,8 @@ abstract class Model
     {
         $keys = [];
         $values = [];
-        if (isset($data['updated_at'])) {
-            $data['updated_at'] = date('Y-m-d H:i:s');
-        }
+        $data = self::setUpdate($data);
+        $data = self::filterColumns($data);
         foreach ($data as $k => $v) {
             $keys[] = sprintf('%s = ?', $k);
             $values[] = $v;
@@ -343,9 +350,8 @@ abstract class Model
     {
         $keys = [];
         $values = [];
-        if (isset($data['updated_at'])) {
-            $data['updated_at'] = date('Y-m-d H:i:s');
-        }
+        $data = self::setUpdate($data);
+        $data = self::filterColumns($data);
         foreach ($data as $k => $v) {
             $keys[] = sprintf('%s = ?', $k);
             $values[] = $v;
@@ -366,13 +372,62 @@ abstract class Model
     public function attach($table, array $data)
     {
         $data[$this->primaryKey] = $this->{$this->primaryKey};
+        $data = self::setDatetime($data);
+        $data = self::filterColumns($data);
         return self::create($data, $table);
+    }
+
+    private static function getColumns()
+    {
+        return array_map(function ($column) {
+            return $column['Field'];
+        }, MysqlDatabase::query("SHOW COLUMNS FROM " . self::getCurrentModel()->getTable()));
+    }
+
+    private static function filterColumns(array $data)
+    {
+        $columns = self::getColumns();
+        $filteredData = [];
+        foreach ($columns as $key => $column) {
+            $filteredData[$column] = $data[$column] ?? null;
+        }
+        return array_filter($filteredData, function ($data) {
+            return $data;
+        });
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public static function setDatetime(array $data): array
+    {
+        if(!empty(self::getCurrentModel()->datetimes)){
+            foreach (self::getCurrentModel()->datetimes as $key => $datetime) {
+                if(in_array($key, ['creation', 'update'])){
+                    $data[$datetime] = date('Y-m-d H:i:s');
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public static function setUpdate(array $data): array
+    {
+        if(!empty(self::getCurrentModel()->datetimes) && isset(self::getCurrentModel()->datetimes['update'])){
+            $data[self::getCurrentModel()->datetimes['update']] = date('Y-m-d H:i:s');
+        }
+        return $data;
     }
 
     public function __get($key)
     {
-        if (empty($this->$key)) {
-            if (method_exists($this, 'get' . ucfirst($key))) {
+        if(empty($this->$key)){
+            if(method_exists($this, 'get' . ucfirst($key))){
                 return $this->{'get' . ucfirst($key)}();
             }
             return $this->$key();

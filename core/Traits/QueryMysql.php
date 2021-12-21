@@ -19,7 +19,7 @@ use Core\QueryBuilderMysql;
  * @method static array map(string $key, $value = null)
  * @method static array get()
  * @method static array toArray()
- * @method static Core\Model last()
+ * @method static \Core\Model|bool last()
  * @method static string stringify()
  *
  * @see \Core\QueryBuilderMysql

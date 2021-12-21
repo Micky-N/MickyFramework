@@ -47,6 +47,9 @@
                     @endguest
                     @auth
                         <li class="mr-3">
+                            <p>{{ auth()->username }}</p>
+                        </li>
+                        <li class="mr-3">
                             <a class="btn btn-success" href="{{ route('admin.products.index') }}">Admin</a>
                         </li>
                         <li class="">
@@ -58,11 +61,6 @@
         </nav>
     </header>
     <main role="main" class="flex-shrink-0">
-        @error
-            <div class="alert alert-danger container">
-                <p>error</p>
-            </div>
-        @enderror
         <div class="container">
             <div class="container my-5">
                 <!-- Toutes les vues seront dans cette variable -->

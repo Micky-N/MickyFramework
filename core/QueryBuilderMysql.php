@@ -150,15 +150,16 @@ class QueryBuilderMysql
     }
 
     /**
-     * Récupere les données du champ $key 
-     * sous forme de tableau 
+     * Récupere les données du champ $key
+     * sous forme de tableau
      * @param mixed $key
+     * @param array $query
      * @return array
      */
     private function mapping($key, array $query = []): array
     {
         $keymap = array_map(function ($km) use ($key) {
-            if(is_string($key)){
+            if (is_string($key)) {
                 return $km[$key];
             }
             $map = [];
@@ -233,27 +234,27 @@ class QueryBuilderMysql
 
     /**
      * Récupere les enregistrement
-     * @return array
+     * @return array|bool
      */
-    public function get(): array
+    public function get()
     {
         return MysqlDatabase::query($this->stringify(), get_class($this->instance));
     }
 
     /**
      * Récupere les enregistrement
-     * @return array
+     * @return array|bool
      */
-    public function toArray(): array
+    public function toArray()
     {
         return MysqlDatabase::query($this->stringify());
     }
 
     /**
      * Recupere le premier enregistrement de la requête
-     * @return Model
+     * @return Model|bool
      */
-    public function first(): Model
+    public function first()
     {
         $this->limit(1);
         return MysqlDatabase::query($this->stringify(), get_class($this->instance), true);
@@ -261,9 +262,9 @@ class QueryBuilderMysql
 
     /**
      * Recupere le dernier enregistrement de la requête
-     * @return Model
+     * @return Model|bool
      */
-    public function last(): Model
+    public function last()
     {
         $this->limit(1);
         $this->orderBy($this->instance->getPrimaryKey());
@@ -291,18 +292,5 @@ class QueryBuilderMysql
     public function getInstance(): Model
     {
         return $this->instance;
-    }
-
-    /**
-     * @param array $data
-     * @param int|null $dateInt
-     * @return array
-     */
-    public function setDatetime(array $data, int $dateInt = null): array
-    {
-        $date = is_null($dateInt) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $dateInt);
-        $data['created_at'] = $date;
-        $data['updated_at'] = $date;
-        return $data;
     }
 }

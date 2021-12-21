@@ -6,7 +6,7 @@ use Core\Controller;
 use Core\Facades\View;
 use Core\Facades\Route;
 use App\Models\Category;
-
+use Core\Validate\Validator;
 
 class CategoryController extends Controller
 {

@@ -23,7 +23,7 @@ class App
 
     public static function Providers(string $key = '')
     {
-        $provider = include (defined('ROOT') ? ROOT : './') . 'core/Provider.php';
+        $provider = include (defined('ROOT') ? ROOT : './') . 'bootstrap/Provider.php';
         return $key && isset($key) ? $provider[$key] : $provider;
     }
 

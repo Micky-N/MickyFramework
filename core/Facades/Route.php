@@ -15,9 +15,12 @@ use Core\Route as CoreRoute;
  * @method static string generateUrlByName(string $routeName, array $params = [])
  * @method static bool|string currentRoute(string $route = '')
  * @method static void run(\Psr\Http\Message\ServerRequestInterface $request)
- * @method static void redirectName(string $name)
- * @method static void redirect(string $url)
- * @method static void back()
+ * @method static \Core\Route redirectName(string $name)
+ * @method static \Core\Route redirect(string $url)
+ * @method static \Core\Route withError(array $errors)
+ * @method static \Core\Route withSuccess(array $success)
+ * @method static \Core\Route with(array $messages)
+ * @method static \Core\Route back()
  * @method static array toArray()
  *
  * @see \Core\Route

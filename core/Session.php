@@ -8,11 +8,9 @@ class Session
 {
 
     const FLASH = 'FLASH_MESSAGES';
-
     const FLASH_ERROR = 'error';
-    const FLASH_WARNING = 'warning';
-    const FLASH_INFO = 'info';
     const FLASH_SUCCESS = 'success';
+    const FLASH_MESSAGE = 'message';
 
     /**
      * Assure que la session est démarré
@@ -40,18 +38,38 @@ class Session
         unset($_SESSION[$key]);
     }
 
-    public function setFlashMessage(string $type, string $name, string $message): void
+    public function setFlashMessageOnType(string $type, string $name, $message): void
     {
-        // remove existing message with the name
         if (isset($_SESSION[self::FLASH][$type][$name])) {
             unset($_SESSION[self::FLASH][$type][$name]);
         }
-        // add the message to the session
-        $_SESSION[self::FLASH][$type][$name] = ['message' => $message];
+        $_SESSION[self::FLASH][$type][$name] = $message;
+    }
+
+    /**
+     * @param string $type
+     * 
+     * @return array|void
+     */
+    public function getFlashMessagesByType(string $type)
+    {
+        if (!isset($_SESSION[self::FLASH][$type])) {
+            return;
+        }
+        $flashType = $_SESSION[self::FLASH][$type];
+        unset($_SESSION[self::FLASH][$type]);
+        return $flashType;
     }
 
     public function getAll()
     {
         return $_SESSION;
+    }
+
+    public function getConstant($const)
+    {
+        if(defined("self::$const")){
+            return constant("self::$const");
+        }
     }
 }

@@ -52,7 +52,8 @@ class Rules
                 return $subject;
             }, 'le champ %s doit être d\'au plus %s'),
             'confirmed' => new Rule(function (string $field, string $subject) {
-                if (!isset($this->data[$field]) || $this->data[$field] !== $subject) {
+                $field = $this->testField($field);
+                if ($field !== $subject) {
                     return false;
                 }
                 return $subject;
@@ -73,7 +74,7 @@ class Rules
             }, 'le champ %s doit etre different du champ %s'),
             'beforeDate' => new Rule(function (string $field, string $subject) {
                 if ($field == 'now') {
-                    $field = "Y-m-d H:i:s";
+                    $field = "Y-m-d";
                 }
                 $field = $this->testField($field);
                 if (date($field) < date($subject)) {
