@@ -2,7 +2,8 @@
 
 namespace Core\Interfaces;
 
-interface DatabaseInterface {
+interface DatabaseInterface
+{
 
     /**
      * Renvoi une connection 
