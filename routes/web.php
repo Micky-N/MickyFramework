@@ -9,7 +9,7 @@ use App\Http\Controllers\UserController;
 
 
 // HOMEPAGE
-Route::get('/', [HomeController::class, 'index'])->middleware('auth')->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 // APPLICATION CRUD
 Route::crud('categories', CategoryController::class);

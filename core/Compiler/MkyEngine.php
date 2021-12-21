@@ -12,7 +12,6 @@ class MkyEngine
     private const VIEW_SUFFIX = '.mky';
     private const CACHE_SUFFIX = '.cache.php';
     private const ECHO = ['{{', '}}'];
-    private const HTML = ['{{', '}}'];
     private array $config;
     /**
      * @var null|string|false
@@ -103,7 +102,7 @@ class MkyEngine
 
     public function parseVariables(): void
     {
-        $this->view = preg_replace_callback('/{{(.*?)}}/', function ($variable) {
+        $this->view = preg_replace_callback('/'.self::ECHO[0].'(.*?)'.self::ECHO[1].'/', function ($variable) {
             return "<?=" . trim($variable[1]) . "?>";
         }, $this->view);
     }
