@@ -17,12 +17,20 @@ class Event implements EventInterface
     protected $target;
     protected array $params = [];
     private bool $propagationStopped = false;
+    private array $actions;
 
 
-    public function __construct($target, array $params)
+    /**
+     * Event constructor.
+     * @param $target
+     * @param array $actions
+     * @param array $params
+     */
+    public function __construct($target, array $actions , array $params = [])
     {
         $this->target = $target;
         $this->params = $params;
+        $this->actions = $actions;
     }
 
     /**

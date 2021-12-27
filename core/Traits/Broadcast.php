@@ -5,16 +5,19 @@ namespace Core\Traits;
 
 
 use Core\App;
+use Core\Interfaces\NotificationInterface;
 use Exception;
 use ReflectionClass;
 
-trait Dispatcher
+trait Broadcast
 {
-
-    public static function dispatch($target = null, array $actions = [], array $params = [])
+    public static function notify($target = null, array $actions = [], array $params = [])
     {
-        $class = new ReflectionClass(get_called_class());
-        $event = $class->newInstance($target, $actions, $params);
+        $notificationRef = new ReflectionClass(App::Providers('notification'));
+        $notification = $notificationRef->newInstance();
+        if(!($notification instanceof NotificationInterface)){
+            throw new Exception(sprintf("La classe %s doit implémenter l'interface %s", $notificationRef->getName(), NotificationInterface::class));
+        }
         if(!is_null(App::getListeners($class->getName()))){
             foreach ($actions as $action) {
                 $listener = App::getListenerActions($class->getName(), $action);

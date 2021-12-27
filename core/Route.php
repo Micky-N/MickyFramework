@@ -12,9 +12,9 @@ class Route
     /**
      * @var Router[]
      */
-    private array $routes;
+    private $routes;
 
-    public function __construct($routes = [])
+    public function __construct(array $routes = [])
     {
         $this->routes = $routes;
     }
@@ -36,7 +36,7 @@ class Route
      * @param array $action
      * @return Router
      */
-    public function post(string $path, array $action): Router
+    public function post(string $path, $action): Router
     {
         $route = new Router($path, $action);
         $this->routes['POST'][] = $route;

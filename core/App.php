@@ -117,13 +117,21 @@ class App
 
     /**
      * @param string $event
-     * @param string $listener
+     * @param string $action
      * @return ListenerInterface|null
      */
-    public static function getListener(string $event, string $listener)
+    public static function getListenerActions(string $event, string $action)
     {
-        if(isset(self::$events[$event]) && isset(self::$events[$event][$listener])){
-            return self::$events[$event][$listener];
+        if(isset(self::$events[$event]) && isset(self::$events[$event][$action])){
+            return self::$events[$event][$action];
+        }
+        return null;
+    }
+
+    public static function getAlias(string $key)
+    {
+        if(isset(self::Providers('alias')[$key])){
+            return self::Providers('alias')[$key];
         }
         return null;
     }

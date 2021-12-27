@@ -47,7 +47,7 @@
                     @endguest
                     @auth
                         <li class="mr-3">
-                            <p>{{ auth()->username }}</p>
+                            <a class="btn btn-outline-dark">{{ auth()->username }}</a>
                         </li>
                         <li class="mr-3">
                             <a class="btn btn-success" href="{{ route('admin.products.index') }}">Admin</a>
@@ -86,7 +86,13 @@ src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-A
 </script>
 <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+<script>
+    var env = {{ json_encode($_ENV); }}
+</script>
+@auth
 <script src="{{ assets('js/script.js') }}"></script>
+@endauth
 @yield('js')
 
 </html>

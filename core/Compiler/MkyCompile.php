@@ -70,6 +70,8 @@ class MkyCompile
             ]),
             'if' => new MkyDirective(['if', 'elseif', 'else', 'endif'], [
                 function ($expression) {
+                    dump($expression);
+                    
                     return '<?php if(' . $expression . '): ?>';
                 },
                 function ($expression) {

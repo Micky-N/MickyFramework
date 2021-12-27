@@ -4,7 +4,7 @@
 if(!function_exists('assets')){
     function assets($path)
     {
-        $newPath = (defined('ROOT') ? ROOT : './') . 'public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path;
+        $newPath = "https://mickyframework.loc/" . 'public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path;
         $newPath = str_replace('\\', '/', $newPath);
         return $newPath;
     }

@@ -3,11 +3,15 @@
 namespace Core;
 
 use Psr\Http\Message\ServerRequestInterface;
+use function PHPUnit\Framework\callback;
 
 class Router
 {
     private string $path;
-    private array $action;
+    /**
+     * @var array|callable
+     */
+    private $action;
     private string $name;
     /**
      * @var string|array
@@ -17,9 +21,9 @@ class Router
 
     /**
      * @param string $path
-     * @param array $action
+     * @param array|callable $action
      */
-    public function __construct(string $path, array $action)
+    public function __construct(string $path, $action)
     {
         $this->path = '/' . trim($path, '/');
         $this->action = $action;
@@ -42,10 +46,14 @@ class Router
         if($request->getParsedBody()){
             $params[] = $request->getParsedBody();
         }
-        $controller = new $this->action[0]();
-        $method = $this->action[1];
-        $this->routesDebugBar($request, $params, $controller, $method);
-        return call_user_func_array([$controller, $method], $params);
+        if(is_array($this->action)){
+            $controller = new $this->action[0]();
+            $method = $this->action[1];
+            $this->routesDebugBar($request, $params, $controller, $method);
+            return call_user_func_array([$controller, $method], $params);
+        }else if(is_callable($this->action)){
+            return call_user_func_array($this->action, $params);
+        }
     }
 
     public function match(ServerRequestInterface $request)

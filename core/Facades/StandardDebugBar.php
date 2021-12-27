@@ -7,7 +7,7 @@ use Core\StandardDebugBar as CoreStandardDebugBar;
 
 
 /**
- * @method static \Core\StandardDebugBar addMessage(string $collector, string $message, $type = 'info')
+ * @method static \Core\StandardDebugBar addMessage(string $collector, $message, $type = 'info')
  * @method static string|null render()
  * @method static string|null renderhead()
  *

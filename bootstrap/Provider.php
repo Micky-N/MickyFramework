@@ -10,8 +10,12 @@ return [
 	    \App\Voters\RoleVoter::class,
     ],
     'events' => [
-        \App\Events\UpdateCategoryEvent::class => [
-            \App\Listeners\UpdateCategoryListener::class
+        \App\Events\CategoryEvent::class => [
+            'update' => \App\Listeners\UpdateCategoryListener::class,
+            'test' => \App\Listeners\TestCategoryListener::class
         ]
+    ],
+    'alias' => [
+        'notification' => \Core\WebPushNotification::class
     ]
 ];

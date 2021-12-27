@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CategoryEvent;
+use App\Models\User;
+use App\Notifications\CategoryNotification;
 use Core\Controller;
 use Core\Facades\View;
 use Core\Facades\Route;
@@ -40,7 +43,8 @@ class CategoryController extends Controller
 
     public function update($category, array $data)
     {
-        Category::update($category, $data);
+        $update_category = Category::update($category, $data);
+        User::find(7)->notify(new CategoryNotification($update_category));
         return Route::redirectName('categories.index');
     }
     

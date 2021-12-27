@@ -6,7 +6,7 @@ namespace App\Events;
 
 use Core\Event;
 
-class UpdateCategoryEvent extends Event
+class CategoryEvent extends Event
 {
 
 }
