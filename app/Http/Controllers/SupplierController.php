@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\SupplierNotification;
 use Core\Controller;
+use Core\Facades\Permission;
 use Core\Facades\View;
 use Core\Facades\Route;
 use App\Models\Supplier;
+use Core\Notification;
 
 
 class SupplierController extends Controller
 {
-    
+
     public function index()
     {
         $suppliers = Supplier::all();
@@ -19,7 +23,6 @@ class SupplierController extends Controller
 
     public function show($supplier)
     {
-        \Core\Facades\Permission::can('admin');
         $supplier = Supplier::find($supplier);
         return View::render('suppliers.show', compact('supplier'));
     }
@@ -42,10 +45,11 @@ class SupplierController extends Controller
 
     public function update($supplier, array $data)
     {
-        Supplier::update($supplier, $data);
+        $supplier = Supplier::update($supplier, $data);
+        Notification::send(User::all(), new SupplierNotification($supplier));
         return Route::redirectName('suppliers.index');
     }
-    
+
     public function delete($supplier)
     {
         Supplier::delete($supplier);

@@ -9,6 +9,7 @@ use Core\Controller;
 use Core\Facades\View;
 use Core\Facades\Route;
 use App\Models\Category;
+use Core\Notification;
 
 class CategoryController extends Controller
 {
@@ -44,7 +45,7 @@ class CategoryController extends Controller
     public function update($category, array $data)
     {
         $update_category = Category::update($category, $data);
-        User::find(7)->notify(new CategoryNotification($update_category));
+        Notification::send(User::all(), new CategoryNotification($update_category));
         return Route::redirectName('categories.index');
     }
     

@@ -33,22 +33,24 @@ class WebPushNotification
     public function send($notifiable, array $message): void
     {
         $message = json_encode($message);
-        $subscriber = Notifiables::where('notifiable_id', $notifiable->{$notifiable->getPrimaryKey()})->first();
-        $subscription = Subscription::create([
-            "endpoint" => $subscriber->endpoint,
-            "keys" => [
-                "p256dh" => $subscriber->p256dh,
-                "auth" => $subscriber->auth,
-            ]
-        ]);
-        $this->webPush->queueNotification($subscription, $message);
+        $subscriber = $notifiable->webPushUserId;
+        if(!empty($subscriber)){
+            $subscription = Subscription::create([
+                "endpoint" => $subscriber->endpoint,
+                "keys" => [
+                    "p256dh" => $subscriber->p256dh,
+                    "auth" => $subscriber->auth,
+                ]
+            ]);
+            $this->webPush->queueNotification($subscription, $message);
 
-        foreach ($this->webPush->flush() as $report) {
-            $endpoint = $report->getRequest()->getUri()->__toString();
+            foreach ($this->webPush->flush() as $report) {
+                $endpoint = $report->getRequest()->getUri()->__toString();
 
-            if($report->isSuccess()){
-            } else {
-                echo sprintf("message failed for %s: %s.<br>", $endpoint, $report->getReason());
+                if($report->isSuccess()){
+                } else {
+                    echo sprintf("message failed for %s: %s.<br>", $endpoint, $report->getReason());
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ return [
         ]
     ],
     'alias' => [
-        'notification' => \Core\WebPushNotification::class
+        'webPush' => \Core\WebPushNotification::class,
+        'beams' => \Core\PusherBeams::class
     ]
 ];

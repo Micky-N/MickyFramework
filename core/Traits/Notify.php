@@ -15,8 +15,7 @@ trait Notify
         foreach ($notification->via($this) as $via){
             $class = new \ReflectionClass(App::getAlias($via));
             $message = $notification->{'to'.ucfirst($via)}($this);
-            $newInstance = $class->newInstance();
-            call_user_func_array([$newInstance, 'send'], [$this, $message]);
+            call_user_func_array([$class->newInstance(), 'send'], [$this, $message]);
         }
     }
 }

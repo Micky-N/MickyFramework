@@ -18,9 +18,14 @@ class User extends Model
         return sprintf("%s %s", $this->first_name, $this->last_name);
     }
 
-    public function notifiable()
+    public function webPushUserId()
     {
         return $this->hasOne(Notifiables::class, 'notifiable_id');
+    }
+
+    public function beamsUserId()
+    {
+        return "App.Models.User.{$this->id}";
     }
 
     public static function create(array $data, string $table = '')

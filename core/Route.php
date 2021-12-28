@@ -12,7 +12,7 @@ class Route
     /**
      * @var Router[]
      */
-    private $routes;
+    private array $routes = [];
 
     public function __construct(array $routes = [])
     {
@@ -26,9 +26,9 @@ class Route
      */
     public function get(string $path, $action): Router
     {
-        $route = new Router($path, $action);
-        $this->routes['GET'][] = $route;
-        return $route;
+        $router = new Router($path, $action);
+        $this->routes['GET'][] = $router;
+        return $router;
     }
 
     /**
@@ -38,9 +38,9 @@ class Route
      */
     public function post(string $path, $action): Router
     {
-        $route = new Router($path, $action);
-        $this->routes['POST'][] = $route;
-        return $route;
+        $router = new Router($path, $action);
+        $this->routes['POST'][] = $router;
+        return $router;
     }
 
     /**
@@ -252,9 +252,9 @@ class Route
      */
     public function run(ServerRequestInterface $request)
     {
-        foreach ($this->routes[$request->getMethod()] as $route) {
-            if ($route->match($request)) {
-                return $route->execute($request);
+        foreach ($this->routes[$request->getMethod()] as $router) {
+            if ($router->match($request)) {
+                return $router->execute($request);
             }
         }
         throw new Exception("La route {$request->getUri()->getPath()} n'existe pas.");

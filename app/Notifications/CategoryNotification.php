@@ -22,10 +22,10 @@ class CategoryNotification implements NotificationInterface
 
     public function via($notifiable)
     {
-        return ['notification'];
+        return ['webPush'];
     }
 
-    public function toNotification($notifiable)
+    public function toWebPush($notifiable)
     {
         return WebPushMessage::create()->title('Catégorie Modifiée')
             ->icon('http://pngimg.com/uploads/php/php_PNG49.png')
