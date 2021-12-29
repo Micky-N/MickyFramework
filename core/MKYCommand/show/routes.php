@@ -1,3 +1,8 @@
+<?php
+
+require_once 'vendor/autoload.php';
+use Core\MKYCommand\MickyCLI;
+
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
     $request = isset($cli['request']) ? $cli['request'] : null;

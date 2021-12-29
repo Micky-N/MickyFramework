@@ -1,10 +1,15 @@
+<?php
+
+require_once 'vendor/autoload.php';
+use Core\MKYCommand\MickyCLI;
+
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
     $options = $cli['create'];
     $name = ucfirst($cli['name']);
     $table = !empty($cli['table']) ? $cli['table'] : null;
     $pk = !empty($cli['pk']) ? $cli['pk'] : null;
-    $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$options.mky");
+    $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$options.".MickyCLI::EXTENSION);
     $template = str_replace('!name', $name, $template);
     $template = str_replace('!table', $table ? "protected string \$table = '$table';\n\t" : '' , $template);
     $template = str_replace('!pk', $pk ? "protected string \$primaryKey = '$pk';" : '', $template);

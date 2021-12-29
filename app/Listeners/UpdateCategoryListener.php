@@ -5,10 +5,15 @@ namespace App\Listeners;
 
 
 use Core\Interfaces\EventInterface;
-use Core\Listener;
+use Core\Interfaces\ListenerInterface;
 
-class UpdateCategoryListener extends Listener
+class UpdateCategoryListener implements ListenerInterface
 {
+
+    public function __construct()
+    {
+    }
+
     public function handle(EventInterface $event)
     {
 

@@ -1,12 +1,9 @@
-<?php
-
-
 namespace App\Events;
 
 use Core\Interfaces\EventInterface;
 use Core\Traits\Dispatcher;
 
-class CategoryEvent implements EventInterface
+class !name implements EventInterface
 {
     use Dispatcher;
 

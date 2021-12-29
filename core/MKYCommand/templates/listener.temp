@@ -1,23 +1,18 @@
-<?php
+namespace App\Listeners;
 
-
-namespace Core;
 
 use Core\Interfaces\EventInterface;
 use Core\Interfaces\ListenerInterface;
 
-class Listener implements ListenerInterface
+class !name implements ListenerInterface
 {
 
     public function __construct()
     {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function handle(EventInterface $event)
     {
-        // TODO: Implement handle() method.
+
     }
 }

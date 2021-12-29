@@ -1,14 +1,19 @@
+<?php
+
+require_once 'vendor/autoload.php';
+use Core\MKYCommand\MickyCLI;
+
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
     $option = $cli['create'];
     $path = isset($cli['path']) ? ucfirst($cli['path']) : null;
     $controllerName = ucfirst($cli['name']);
-    $crud = isset($cli['crud']) ? file_get_contents(MickyCLI::$BASE_MKY."/templates/controller/crud.mky") : null;
+    $crud = isset($cli['crud']) ? file_get_contents(MickyCLI::BASE_MKY."/templates/controller/crud.".MickyCLI::EXTENSION) : null;
     $model = isset($cli['model']) ? $cli['model'] : null;
     if (!strpos($controllerName, 'Controller')) {
         throw new Exception("Le controller $controllerName doit avoir un suffix Controller.");
     }
-    $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
+    $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
     $template = str_replace('!name', $controllerName, $template);
     $template = str_replace('!path', $path ? "\\".ucfirst($path) : '', $template);
     $template = str_replace('!model', $model ? "use App\\Models\\".ucfirst($model).";" : '', $template);

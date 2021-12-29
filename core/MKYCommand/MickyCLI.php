@@ -7,7 +7,9 @@ use Exception;
 class MickyCLI
 {
 
-    public static string $BASE_MKY = 'core/MKYCommand';
+    const BASE_MKY = 'core/MKYCommand';
+
+    const EXTENSION = 'temp';
 
     private array $cli = [];
 
@@ -39,6 +41,10 @@ class MickyCLI
         'permission' => 'required',
         'cache' => 'required',
         'clear' => 'novalue',
+        'notification' => 'required',
+        'via' => 'required',
+        'event' => 'required',
+        'listener' => 'required',
     ];
 
     private static array $required = [
@@ -72,6 +78,16 @@ class MickyCLI
                 'name' => 'required',
                 'model' => 'required',
                 'action' => 'optional'
+            ],
+            'notification' => [
+                'name' => 'required',
+                'via' => 'required'
+            ],
+            'event' => [
+                'name' => 'required'
+            ],
+            'listener' => [
+                'name' => 'required'
             ]
         ],
         'show' => [
@@ -202,7 +218,7 @@ class MickyCLI
     public function executeMKY()
     {
         $script = $this->sendOptions();
-        exec("php " . self::$BASE_MKY . "/exec.php $script", $this->output, $this->retval);
+        exec("php " . self::BASE_MKY . "/exec.php $script", $this->output, $this->retval);
         echo "\n-------------------------  Execution: $script  ------------------------\n\n";
         echo join("\n", $this->output);
     }
@@ -219,7 +235,7 @@ class MickyCLI
             foreach ($this->cli as $cli => $option) {
                 if (array_key_exists($cli, self::$longOptions)) {
                     if (array_key_exists($cli, self::$required) && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null) {
-                        $compile = file_get_contents(self::$BASE_MKY . "/$cli/$option.mky");
+                        $compile = file_get_contents(self::BASE_MKY . "/$cli/$option.php");
                         break;
                     }
                 } else {
@@ -232,29 +248,11 @@ class MickyCLI
         }
     }
 
-
-    // DEBUT COMPILE
-
-    public function start_mky()
-    {
-        return "<?php\n";
-    }
-
-    public function require_mky()
-    {
-        return "require_once 'vendor/autoload.php';\nuse Core\MKYCommand\MickyCLI;\n";
-    }
-
     public function compileExec(string $compile = '')
     {
-        $exec = fopen(self::$BASE_MKY . "/exec.php", "w");
-        if ($compile) {
-            $compile = $this->start_mky() . $this->require_mky() . $compile;
-        }
-        fwrite($exec, $compile ? $compile : "");
+        $exec = fopen(self::BASE_MKY . "/exec.php", "w");
+        fwrite($exec, $compile ?? "");
     }
-
-    // FIN COMPILE
 
     public static function table($data)
     {

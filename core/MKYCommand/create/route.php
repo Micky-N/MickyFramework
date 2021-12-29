@@ -1,3 +1,8 @@
+<?php
+
+require_once 'vendor/autoload.php';
+use Core\MKYCommand\MickyCLI;
+
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
     $option = $cli['create'];
@@ -10,7 +15,7 @@ if (php_sapi_name() === "cli") {
         }
         $url = $cli['url'];
         $controller = $cli['controller'];
-        if(stripos($controller, 'Controller') == false){
+        if(stripos($controller, 'Controller') === false){
             throw new \Exception("Le controller doit avoir un suffix Controller.");
         }
         $method = $cli['method'];
@@ -24,7 +29,7 @@ if (php_sapi_name() === "cli") {
                 $routename = $routename == false ? $plural[strtolower($name)].".".$method : $routename;
             }
         }
-        $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/$option.mky");
+        $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
         $template = str_replace('!request', $request, $template);
         $template = str_replace('!url', "'$url'", $template);
         $template = str_replace('!controller', "\App\\Http\\Controllers\\".$controller."::class", $template);
@@ -37,7 +42,7 @@ if (php_sapi_name() === "cli") {
             throw new \Exception("Le controller doit avoir un suffix Controller.");
         }
         $namespace = $cli['namespace'];
-        $template = file_get_contents(MickyCLI::$BASE_MKY."/templates/route/crud.mky");
+        $template = file_get_contents(MickyCLI::BASE_MKY."/templates/route/crud.".MickyCLI::EXTENSION);
         $template = str_replace('!controller', "\App\\Http\\Controllers\\".$controller."::class", $template);
         $template = str_replace('!namespace', $namespace, $template);
     }
@@ -50,5 +55,5 @@ if (php_sapi_name() === "cli") {
         $model = fopen("routes/$path.php", "a") or die("Impossible d'ouvre le fichier $routename !");
         fwrite($model, "\n".$template);
     }
-    print("La route a été créé !");
+    print("La route $routename a été créé !");
 }

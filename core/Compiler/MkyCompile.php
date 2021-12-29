@@ -28,7 +28,7 @@ class MkyCompile
             'style' => new MkyDirective(['style', 'endstyle'], [
                 function ($href = null) {
                     if($href){
-                        return '<link rel="stylesheet" type="text/css" href=' . $href . '/>';
+                        return '<link rel="stylesheet" type="text/css" href=' . $href . '>';
                     }
                     return '<style>';
                 },
