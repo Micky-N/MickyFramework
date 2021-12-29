@@ -23,12 +23,12 @@ class NotificationController extends Controller
                     'auth' => $data['keys']['auth'],
                     'p256dh' => $data['keys']['p256dh'],
                 ];
-                $already = !is_null(auth()->notifiable);
+                $already = !is_null(auth()->webPushUser);
                 if($already){
                     unset($add['notifiable_id']);
-                    $query = auth()->notifiable->modify($add);
+                    $query = auth()->webPushUser->modify($add);
                     if($query !== false){
-                        echo json_encode(['status' => 'ok', 'message' => 'already subscribed']);
+                        echo json_encode(['status' => 'ok', 'message' => 'update subscribed']);
                         die();
                     } else {
                         echo json_encode(['status' => 'error', 'message' => 'Try again']);

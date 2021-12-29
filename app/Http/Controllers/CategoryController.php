@@ -45,7 +45,7 @@ class CategoryController extends Controller
     public function update($category, array $data)
     {
         $update_category = Category::update($category, $data);
-        Notification::send(User::all(), new CategoryNotification($update_category));
+        Notification::send(User::all(), new CategoryNotification($update_category, 'create'));
         return Route::redirectName('categories.index');
     }
     

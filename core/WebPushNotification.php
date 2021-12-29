@@ -33,8 +33,8 @@ class WebPushNotification
     public function send($notifiable, array $message): void
     {
         $message = json_encode($message);
-        $subscriber = $notifiable->webPushUserId;
-        if(!empty($subscriber)){
+        $subscriber = $notifiable->routeNotificationFor('webPush');
+        if($subscriber !== false){
             $subscription = Subscription::create([
                 "endpoint" => $subscriber->endpoint,
                 "keys" => [

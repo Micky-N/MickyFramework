@@ -18,14 +18,22 @@ class User extends Model
         return sprintf("%s %s", $this->first_name, $this->last_name);
     }
 
-    public function webPushUserId()
+    public function webPushUser()
     {
         return $this->hasOne(Notifiables::class, 'notifiable_id');
     }
 
-    public function beamsUserId()
+    public function routeNotificationFor(string $channel)
     {
-        return "App.Models.User.{$this->id}";
+        switch ($channel):
+            case 'beams':
+                $class = str_replace('\\', '.', get_class($this));
+                return $class . '.' . $this->id;
+                break;
+            case 'webPush':
+                return $this->webPushUser();
+                break;
+        endswitch;
     }
 
     public static function create(array $data, string $table = '')

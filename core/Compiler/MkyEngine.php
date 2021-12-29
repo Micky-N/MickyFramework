@@ -42,13 +42,13 @@ class MkyEngine
     public function view(string $viewName, array $data = [], $extends = false)
     {
         $viewPath = $this->getConfig('views') . '/' . $this->parseViewName($viewName);
-        if (!$extends) {
+        if(!$extends){
             $this->viewName = $viewName;
             $this->data = $data;
             $this->viewPath = $viewPath;
         }
 
-        if (!file_exists($viewPath)) {
+        if(!file_exists($viewPath)){
             throw new Exception(sprintf('la view %s n\'existe pas', $viewPath));
         }
 
@@ -57,19 +57,19 @@ class MkyEngine
 
 
         $cachePath = $this->getConfig('cache') . '/' . md5($this->viewName) . self::CACHE_SUFFIX;
-        if (!file_exists($cachePath)) {
+        if(!file_exists($cachePath)){
             Cache::addCache($cachePath, $this->view);
         }
 
-        if (
+        if(
             (filemtime($cachePath) < filemtime($viewPath)) ||
             (filemtime($cachePath) < filemtime($this->viewPath))
-        ) {
+        ){
             echo '<!-- cache modifié -->';
             Cache::addCache($cachePath, $this->view);
         }
 
-        if (!$extends) {
+        if(!$extends){
             ob_start();
             extract($data);
             $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
@@ -102,7 +102,7 @@ class MkyEngine
 
     public function parseVariables(): void
     {
-        $this->view = preg_replace_callback('/'.self::ECHO[0].'(.*?)'.self::ECHO[1].'/', function ($variable) {
+        $this->view = preg_replace_callback('/' . self::ECHO[0] . '(.*?)' . self::ECHO[1] . '/', function ($variable) {
             return "<?=" . trim($variable[1]) . "?>";
         }, $this->view);
     }
@@ -160,8 +160,9 @@ class MkyEngine
         foreach ($this->directives->getDirectives() as $key => $mkyDirective) {
             foreach ($mkyDirective->encode as $index => $directive) {
                 $callback = $mkyDirective->callbacks[$index];
-                $this->view = preg_replace_callback('/@' . $directive . '(\((.*?)?\))?/', function ($expression) use ($callback) {
-                    return call_user_func($callback, $expression[2] ?? null);
+                $this->view = preg_replace_callback('/\B@(@?' . $directive . '?)([ \t]*)(\( ( ([^()]+) | (?3) )* \))?/x', function ($expression) use ($callback, $directive) {
+                    $str = isset($expression[3]) ? substr($expression[3], 1, -1) : null;
+                    return call_user_func($callback, $str);
                 }, str_replace(' (', '(', $this->view));
             }
         }

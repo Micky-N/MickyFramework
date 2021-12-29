@@ -38,7 +38,7 @@
 @section('js')
     <script>
         var $table = $('#table')
-        var categories = JSON.parse('@json($categories)')
+        var categories = @json($categories)
 
         function categoriesTable($el, categories) {
             var categoriesCells = Object.keys(categories[0])

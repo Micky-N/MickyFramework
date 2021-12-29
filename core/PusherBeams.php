@@ -23,7 +23,7 @@ class PusherBeams
 
     public function send($notifiable, array $message)
     {
-       return $this->beamsClient->publishToUsers([$notifiable->beamsUserId], [
+        return $this->beamsClient->publishToUsers([$notifiable->routeNotificationFor('beams')], [
             'web' => $message
         ]);
     }

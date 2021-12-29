@@ -65,13 +65,11 @@ class MkyCompile
             ]),
             'json' => new MkyDirective(['json'], [
                 function ($expression) {
-                    return '<?= json_encode(' . $expression . ', JSON_UNESCAPED_UNICODE) ?>';
+                    return '<?= json_encode(' . $expression . ', JSON_UNESCAPED_UNICODE); ?>';
                 }
             ]),
             'if' => new MkyDirective(['if', 'elseif', 'else', 'endif'], [
                 function ($expression) {
-                    dump($expression);
-                    
                     return '<?php if(' . $expression . '): ?>';
                 },
                 function ($expression) {

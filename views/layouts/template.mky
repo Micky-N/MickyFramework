@@ -89,7 +89,8 @@ src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-A
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
 <script type="text/javascript" src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 <script>
-    var env = {{ json_encode($_ENV); }}
+    var env = @json($_ENV);
+    var auth = @json(auth())
 </script>
 @auth
 <script type="text/javascript" src="{{ assets('js/script.js') }}"></script>
