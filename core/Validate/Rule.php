@@ -17,7 +17,7 @@ class Rule
     }
 
     /**
-     * Get the value of callback
+     * Retourne la valeur du callback
      */ 
     public function getCallback()
     {
@@ -25,7 +25,7 @@ class Rule
     }
 
     /**
-     * Get the value of error
+     * Retourne la valeur de l'erreur
      */ 
     public function getErrorMessage()
     {

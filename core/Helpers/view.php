@@ -4,8 +4,7 @@
 if(!function_exists('assets')){
     function assets($path)
     {
-        $newPath = "https://mickyframework.loc/" . 'public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path;
-        $newPath = str_replace('\\', '/', $newPath);
+        $newPath = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://').$_SERVER['HTTP_HOST']."/" . 'public/' . 'assets/' . $path;
         return $newPath;
     }
 }

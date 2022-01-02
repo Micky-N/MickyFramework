@@ -8,6 +8,9 @@ use Core\Compiler\MkyEngine;
 class View
 {
     /**
+     * Affiche le rendu d'une view
+     * sur le site
+     *
      * @param string $view
      * @param array $params
      * @return string|bool

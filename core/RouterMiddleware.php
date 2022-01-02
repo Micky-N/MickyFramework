@@ -29,6 +29,12 @@ class RouterMiddleware
         $this->middlewares = $routeMiddlewares;
     }
 
+    /**
+     * Lance le contrôle des middlewares
+     *
+     * @param ServerRequestInterface $request
+     * @return mixed|ServerRequestInterface
+     */
     public function process(ServerRequestInterface $request)
     {
         if ($this->index < count($this->middlewares)) {
@@ -43,6 +49,8 @@ class RouterMiddleware
     }
 
     /**
+     * Lance le contrôle des permissions
+     *
      * @param string $middleware
      * @param array $matches
      * @return bool

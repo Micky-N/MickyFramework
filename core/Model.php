@@ -4,6 +4,8 @@ namespace Core;
 
 use Core\Traits\QueryMysql;
 use Exception;
+use ReflectionClass;
+use ReflectionException;
 use stdClass;
 
 abstract class Model
@@ -13,11 +15,21 @@ abstract class Model
     protected string $table;
     protected string $primaryKey = 'id';
     /**
+     * Stocke le champ de date pour
+     * automatiser les enregistrements
      * ['creation' => colonne création, 'update' => colonne modifié]
+     *
      * @var array
      */
     protected array $datetimes = [];
 
+    /**
+     * Récupère le nom de la table
+     * du model actuel
+     *
+     * @return string
+     * @throws Exception
+     */
     public function getTable(): string
     {
         $class = get_called_class();
@@ -32,21 +44,35 @@ abstract class Model
         return $this->table;
     }
 
+    /**
+     * Récupère le nom de la clé primaire
+     * du model actuel
+     *
+     * @return string|null
+     */
     public function getPrimaryKey()
     {
-        return $this->primaryKey;
-    }
-
-    protected static function getCurrentModel()
-    {
-        $current = get_called_class();
-        return new $current();
+        return $this->primaryKey ?? null;
     }
 
     /**
-     * Récupere l'enregistrement de l'id
+     * Récupère l'instance du model actuel
+     *
+     * @return object
+     * @throws ReflectionException
+     */
+    protected static function getCurrentModel()
+    {
+        $current = new ReflectionClass(get_called_class());
+        return $current->newInstance();
+    }
+
+    /**
+     * Récupère un enregistrement
+     *
      * @param mixed $id
      * @return self|bool
+     * @throws Exception
      */
     public static function find($id)
     {
@@ -56,11 +82,22 @@ abstract class Model
         )->first();
     }
 
+    /**
+     * Retourn tous les enregistrement
+     *
+     * @return array
+     */
     public static function all(): array
     {
         return self::get();
     }
 
+    /**
+     * Retourne le nombre d'enregistrement
+     *
+     * @return int
+     * @throws ReflectionException
+     */
     public static function count(): int
     {
         $count = self::select(
@@ -73,9 +110,13 @@ abstract class Model
     }
 
     /**
+     * Enregistrement une nouvelle donnée
+     * dans la table actuel
+     *
      * @param array $data
      * @param string $table
-     * @return \Core\Model|bool
+     * @return Model|bool
+     * @throws ReflectionException
      */
     public static function create(array $data, string $table = '')
     {
@@ -101,6 +142,15 @@ abstract class Model
         return self::last();
     }
 
+    /**
+     * Modifie un enregistrement
+     * de la table actuel
+     *
+     * @param $id
+     * @param array $data
+     * @return bool|Model
+     * @throws ReflectionException
+     */
     public static function update($id, array $data)
     {
         $keys = [];
@@ -124,7 +174,15 @@ abstract class Model
         return self::find($id);
     }
 
-    public static function delete($id)
+    /**
+     * Supprime un enregistrement
+     * de la table actuel
+     *
+     * @param $id
+     * @return array
+     * @throws ReflectionException
+     */
+    public static function delete($id): array
     {
         $statement =
             'DELETE FROM ' .
@@ -136,7 +194,14 @@ abstract class Model
         return self::all();
     }
 
-    public function deleteSelf()
+    /**
+     * Supprime l'instance actuel
+     * dans sa table
+     *
+     * @return array
+     * @throws ReflectionException
+     */
+    public function deleteSelf(): array
     {
         $statement =
             'DELETE FROM ' .
@@ -148,17 +213,33 @@ abstract class Model
         return self::all();
     }
 
-    public static function shuffleId(): int
+    /**
+     * Récupère une valeur d'une
+     * clé primaire au hasard
+     *
+     * @return string
+     * @throws ReflectionException
+     */
+    public static function shuffleId(): string
     {
         $pk = self::getCurrentModel()->getPrimaryKey();
         $ids = self::select($pk)->get();
-        return (int)$ids[array_rand($ids, 1)]->$pk;
+        return $ids[array_rand($ids, 1)]->{$pk};
     }
 
+    /**
+     * Récupère les enregistrements de
+     * la table porteuse de la clé primaire
+     *
+     * @param string $model
+     * @param string $foreignKey
+     * @return array|bool|mixed
+     * @throws ReflectionException
+     */
     public function hasMany(string $model, string $foreignKey = '')
     {
         $table = (new $model())->getTable();
-        $second = strtolower((new \ReflectionClass($this))->getShortName());
+        $second = strtolower((new ReflectionClass($this))->getShortName());
         $foreignKey = $foreignKey ?: $second . '_' . $this->primaryKey;
         return MysqlDatabase::prepare(
             "
@@ -180,10 +261,20 @@ abstract class Model
         );
     }
 
+    /**
+     * Récupère l'enregistrement de la table
+     * lié avec la table actuel par la clé étrangère
+     * @param string $model
+     * @param string $foreignKey
+     * @return array|bool|mixed
+     * @throws ReflectionException
+     * @example One to Many
+     *
+     */
     public function belongsTo(string $model, string $foreignKey = '')
     {
         $table = new $model();
-        $second = strtolower((new \ReflectionClass($table))->getShortName());
+        $second = strtolower((new ReflectionClass($table))->getShortName());
         $foreignKey = $foreignKey ?: $second . '_' . $table->primaryKey;
         return MysqlDatabase::prepare(
             "
@@ -213,10 +304,22 @@ abstract class Model
         );
     }
 
+    /**
+     * Récupère les enregistrements de la table
+     * lié avec la table actuel par la table d'association
+     * @param string $model
+     * @param string $pivot
+     * @param string $foreignKeyOne
+     * @param string $foreignKeyTwo
+     * @return array|bool|mixed
+     * @throws ReflectionException
+     * @example Many to Many
+     *
+     */
     public function belongsToMany(string $model, string $pivot = '', string $foreignKeyOne = '', string $foreignKeyTwo = '')
     {
-        $first = strtolower((new \ReflectionClass($this))->getShortName());
-        $second = strtolower((new \ReflectionClass($model))->getShortName());
+        $first = strtolower((new ReflectionClass($this))->getShortName());
+        $second = strtolower((new ReflectionClass($model))->getShortName());
         $secondInstance = new $model();
         $table = $secondInstance->getTable();
         $all = MysqlDatabase::query(
@@ -226,18 +329,17 @@ abstract class Model
             foreach ($all as $a) {
                 if(
                 strpos(
-                    $a->{'Tables_in_' . config('connection.mysql.name')},
+                    $a['Tables_in_' . config('connection.mysql.name')],
                     '_'
                 )
                 ){
                     $atest = explode(
                         '_',
-                        $a->{'Tables_in_' . config('connection.mysql.name')}
+                        $a['Tables_in_' . config('connection.mysql.name')]
                     );
                     if(in_array($first, $atest) && in_array($second, $atest)){
                         $pivot =
-                            $a->{'Tables_in_' .
-                            config('connection.mysql.name')};
+                            $a['Tables_in_' . config('connection.mysql.name')];
                     }
                 }
             }
@@ -260,10 +362,20 @@ abstract class Model
         );
     }
 
+    /**
+     * Récupère l'enregistrement de
+     * la table porteuse de la clé primaire
+     * @param string $model
+     * @param string $foreignKey
+     * @return array|bool|mixed
+     * @throws ReflectionException
+     * @example One to One
+     *
+     */
     public function hasOne(string $model, string $foreignKey = '')
     {
         $table = (new $model())->getTable();
-        $second = strtolower((new \ReflectionClass($this))->getShortName());
+        $second = strtolower((new ReflectionClass($this))->getShortName());
         $foreignKey = $foreignKey ?: $second . '_' . $this->primaryKey;
         return MysqlDatabase::prepare(
             "
@@ -286,6 +398,14 @@ abstract class Model
         );
     }
 
+    /**
+     * Récupère les données des champs
+     * séléctionnés à partir d'une relation
+     *
+     * @param string $relation
+     * @param array $properties
+     * @return $this
+     */
     public function with(string $relation, array $properties = [])
     {
         $instance = $this->{$relation};
@@ -323,6 +443,15 @@ abstract class Model
         return $this;
     }
 
+    /**
+     * Modifie l'enregistrement de l'instance
+     * actuel
+     * @param array $data
+     * @return $this
+     * @throws ReflectionException
+     * @example One to One ou self
+     *
+     */
     public function modify(array $data)
     {
         $keys = [];
@@ -346,29 +475,57 @@ abstract class Model
         return $this;
     }
 
+    /**
+     * Modifie tous les engeristrements d'une
+     * relation
+     * @param string $relation
+     * @param $id
+     * @param array $data
+     * @return $this
+     * @throws ReflectionException
+     * @example One to Many
+     *
+     */
     public function modifyMany(string $relation, $id, array $data)
     {
-        $keys = [];
-        $values = [];
-        $data = self::setUpdate($data);
-        $data = self::filterColumns($data);
-        foreach ($data as $k => $v) {
-            $keys[] = sprintf('%s = ?', $k);
-            $values[] = $v;
+        $instances = self::getCurrentModel()->{$relation};
+        $instances = !empty($instances) ? (is_array($instances) ? $instances : [$instances]) : false;
+        if($instances !== false){
+            foreach ($instances as $instance) {
+                $keys = [];
+                $values = [];
+                $data = self::setUpdate($data);
+                $data = self::filterColumns($data);
+                foreach ($data as $k => $v) {
+                    $keys[] = sprintf('%s = ?', $k);
+                    $values[] = $v;
+                }
+                $values[] = $instance->{$instance->getPrimaryKey()};
+                $statement =
+                    'UPDATE ' .
+                    $instance->getTable() .
+                    ' SET ' .
+                    implode(', ', $keys) .
+                    ' WHERE ' .
+                    $instance->getPrimaryKey() .
+                    ' = ?';
+                MysqlDatabase::prepare($statement, $values);
+            }
+            return $this;
+        } else {
+            throw new Exception(sprintf('la relation %s n\'existe pas', $relation));
         }
-        $values[] = $this->{$this->getPrimaryKey()};
-        $statement =
-            'UPDATE ' .
-            self::getCurrentModel()->getTable() .
-            ' SET ' .
-            implode(', ', $keys) .
-            ' WHERE ' .
-            self::getCurrentModel()->getPrimaryKey() .
-            ' = ?';
-        MysqlDatabase::prepare($statement, $values);
-        return $this;
     }
 
+    /**
+     * Créer un nouvel enregistrement dans
+     * la table en relation
+     *
+     * @param $table
+     * @param array $data
+     * @return bool|Model
+     * @throws ReflectionException
+     */
     public function attach($table, array $data)
     {
         $data[$this->primaryKey] = $this->{$this->primaryKey};
@@ -377,6 +534,13 @@ abstract class Model
         return self::create($data, $table);
     }
 
+    /**
+     * Récupère le nom de chaque colonne
+     * de la table
+     *
+     * @return array
+     * @throws ReflectionException
+     */
     private static function getColumns()
     {
         return array_map(function ($column) {
@@ -384,6 +548,14 @@ abstract class Model
         }, MysqlDatabase::query("SHOW COLUMNS FROM " . self::getCurrentModel()->getTable()));
     }
 
+    /**
+     * Filtre les données selon les colonnes
+     * de la table
+     *
+     * @param array $data
+     * @return array
+     * @throws ReflectionException
+     */
     private static function filterColumns(array $data)
     {
         $columns = self::getColumns();
@@ -397,8 +569,12 @@ abstract class Model
     }
 
     /**
+     * Met les champs datetimes de
+     * l'instance actuel à la date aujourd'hui
+     *
      * @param array $data
      * @return array
+     * @throws ReflectionException
      */
     public static function setDatetime(array $data): array
     {
@@ -413,8 +589,11 @@ abstract class Model
     }
 
     /**
+     * Met le champs datetimes update de
+     * l'instance actuel à la date aujourd'hui
      * @param array $data
      * @return array
+     * @throws ReflectionException
      */
     public static function setUpdate(array $data): array
     {

@@ -20,6 +20,8 @@ class Route
     }
 
     /**
+     * Inscrit la route en GET
+     *
      * @param string $path
      * @param Callable|array $action
      * @return Router
@@ -32,6 +34,7 @@ class Route
     }
 
     /**
+     * Inscrit la route en POST
      * @param string $path
      * @param array $action
      * @return Router
@@ -44,6 +47,8 @@ class Route
     }
 
     /**
+     * Retourne les routes par nom
+     *
      * @return array
      */
     public function routesByName(): array
@@ -58,6 +63,9 @@ class Route
     }
 
     /**
+     * Créé un ensemble de routes selon
+     * le model CRUD
+     *
      * @param string $namespace
      * @param string $controller
      * @param array $only
@@ -149,6 +157,9 @@ class Route
     }
 
     /**
+     * Vérifié si la route a besoin
+     * d'un paramètre
+     *
      * @param string $path
      * @return string
      * @throws Exception
@@ -171,6 +182,9 @@ class Route
     }
 
     /**
+     * Génère la url de la route
+     * par son nom
+     *
      * @param string $routeName
      * @param array $params
      * @return string
@@ -180,6 +194,7 @@ class Route
     {
         $path = '';
         $err = 0;
+        $length = 0;
         foreach ($this->routes as $method => $routes) {
             foreach ($routes as $router) {
                 if ($router->name === $routeName) {
@@ -213,8 +228,9 @@ class Route
     }
 
     /**
-     * @param string $route
+     * Retourne la route actuel
      *
+     * @param string $route
      * @return bool|string
      */
     public function currentRoute(string $route = '')
@@ -229,8 +245,9 @@ class Route
     }
 
     /**
-     * @param string $route
+     * Retourn le namespace de la route
      *
+     * @param string $route
      * @return bool
      */
     public function namespaceRoute(string $route = '')
@@ -246,6 +263,8 @@ class Route
     }
 
     /**
+     * Démarre la recherche de la route
+     *
      * @param ServerRequestInterface $request
      * @return void
      * @throws Exception
@@ -257,10 +276,12 @@ class Route
                 return $router->execute($request);
             }
         }
-        throw new Exception("La route {$request->getUri()->getPath()} n'existe pas.");
+        ErrorController::error(400, sprintf("La route %s n'existe pas", $request->getUri()->getPath()));
     }
 
     /**
+     * Redirection par url
+     *
      * @param string $url
      */
     public function redirect(string $url): void
@@ -269,6 +290,8 @@ class Route
     }
 
     /**
+     * Redirection par nom de route
+     *
      * @param string $name
      * @return Route
      * @throws Exception
@@ -280,6 +303,13 @@ class Route
         return $this;
     }
 
+    /**
+     * Inscrit un message d'erreur
+     * dans la session
+     *
+     * @param array $errors
+     * @return $this
+     */
     public function withError(array $errors): self
     {
         foreach ($errors as $name => $message) {
@@ -288,6 +318,11 @@ class Route
         return $this;
     }
 
+    /**
+     * Inscrit un message de succes
+     * @param array $success
+     * @return $this
+     */
     public function withSuccess(array $success): self
     {
         foreach ($success as $name => $message) {
@@ -296,6 +331,12 @@ class Route
         return $this;
     }
 
+    /**
+     * Inscrit un message
+     *
+     * @param array $messages
+     * @return $this
+     */
     public function with(array $messages): self
     {
         foreach ($messages as $name => $message) {
@@ -305,7 +346,8 @@ class Route
     }
 
     /**
-     *
+     * Redirection a arriere
+     * @return Route
      */
     public function back(): self
     {
@@ -314,6 +356,9 @@ class Route
     }
 
     /**
+     * Affiche les routes sont forme de tableau
+     * pour cli
+     *
      * @return array
      */
     public function toArray(): array

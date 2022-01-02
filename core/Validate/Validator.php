@@ -3,6 +3,7 @@
 namespace Core\Validate;
 
 use Core\Facades\Route;
+use Exception;
 
 class Validator
 {
@@ -23,7 +24,11 @@ class Validator
     }
 
     /**
+     * Lance la vérification de chaque point de contrôle
+     * mode instancier
+     *
      * @return bool
+     * @throws Exception
      */
     public function passed(): bool
     {
@@ -38,6 +43,16 @@ class Validator
         return true;
     }
 
+    /**
+     * Lance la vérification de chaque point de contrôle
+     * mode static avec redirection en arriere
+     * avec les erreurs si présent
+     *
+     * @param array $data
+     * @param array $rules
+     * @return array|\Core\Route
+     * @throws Exception
+     */
     public static function check(array $data, array $rules)
     {
         $rules = new Rules($data, $rules);
@@ -50,16 +65,31 @@ class Validator
         return $data;
     }
 
+    /**
+     * Retourne les données du formulaire
+     *
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * Retourne les règles saisie
+     *
+     * @return array
+     */
     public function getRules()
     {
         return $this->rules;
     }
 
+    /**
+     * Retourne les erreurs
+     *
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;

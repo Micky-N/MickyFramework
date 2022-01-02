@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use DebugBar\DataCollector\PDO\TraceablePDO;
+use Exception;
 use PDO;
 use Core\Database;
 use Core\Interfaces\DatabaseInterface;
@@ -9,6 +11,13 @@ use Core\Interfaces\DatabaseInterface;
 class MysqlDatabase extends Database implements DatabaseInterface
 {
 
+    /**
+     * Créer et récupère la connection
+     * à la base de données
+     *
+     * @return TraceablePDO|PDO
+     * @throws Exception
+     */
     public static function getConnection()
     {
         if(is_null(self::$connection) || !method_exists(self::$connection, 'getAttribute') || self::$connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql'){
@@ -18,12 +27,21 @@ class MysqlDatabase extends Database implements DatabaseInterface
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$connection = $pdo;
             if(config('env') == 'local'){
-                self::$connection = new \DebugBar\DataCollector\PDO\TraceablePDO(self::$connection);
+                self::$connection = new TraceablePDO(self::$connection);
             }
         }
         return self::$connection;
     }
 
+    /**
+     * Requète query à la base de données
+     *
+     * @param $statement
+     * @param null $class_name
+     * @param bool $one
+     * @return array|mixed
+     * @throws Exception
+     */
     public static function query($statement, $class_name = null, $one = false)
     {
         $req = self::getConnection()->query($statement);
@@ -31,6 +49,16 @@ class MysqlDatabase extends Database implements DatabaseInterface
         return $one ? $req->fetch() : $req->fetchAll();
     }
 
+    /**
+     * Requète preparée à la base de données
+     *
+     * @param $statement
+     * @param $attribute
+     * @param null $class_name
+     * @param bool $one
+     * @return array|bool|mixed
+     * @throws Exception
+     */
     public static function prepare($statement, $attribute, $class_name = null, $one = false)
     {
         $req = self::getConnection()->prepare($statement);
@@ -46,6 +74,13 @@ class MysqlDatabase extends Database implements DatabaseInterface
         return $one ? $req->fetch() : $req->fetchAll();
     }
 
+    /**
+     * Récupère le dernier enregistrement
+     * de la table
+     *
+     * @return string
+     * @throws Exception
+     */
     public static function lastInsertId(): string
     {
         return self::getConnection()->lastInsertId();

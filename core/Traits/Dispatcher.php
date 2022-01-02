@@ -8,10 +8,19 @@ use Core\App;
 use Core\Interfaces\EventInterface;
 use Exception;
 use ReflectionClass;
+use ReflectionException;
 
 trait Dispatcher
 {
 
+    /**
+     * Déclenche l'événement et les écouteurs
+     *
+     * @param null $target
+     * @param array $actions
+     * @param array $params
+     * @throws ReflectionException
+     */
     public static function dispatch($target = null, array $actions = [], array $params = [])
     {
         $class = new ReflectionClass(get_called_class());

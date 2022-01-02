@@ -8,6 +8,7 @@ use Core\Interfaces\EventInterface;
 use Core\Interfaces\ListenerInterface;
 use Core\Interfaces\MiddlewareInterface;
 use Core\Interfaces\VoterInterface;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 
 class App
@@ -27,22 +28,36 @@ class App
      */
     private static array $events;
 
+    /**
+     * Retourne la liste du provider
+     * @param string $key
+     * @return mixed
+     */
     public static function Providers(string $key = '')
     {
         $provider = include (defined('ROOT') ? ROOT : './') . 'bootstrap/Provider.php';
         return $key && isset($provider[$key]) ? $provider[$key] : $provider;
     }
 
+    /**
+     * Inscrit les middlewares à partir des providers
+     */
     public static function setMiddlewares()
     {
         self::$middlewares = self::Providers('middlewares');
     }
 
+    /**
+     * Inscrit les events et listeners à partir des providers
+     */
     public static function setEvents()
     {
         self::$events = self::Providers('events');
     }
 
+    /**
+     * Inscrit les voters à partir des providers
+     */
     public static function setVoters()
     {
         $voters = self::Providers('voters');
@@ -52,11 +67,19 @@ class App
         self::$voters = $voters;
     }
 
+    /**
+     * Inscrit les routes à partir des providers
+     */
     public static function setRoutes()
     {
         return includeAll(ROOT . 'routes');
     }
 
+    /**
+     * Lance le remplissage de providers
+     * et envoi la requête dans la route
+     * @param ServerRequestInterface $request
+     */
     public static function run(ServerRequestInterface $request)
     {
         self::setMiddlewares();
@@ -68,6 +91,8 @@ class App
     }
 
     /**
+     * Retourne les voters
+     *
      * @return VoterInterface[]
      */
     public static function getVoters(): array
@@ -76,6 +101,8 @@ class App
     }
 
     /**
+     * Retourne les middlewares
+     *
      * @return MiddlewareInterface[]
      */
     public static function getMiddlewares(): array
@@ -84,6 +111,7 @@ class App
     }
 
     /**
+     * Retourne le middleware
      * @param string $middleware
      * @return MiddlewareInterface|null
      */
@@ -96,6 +124,8 @@ class App
     }
 
     /**
+     * Retourne les events
+     *
      * @return EventInterface[]|null
      */
     public static function getEvents()
@@ -104,6 +134,7 @@ class App
     }
 
     /**
+     * Retourne les listeners d'un event
      * @param string $event
      * @return ListenerInterface[]|null
      */
@@ -116,6 +147,8 @@ class App
     }
 
     /**
+     * Retourne le listener de l'action de l'event
+     *
      * @param string $event
      * @param string $action
      * @return ListenerInterface|null
@@ -128,6 +161,12 @@ class App
         return null;
     }
 
+    /**
+     * Retourne les classes par l'alias
+     *
+     * @param string $key
+     * @return mixed|null
+     */
     public static function getAlias(string $key)
     {
         if(isset(self::Providers('alias')[$key])){
@@ -136,6 +175,11 @@ class App
         return null;
     }
 
+    /**
+     * Lance le debugbar si activer
+     *
+     * @throws Exception
+     */
     public static function debugMode()
     {
         if(config('debugMode')){

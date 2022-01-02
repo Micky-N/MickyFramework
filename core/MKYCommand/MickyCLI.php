@@ -17,7 +17,14 @@ class MickyCLI
 
     private int $retval = 0;
 
-    private static $longOptions = [
+    /**
+     * Liste des commande
+     * required: a besoin d'un paramètre
+     * novalue: pas de paramètre requis
+     *
+     * @var array|string[]
+     */
+    private static array $longOptions = [
         'create' => 'required',
         'name' => 'required',
         'pk' => 'required',
@@ -47,6 +54,13 @@ class MickyCLI
         'listener' => 'required',
     ];
 
+    /**
+     * Architecture des commandes
+     * required: commande obligatoire
+     * optional: commande optionnelle
+     *
+     * @var array|string[][][]
+     */
     private static array $required = [
         'create' => [
             'controller' => [
@@ -111,11 +125,22 @@ class MickyCLI
         $this->cli = $cli;
     }
 
+    /**
+     * Retourne la valeur de la clé
+     * d'une option
+     * @param string $option
+     * @return mixed|string
+     */
     public function getOption(string $option)
     {
         return self::$longOptions[$option];
     }
 
+    /**
+     * Formate les options pour le cli
+     *
+     * @return array|string[]
+     */
     public static function cliLongOptions()
     {
         $longOpt = array_map(function ($o) {
@@ -126,16 +151,20 @@ class MickyCLI
                 case 'optional':
                     return $o . '::';
                     break;
-                case 'novalue':
-                    return $o;
-                    break;
                 default:
+                    return $o;
                     break;
             }
         }, array_keys(self::$longOptions));
         return $longOpt;
     }
 
+    /**
+     * Retourne la commande dans l'architecture
+     * des commandes
+     * @param mixed ...$args
+     * @return array|mixed|string[][]|string[][][]
+     */
     public function getCommandBy(...$args)
     {
         $res = self::$required;
@@ -147,21 +176,26 @@ class MickyCLI
         return $res;
     }
 
+    /**
+     * Vérifie si l'option existe dans la liste
+     * des options
+     * @param string $option
+     * @return bool
+     */
     public function isFieldExist(string $option)
     {
         if (!empty($this->getOption($option))) {
             return true;
         }
+        return false;
     }
 
-    public function getMethod(string $method, ...$options)
-    {
-        if ($this->getCommandBy($options, $method)) {
-            return $this->getCommandBy($options, $method);
-        }
-        throw new Exception("La méthode {$method} n'existe pas.");
-    }
-
+    /**
+     * Vérifie si la présence d'une commande
+     *
+     * @return bool
+     * @throws Exception
+     */
     public function isInputCli()
     {
         if (!empty((array_keys($this->cli)))) {
@@ -170,16 +204,13 @@ class MickyCLI
         throw new Exception("Saisir une option (--option).");
     }
 
-    public function isInputMethod()
-    {
-        foreach ($this->cli as $key => $value) {
-            if ($value == false || !empty($value)) {
-                return true;
-            }
-            throw new Exception("Methode $key invalide.");
-        }
-    }
-
+    /**
+     * Concatène la commande et le résultat
+     * avec la liste des commande saisie
+     *
+     * @return string
+     * @throws Exception
+     */
     private function sendOptions()
     {
         $send = [];
@@ -195,6 +226,15 @@ class MickyCLI
         return join(' ', $send);
     }
 
+    /**
+     * Vérifié l'existence de la commande
+     * dans l'architecture et si la commande est
+     * obligatoire
+     *
+     * @param string $cliKey
+     * @return bool
+     * @throws Exception
+     */
     private function checkCLI(string $cliKey)
     {
         $cliOption = $this->cli[$cliKey];
@@ -215,6 +255,12 @@ class MickyCLI
         return true;
     }
 
+    /**
+     * Execute le script en cli
+     * sur le fichier exec.php compilé
+     *
+     * @throws Exception
+     */
     public function executeMKY()
     {
         $script = $this->sendOptions();
@@ -223,6 +269,12 @@ class MickyCLI
         echo join("\n", $this->output);
     }
 
+    /**
+     * Lance la vérification de toute la commande
+     * compile et execute la commande
+     *
+     * @throws Exception
+     */
     public function run()
     {
         $compile = '';
@@ -248,12 +300,24 @@ class MickyCLI
         }
     }
 
+    /**
+     * Lance la compilation du fichier de construction
+     * sur le fichier exec.php
+     *
+     * @param string $compile
+     */
     public function compileExec(string $compile = '')
     {
         $exec = fopen(self::BASE_MKY . "/exec.php", "w");
         fwrite($exec, $compile ?? "");
     }
 
+    /**
+     * Retourne un tableau de données formater
+     *
+     * @param $data
+     * @return string
+     */
     public static function table($data)
     {
         // Find longest string in each column

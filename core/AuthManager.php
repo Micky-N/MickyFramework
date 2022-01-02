@@ -20,7 +20,10 @@ class AuthManager
     }
 
     /**
+     * Retourne l'utilisateur connecté
+     *
      * @return User|null|\Core\Route
+     * @throws \Exception
      */
     public function getAuth()
     {
@@ -30,6 +33,12 @@ class AuthManager
         return null;
     }
 
+    /**
+     * Connecte l'utilisateur à la session
+     *
+     * @param mixed $logId
+     * @return void
+     */
     public function login($logId)
     {
         if(!$this->isLoggin()){
@@ -37,6 +46,11 @@ class AuthManager
         }
     }
 
+    /**
+     * Déconnecte l'utilisateur d la session
+     *
+     * @return \Core\Route
+     */
     public function logout()
     {
         (new Session())->delete('auth');
@@ -47,6 +61,11 @@ class AuthManager
         return Route::back();
     }
 
+    /**
+     * Vérifie si l'utilisateur est connecté
+     *
+     * @return bool
+     */
     public function isLoggin()
     {
         return $this->auth !== null;

@@ -95,6 +95,16 @@ class Rules
         ];
     }
 
+    /**
+     * Vérifie si la règle existe dans
+     * la liste des règle et lance le contrôle
+     * des règles
+     *
+     * @param string $key
+     * @param $subject
+     * @return bool
+     * @throws Exception
+     */
     public function checkRule(string $key, $subject)
     {
         if (isset($this->rules[$key])) {
@@ -127,16 +137,23 @@ class Rules
         return $subject;
     }
 
+    /**
+     * Vérifie si le champ existe dans les
+     * données du formulaire
+     *
+     * @param string $field
+     * @return mixed|string
+     */
     public function testField(string $field)
     {
-        if (is_int(stripos($field, self::FIELD)) && stripos($field, self::FIELD) == 0) {
+        if (stripos($field, self::FIELD) === 0) {
             return $this->data[str_replace(self::FIELD, '', $field)];
         }
         return $field;
     }
 
     /**
-     * Get the value of errors
+     * Retourne les erreurs
      */
     public function getErrors()
     {

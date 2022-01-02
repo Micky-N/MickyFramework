@@ -9,31 +9,35 @@ class MkyDirective
     /**
      * @var string[]
      */
-    private array $encode;
+    private array $encodes;
     /**
      * @var Closure[]
      */
     private array $callbacks;
 
     /**
-     * @param string[] $encode
+     * @param string[] $encodes
      * @param Closure[] $callbacks
      */
-    public function __construct(array $encode, array $callbacks)
+    public function __construct(array $encodes, array $callbacks)
     {
-        $this->encode = $encode;
+        $this->encodes = $encodes;
         $this->callbacks = $callbacks;
     }
 
     /**
+     * Retourne les caractères encodés
+     *
      * @return string[]
      */
-    public function getEncode(): array
+    public function getEncodes(): array
     {
-        return $this->encode;
+        return $this->encodes;
     }
 
     /**
+     * Retourne les fonctions
+     *
      * @return Closure[]
      */
     public function getCallbacks(): array

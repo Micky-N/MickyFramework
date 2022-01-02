@@ -6,6 +6,8 @@ use Core\QueryBuilderMysql;
 
 
 /**
+ * Trait et facade de \Core\QueryBuilderMysql
+ *
  * @method static \Core\QueryBuilderMysql where()
  * @method static \Core\QueryBuilderMysql select()
  * @method static \Core\QueryBuilderMysql from(string $table, $alias = null)

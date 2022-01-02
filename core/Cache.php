@@ -2,7 +2,8 @@
 
 namespace Core;
 
-use function PHPUnit\Framework\directoryExists;
+
+use Exception;
 
 class Cache
 {
@@ -14,13 +15,20 @@ class Cache
         $this->cache = config('cache');
     }
 
+    /**
+     * Créer et ajouter un ficher/dossier
+     * dans le cache
+     *
+     * @param string $directory
+     * @param string $data
+     */
     public function addCache(string $directory, string $data)
     {
         $array = explode('/', $directory);
         $start = '';
         foreach ($array as $file) {
             $start .= $file;
-            if (stripos($file, '.') != false) {
+            if (strpos($file, '.') !== false) {
                 file_put_contents($start, $data);
             } else {
                 if(!file_exists($start)){
@@ -31,6 +39,10 @@ class Cache
         }
     }
 
+    /**
+     * Supprime un fichier/dossier dans le cache
+     * @param string $file
+     */
     public function removeCache(string $file)
     {
         function recursiveRemove($dir)
@@ -54,6 +66,13 @@ class Cache
         recursiveRemove($file);
     }
 
+    /**
+     * Retourne le nom du fichier/dossier
+     *
+     * @param string $file
+     * @return string
+     * @throws Exception
+     */
     private function getFile(string $file)
     {
         $file = str_replace(config('cache'), '', $file);

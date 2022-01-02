@@ -12,11 +12,13 @@ class Router
      * @var array|callable
      */
     private $action;
+
     private string $name;
     /**
      * @var string|array
      */
     private $middleware;
+
     private array $matches;
 
     /**
@@ -30,6 +32,9 @@ class Router
     }
 
     /**
+     * Execute le controller et la méthode
+     * de la route
+     *
      * @param ServerRequestInterface $request
      * @return void
      */
@@ -56,6 +61,13 @@ class Router
         }
     }
 
+    /**
+     * Compare la requête et l'url de la route
+     * et récupère les paramètres
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
     public function match(ServerRequestInterface $request)
     {
         $url = trim($request->getUri()->getPath(), '/');
@@ -79,7 +91,9 @@ class Router
     }
 
     /**
-     * Get the value of name
+     * Retourne le nom de la route
+     *
+     * @return string
      */
     public function getName()
     {
@@ -87,7 +101,9 @@ class Router
     }
 
     /**
-     * Get the value of middleware
+     * Retourne le middleware
+     *
+     * @return array|string
      */
     public function getMiddleware()
     {
@@ -95,7 +111,8 @@ class Router
     }
 
     /**
-     * Set a new name to $this->name
+     * Inscrit un nom de la route
+     *
      * @param string $name
      * @return Router
      */
@@ -106,7 +123,8 @@ class Router
     }
 
     /**
-     * Set a new middleware to $this->middleware
+     * Inscrit un middleware a la route
+     *
      * @param string|array $middleware
      * @return Router
      */
@@ -117,7 +135,9 @@ class Router
     }
 
     /**
-     * Get the value of path
+     * Retourne l'url de la route
+     *
+     * @return string
      */
     public function getPath()
     {
@@ -125,13 +145,23 @@ class Router
     }
 
     /**
-     * Get the value of action
+     * Retourne l'action de la route
+     *
+     * @return array|callable
      */
     public function getAction()
     {
         return $this->action;
     }
 
+    /**
+     * Affiche la route dans le DebugBar
+     *
+     * @param ServerRequestInterface $request
+     * @param array $params
+     * @param Controller $controller
+     * @param string $method
+     */
     public function routesDebugBar(ServerRequestInterface $request, array $params, Controller $controller, string $method)
     {
         \Core\Facades\StandardDebugBar::addMessage('Routes', [

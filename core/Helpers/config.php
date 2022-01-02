@@ -2,6 +2,7 @@
 
 use Symfony\Component\Dotenv\Dotenv;
 
+
 function configEnv()
 {
     $dotenv = new Dotenv();

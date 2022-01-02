@@ -7,14 +7,16 @@ interface EventInterface
 {
 
     /**
-     * Indicate whether or not to stop propagating this event
+     * Indique si la propagation des events
+     * doit être stopper
      *
      * @param bool $flag
      */
     public function stopPropagation(bool $flag);
 
     /**
-     * Has this event indicated event propagation should stop?
+     * Retourne si la propagation est
+     * stoppée
      *
      * @return bool
      */

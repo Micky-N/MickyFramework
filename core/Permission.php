@@ -16,6 +16,8 @@ class Permission
     private array $voters = [];
 
     /**
+     * Autorise l'accès si true
+     *
      * @param string $permission
      * @param null $subject
      * @return bool|void
@@ -29,12 +31,19 @@ class Permission
         return true;
     }
 
+    /**
+     * Ajoute un voter
+     *
+     * @param VoterInterface $voter
+     */
     public function addVoter(VoterInterface $voter): void
     {
         $this->voters[] = $voter;
     }
 
     /**
+     * Test la permission
+     *
      * @param string $permission
      * @param null $subject
      * @return bool
@@ -47,7 +56,9 @@ class Permission
                 $auth = new AuthManager();
                 if($auth->isLoggin()){
                     $vote = $voter->vote($auth->getAuth(), $permission, $subject);
-                    $this->voterDebugBar($voter, $vote, $permission);
+                    if(config('env') === 'local'){
+                        $this->voterDebugBar($voter, $vote, $permission);
+                    }
                     if($vote === true){
                         return true;
                     }
@@ -57,6 +68,13 @@ class Permission
         return false;
     }
 
+    /**
+     * Inscrit le voter dans le debugBar
+     *
+     * @param VoterInterface $voter
+     * @param bool $vote
+     * @param string $permission
+     */
     private function voterDebugBar(VoterInterface $voter, bool $vote, string $permission){
         $className = get_class($voter);
         $type = $vote ? 'info' : 'error';

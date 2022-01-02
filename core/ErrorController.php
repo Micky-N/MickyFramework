@@ -5,18 +5,38 @@ namespace Core;
 
 
 use Core\Facades\View;
+use Exception;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\ServerRequest;
 
 class ErrorController extends Controller
 {
 
-    public static function error($code)
+    /**
+     * Affiche l'erreur dans le view Error
+     *
+     * @param $code
+     * @param string $text
+     * @return \Core\View
+     * @throws Exception
+     */
+    public static function error($code, string $text = null)
     {
-        return View::render('general.errors', self::getStatut($code));
+        $status = self::getStatus($code);
+        $status['text'] = $text ?? $status['text'];
+        if(file_exists(ROOT.'views/general/errors.mky')){
+            return View::render('general.errors', $status);
+        }
+        throw new Exception($status['text'], $status['code']);
     }
 
-    private static function getStatut(int $code)
+    /**
+     * Retourne le code status et le message
+     *
+     * @param int $code
+     * @return array
+     */
+    private static function getStatus(int $code)
     {
         switch ($code) {
             case 100:

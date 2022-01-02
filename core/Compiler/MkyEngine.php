@@ -33,6 +33,8 @@ class MkyEngine
     }
 
     /**
+     * Affiche la view compilée
+     *
      * @param string $viewName
      * @param array $data
      * @param bool $extends
@@ -80,16 +82,21 @@ class MkyEngine
         }
     }
 
-    public function withError($message)
-    {
-    }
-
+    /**
+     * Réecrit le nom de la view
+     *
+     * @param string $viewName
+     * @return string
+     */
     private function parseViewName(string $viewName): string
     {
         $viewName = str_replace('.', '/', $viewName);
         return $viewName . self::VIEW_SUFFIX;
     }
 
+    /**
+     * Lance la compilation de la view
+     */
     public function parse()
     {
         $this->parseIncludes();
@@ -100,6 +107,9 @@ class MkyEngine
         $this->parseDirectives();
     }
 
+    /**
+     * Compile les variables dans l'echo
+     */
     public function parseVariables(): void
     {
         $this->view = preg_replace_callback('/' . self::ECHO[0] . '(.*?)' . self::ECHO[1] . '/', function ($variable) {
@@ -109,6 +119,8 @@ class MkyEngine
 
 
     /**
+     * Retourn la valeur de la config
+     *
      * @param string $key
      * @return mixed
      */
@@ -117,6 +129,9 @@ class MkyEngine
         return $this->config[$key] ?? $this->config;
     }
 
+    /**
+     * Compile les fichiers inclus
+     */
     public function parseIncludes(): void
     {
         $this->view = preg_replace_callback('/@include\(\'(.*?)\'\)/', function ($viewName) {
@@ -124,6 +139,9 @@ class MkyEngine
         }, str_replace(' (', '(', $this->view));
     }
 
+    /**
+     * Compile le layout
+     */
     public function parseExtends(): void
     {
         $this->view = preg_replace_callback('/@extends\(\'(.*?)\'\)/', function ($viewName) {
@@ -131,6 +149,9 @@ class MkyEngine
         }, str_replace(' (', '(', $this->view));
     }
 
+    /**
+     * compile les blocks du layout
+     */
     public function parseYields(): void
     {
         $this->view = preg_replace_callback('/@yield\(\'(.*?)\'\)/s', function ($yieldName) {
@@ -138,6 +159,9 @@ class MkyEngine
         }, str_replace(' (', '(', $this->view));
     }
 
+    /**
+     * Compile les sections de la view
+     */
     public function parseSections(): void
     {
         $this->view = preg_replace_callback('/@section\(\'(.*?)\', (\"(.*?)\"|\'(.*?)\')\)/', function ($sectionDetail) {
@@ -152,13 +176,14 @@ class MkyEngine
     }
 
     /**
-     * Compile directives
-     * see MkyCompile
+     * Compile les directives
+     *
+     * @see MkyCompile
      */
     private function parseDirectives(): void
     {
         foreach ($this->directives->getDirectives() as $key => $mkyDirective) {
-            foreach ($mkyDirective->encode as $index => $directive) {
+            foreach ($mkyDirective->encodes as $index => $directive) {
                 $callback = $mkyDirective->callbacks[$index];
                 $this->view = preg_replace_callback('/\B@(@?' . $directive . '?)([ \t]*)(\( ( ([^()]+) | (?3) )* \))?/x', function ($expression) use ($callback, $directive) {
                     $str = isset($expression[3]) ? substr($expression[3], 1, -1) : null;

@@ -8,10 +8,9 @@ class MkyCompile
 {
 
     /**
-     * @var array|MkyDirective[]
+     * @var MkyDirective[]
      */
     private array $directives;
-    private array $callbacks;
 
     /**
      * @var bool[]
@@ -27,7 +26,7 @@ class MkyCompile
         $this->directives = [
             'style' => new MkyDirective(['style', 'endstyle'], [
                 function ($href = null) {
-                    if($href){
+                    if ($href) {
                         return '<link rel="stylesheet" type="text/css" href=' . $href . '>';
                     }
                     return '<style>';
@@ -38,7 +37,7 @@ class MkyCompile
             ]),
             'script' => new MkyDirective(['script', 'endscript'], [
                 function ($src = null) {
-                    if($src){
+                    if ($src) {
                         return '<script type="text/javascript" src=' . $src . '></script>';
                     }
                     return '<script>';
@@ -233,7 +232,7 @@ class MkyCompile
                     return '<?php switch(' . $expression . '):';
                 },
                 function ($expression) {
-                    if($this->conditions['firstCaseSwitch']){
+                    if ($this->conditions['firstCaseSwitch']) {
                         $this->conditions['firstCaseSwitch'] = false;
                         return ' case ' . $expression . ': ?>';
                     }
@@ -253,18 +252,36 @@ class MkyCompile
     }
 
     /**
+     * Inscrit une directive
+     *
      * @param string $key
      * @param string[] $directives
      * @param callable[] $callbacks
      * @return MkyCompile
      */
-    public function setDirectives(string $key, array $directives, array $callbacks): MkyCompile
+    public function setDirective(string $key, array $directives, array $callbacks): MkyCompile
     {
         $this->directives[$key] = new MkyDirective($directives, $callbacks);
         return $this;
     }
 
+
     /**
+     * Inscrit une condition
+     *
+     * @param string $key
+     * @param bool $value
+     * @return MkyCompile
+     */
+    public function setCondition(string $key, bool $value): MkyCompile
+    {
+        $this->conditions[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * Retourne les directives
+     *
      * @return array
      */
     public function getDirectives(): array

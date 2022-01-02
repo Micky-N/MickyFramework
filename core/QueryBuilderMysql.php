@@ -3,17 +3,53 @@
 namespace Core;
 
 use Core\MysqlDatabase;
+use Exception;
 use stdClass;
 
 class QueryBuilderMysql
 {
+    /**
+     * SELECT
+     * @var array
+     */
     private array $fields = [];
+
+    /**
+     * FROM
+     * @var array
+     */
     private array $from = [];
+
+    /**
+     * WHERE
+     * @var array
+     */
     private array $conditions = [];
+
+    /**
+     * ORDER BY
+     * @var array
+     */
     private array $order = [];
+
+    /**
+     * LIMIT
+     * @var array
+     */
     private array $limit = [];
+
+    /**
+     * JOIN ON
+     * @var array
+     */
     private array $joins = [];
+
+    /**
+     * GROUP BY
+     * @var array
+     */
     private array $group = [];
+
     private Model $instance;
 
     public function __construct($instance)
@@ -23,8 +59,10 @@ class QueryBuilderMysql
     }
 
     /**
+     * @see MysqlDatabase::query()
      * @param string $statement
      * @return array
+     * @throws Exception
      */
     public function query(string $statement): array
     {
@@ -32,15 +70,20 @@ class QueryBuilderMysql
     }
 
     /**
+     * @see MysqlDatabase::prepare()
      * @param string $statement
      * @param array $attribute
      * @return array
+     * @throws Exception
      */
     public function prepare(string $statement, array $attribute): array
     {
         return MysqlDatabase::prepare($statement, $attribute);
     }
 
+    /**
+     * @return $this
+     */
     public function select()
     {
         $this->fields = func_get_args();
@@ -116,7 +159,7 @@ class QueryBuilderMysql
      * @param string $to
      * @param string $aliasFirstTable
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function join(string $join_table, string $on, string $operation, string $to, string $aliasFirstTable = ''): QueryBuilderMysql
     {
@@ -136,6 +179,7 @@ class QueryBuilderMysql
      * @param string $key
      * @param mixed $value
      * @return array
+     * @throws Exception
      */
     public function map(string $key = '', $value = null): array
     {
@@ -171,6 +215,9 @@ class QueryBuilderMysql
         return $keymap;
     }
 
+    /**
+     * @return string
+     */
     private function hasFields()
     {
         if (!empty($this->fields)) {
@@ -180,6 +227,9 @@ class QueryBuilderMysql
         }
     }
 
+    /**
+     * @return string
+     */
     private function hasLimit()
     {
         if (!empty($this->limit))
@@ -188,6 +238,9 @@ class QueryBuilderMysql
             return '';
     }
 
+    /**
+     * @return string
+     */
     private function hasConditions()
     {
         if (!empty($this->conditions))
@@ -196,6 +249,9 @@ class QueryBuilderMysql
             return '';
     }
 
+    /**
+     * @return string
+     */
     private function hasOrder()
     {
         if (!empty($this->order))
@@ -204,6 +260,10 @@ class QueryBuilderMysql
             return '';
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     private function hasFrom()
     {
         if (!empty($this->from)) {
@@ -213,6 +273,9 @@ class QueryBuilderMysql
         }
     }
 
+    /**
+     * @return string
+     */
     private function hasJoin()
     {
         $syntax = '';
@@ -224,6 +287,9 @@ class QueryBuilderMysql
         return $syntax;
     }
 
+    /**
+     * @return string
+     */
     private function hasGroup()
     {
         if (!empty($this->group))
@@ -234,7 +300,9 @@ class QueryBuilderMysql
 
     /**
      * Récupere les enregistrement
+     *
      * @return array|bool
+     * @throws Exception
      */
     public function get()
     {
@@ -243,7 +311,10 @@ class QueryBuilderMysql
 
     /**
      * Récupere les enregistrement
+     * sous forme de tableau
+     *
      * @return array|bool
+     * @throws Exception
      */
     public function toArray()
     {
@@ -252,7 +323,9 @@ class QueryBuilderMysql
 
     /**
      * Recupere le premier enregistrement de la requête
+     *
      * @return Model|bool
+     * @throws Exception
      */
     public function first()
     {
@@ -262,7 +335,9 @@ class QueryBuilderMysql
 
     /**
      * Recupere le dernier enregistrement de la requête
+     *
      * @return Model|bool
+     * @throws Exception
      */
     public function last()
     {
@@ -272,7 +347,10 @@ class QueryBuilderMysql
     }
 
     /**
+     * Retourne la requète en texte
+     *
      * @return string
+     * @throws Exception
      */
     public function stringify(): string
     {
@@ -287,6 +365,7 @@ class QueryBuilderMysql
 
     /**
      * Récuperer le model en cours
+     *
      * @return Model
      */
     public function getInstance(): Model
