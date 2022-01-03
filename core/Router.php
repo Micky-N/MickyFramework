@@ -2,180 +2,398 @@
 
 namespace Core;
 
+use Core\Facades\Session;
+use Exception;
+use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use function PHPUnit\Framework\callback;
 
 class Router
 {
-    private string $path;
     /**
-     * @var array|callable
+     * @var Route[]
      */
-    private $action;
+    private array $routes = [];
 
-    private string $name;
-    /**
-     * @var string|array
-     */
-    private $middleware;
-
-    private array $matches;
-
-    /**
-     * @param string $path
-     * @param array|callable $action
-     */
-    public function __construct(string $path, $action)
+    public function __construct(array $routes = [])
     {
-        $this->path = '/' . trim($path, '/');
-        $this->action = $action;
+        $this->routes = $routes;
     }
 
     /**
-     * Execute le controller et la méthode
-     * de la route
+     * Inscrit la route en GET
      *
-     * @param ServerRequestInterface $request
+     * @param string $path
+     * @param Callable|array $action
+     * @return Route
+     */
+    public function get(string $path, $action): Route
+    {
+        $route = new Route($path, $action);
+        $this->routes['GET'][] = $route;
+        return $route;
+    }
+
+    /**
+     * Inscrit la route en POST
+     * @param string $path
+     * @param array $action
+     * @return Route
+     */
+    public function post(string $path, $action): Route
+    {
+        $route = new Route($path, $action);
+        $this->routes['POST'][] = $route;
+        return $route;
+    }
+
+    /**
+     * Retourne les routes par nom
+     *
+     * @return Route[]
+     */
+    public function routesByName(): array
+    {
+        $routesNamed = [];
+        foreach ($this->routes as $request => $routesRequest) {
+            foreach ($this->routes[$request] as $route) {
+                $routesNamed[$route->name] = $route;
+            }
+        }
+        return $routesNamed;
+    }
+
+    /**
+     * Créé un ensemble de routes selon
+     * le model CRUD
+     *
+     * @param string $namespace
+     * @param string $controller
+     * @param array $only
      * @return void
      */
-    public function execute(ServerRequestInterface $request)
+    public function crud(string $namespace, string $controller, array $only = []): void
     {
-        $params = [];
-        if($this->matches){
-            $params = $this->matches;
+        $path = '';
+        $action = '';
+        $controllerName = get_plural(strtolower(str_replace('Controller', '', str_replace('App\\Http\\Controllers\\', '', $controller))));
+        $id = "/:" . strtolower(str_replace('Controller', '', get_singular($controllerName)));
+        if (strpos($namespace, '.')) {
+            $namespaces = explode('.', $namespace);
+            $namespace = end($namespaces);
+            foreach ($namespaces as $key => $name) {
+                if ($key < count($namespaces) - 1) {
+                    $path .= "$name/:" . get_singular($name) . '/';
+                }
+            }
+            $controllerName = join('.', array_map(function ($n) {
+                return strtolower($n);
+            }, $namespaces));
+            array_shift($namespaces);
+            $action = join('', array_map(function ($n) {
+                return ucfirst(get_singular($n));
+            }, $namespaces));
+            $id = "/:" . get_singular($namespace);
         }
-        if(!empty($this->middleware)){
-            $routerMiddleware = new RouterMiddleware($this->middleware, $this->matches);
-            $routerMiddleware->process($request);
-        }
-        if($request->getParsedBody()){
-            $params[] = $request->getParsedBody();
-        }
-        if(is_array($this->action)){
-            $controller = new $this->action[0]();
-            $method = $this->action[1];
-            $this->routesDebugBar($request, $params, $controller, $method);
-            return call_user_func_array([$controller, $method], $params);
-        }else if(is_callable($this->action)){
-            return call_user_func_array($this->action, $params);
+
+        $crudActions = [
+            'index' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace",
+                'action' => [$controller, 'index' . $action],
+                'name' => "$controllerName.index",
+            ],
+            'show' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace{$id}",
+                'action' => [$controller, 'show' . $action],
+                'name' => "$controllerName.show",
+            ],
+            'new' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace/new",
+                'action' => [$controller, 'new' . $action],
+                'name' => "$controllerName.new",
+            ],
+            'create' => [
+                'request' => 'post',
+                'path' => "{$path}$namespace",
+                'action' => [$controller, 'create' . $action],
+                'name' => "$controllerName.create",
+            ],
+            'edit' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace/edit{$id}",
+                'action' => [$controller, 'edit' . $action],
+                'name' => "$controllerName.edit",
+            ],
+            'update' => [
+                'request' => 'post',
+                'path' => "{$path}$namespace/update{$id}",
+                'action' => [$controller, 'update' . $action],
+                'name' => "$controllerName.update",
+            ],
+            'delete' => [
+                'request' => 'get',
+                'path' => "{$path}$namespace/delete{$id}",
+                'action' => [$controller, 'delete' . $action],
+                'name' => "$controllerName.delete",
+            ],
+        ];
+        foreach ($crudActions as $key => $crudAction) {
+            if (!empty($only) && in_array($key, $only)) {
+                $route = call_user_func_array(
+                    [$this, $crudAction['request']],
+                    [$crudAction['path'], $crudAction['action']]
+                );
+                call_user_func_array([$route, 'name'], [$crudAction['name']]);
+            } elseif (empty($only)) {
+                $route = call_user_func_array(
+                    [$this, $crudAction['request']],
+                    [$crudAction['path'], $crudAction['action']]
+                );
+                call_user_func_array([$route, 'name'], [$crudAction['name']]);
+            }
         }
     }
 
     /**
-     * Compare la requête et l'url de la route
-     * et récupère les paramètres
+     * Vérifié si la route a besoin
+     * d'un paramètre
      *
-     * @param ServerRequestInterface $request
+     * @param string $path
+     * @return string
+     * @throws Exception
+     */
+    public function routeNeedParams(string $path): string
+    {
+        $needed = [];
+        $pathArray = explode('/', $path);
+        $needed = array_map(function ($p) use ($needed) {
+            if (strpos($p, ':') === 0) {
+                $p = str_replace(':', '', $p);
+                return $p;
+            }
+        }, $pathArray);
+        $needed = array_filter($needed);
+        if (!empty($needed)) {
+            throw new Exception('need params');
+        }
+        return $path;
+    }
+
+    /**
+     * Génère la url de la route
+     * par son nom
+     *
+     * @param string $routeName
+     * @param array $params
+     * @return string
+     * @throws Exception
+     */
+    public function generateUrlByName(string $routeName, array $params = []): string
+    {
+        $path = '';
+        $err = 0;
+        $requestTest = '';
+        $routesTest = [];
+        foreach ($this->routes as $request => $routesByRequest) {
+            $requestTest = $request;
+            $routesTest = $routesByRequest;
+            foreach ($routesByRequest as $route) {
+                if ($route->name === $routeName) {
+                    $path = $route->path;
+                    if (!empty($params)) {
+                        $path = explode('/', $path);
+                        foreach ($path as $key => $value) {
+                            if (strpos($value, ':') === 0) {
+                                $value = str_replace(':', '', $value);
+                                if (isset($params[$value])) {
+                                    $path[$key] = $params[$value];
+                                } else {
+                                    throw new Exception(
+                                        "Le paramètre '$value' est requie",
+                                        13
+                                    );
+                                }
+                            }
+                        }
+                        $path = implode('/', $path);
+                    }
+                } else {
+                    $err += 1;
+                }
+            }
+        }
+        if ($err == count((array)$routesTest)) {
+            throw new Exception("La route '$routeName' n'existe pas dans la requête $requestTest.", 13);
+        }
+        return $this->routeNeedParams($path);
+    }
+
+    /**
+     * Retourne la route actuel
+     *
+     * @param string $route
+     * @return bool|string
+     */
+    public function currentRoute(string $route = '')
+    {
+        $currentRoute = ServerRequest::fromGlobals()
+            ->getUri()
+            ->getPath();
+        if ($route) {
+            return $currentRoute === $route;
+        }
+        return $currentRoute;
+    }
+
+    /**
+     * Retourn le namespace de la route
+     *
+     * @param string $route
      * @return bool
      */
-    public function match(ServerRequestInterface $request)
+    public function namespaceRoute(string $route = '')
     {
-        $url = trim($request->getUri()->getPath(), '/');
-        $path = preg_replace('#(:[\w]+)#', '([^/]+)', trim($this->path, '/'));
-
-        $pathToMatch = "#^$path$#";
-        if(preg_match($pathToMatch, $url, $matches)){
-            $key = array_map(function ($pa) {
-                if(strpos($pa, ':') == 0){
-                    $pa = str_replace(':', '', $pa);
-                }
-                return $pa;
-            }, explode('/:', trim($this->path, '/')));
-            array_shift($key);
-            array_shift($matches);
-            $matches = $matches != [] ? array_combine($key, $matches) : $matches;
-            $this->matches = $matches;
-            return true;
+        $currentRoute = ServerRequest::fromGlobals()
+            ->getUri()
+            ->getPath();
+        $currentRouteArray = explode('/', trim($currentRoute, '/'));
+        if ($route) {
+            return $currentRouteArray[0] === $route;
         }
         return false;
     }
 
     /**
-     * Retourne le nom de la route
+     * Démarre la recherche de la route
      *
-     * @return string
+     * @param ServerRequestInterface $request
+     * @return void
+     * @throws Exception
      */
-    public function getName()
+    public function run(ServerRequestInterface $request)
     {
-        return $this->name;
+        foreach ($this->routes[$request->getMethod()] as $route) {
+            if ($route->match($request)) {
+                return $route->execute($request);
+            }
+        }
+        ErrorController::error(400, sprintf("La route %s n'existe pas", $request->getUri()->getPath()));
     }
 
     /**
-     * Retourne le middleware
+     * Redirection par url
      *
-     * @return array|string
+     * @param string $url
      */
-    public function getMiddleware()
+    public function redirect(string $url): void
     {
-        return $this->middleware;
+        header("Location: $url");
     }
 
     /**
-     * Inscrit un nom de la route
+     * Redirection par nom de route
      *
      * @param string $name
      * @return Router
+     * @throws Exception
      */
-    public function name(string $name): Router
+    public function redirectName(string $name): self
     {
-        $this->name = $name;
+        $path = $this->generateUrlByName($name);
+        header("Location: $path");
         return $this;
     }
 
     /**
-     * Inscrit un middleware a la route
+     * Inscrit un message d'erreur
+     * dans la session
      *
-     * @param string|array $middleware
+     * @param array $errors
+     * @return $this
+     */
+    public function withError(array $errors): self
+    {
+        foreach ($errors as $name => $message) {
+            Session::setFlashMessageOnType(Session::getConstant('FLASH_ERROR'), $name, $message);
+        }
+        return $this;
+    }
+
+    /**
+     * Inscrit un message de succes
+     * @param array $success
+     * @return $this
+     */
+    public function withSuccess(array $success): self
+    {
+        foreach ($success as $name => $message) {
+            Session::setFlashMessageOnType(Session::getConstant('FLASH_SUCCESS'), $name, $message);
+        }
+        return $this;
+    }
+
+    /**
+     * Inscrit un message
+     *
+     * @param array $messages
+     * @return $this
+     */
+    public function with(array $messages): self
+    {
+        foreach ($messages as $name => $message) {
+            Session::setFlashMessageOnType(Session::getConstant('FLASH_MESSAGE'), $name, $message);
+        }
+        return $this;
+    }
+
+    /**
+     * Redirection a arriere
      * @return Router
      */
-    public function middleware($middleware): Router
+    public function back(): self
     {
-        $this->middleware = $middleware;
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         return $this;
     }
 
     /**
-     * Retourne l'url de la route
+     * Affiche les routes sont forme de tableau
+     * pour cli
      *
-     * @return string
+     * @return array
      */
-    public function getPath()
+    public function toArray(): array
     {
-        return $this->path;
-    }
-
-    /**
-     * Retourne l'action de la route
-     *
-     * @return array|callable
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    /**
-     * Affiche la route dans le DebugBar
-     *
-     * @param ServerRequestInterface $request
-     * @param array $params
-     * @param Controller $controller
-     * @param string $method
-     */
-    public function routesDebugBar(ServerRequestInterface $request, array $params, Controller $controller, string $method)
-    {
-        \Core\Facades\StandardDebugBar::addMessage('Routes', [
-            'url' => $request->getUri()->getPath(),
-            'params' => $params,
-            'controller' => get_class($controller),
-            'method' => $method
-        ]);
-    }
-
-    public function __get($name)
-    {
-        if(isset($this->{$name})){
-            return $this->{'get' . ucfirst($name)}();
+        includeAll('routes');
+        $routes = [];
+        $namespace = '/';
+        $currentPath = "\t";
+        foreach ($this->routes as $method => $routes) {
+            foreach ($routes as $route) {
+                $paths = explode('/', trim($route->path, '/'));
+                if (in_array($namespace, $paths)) {
+                    unset($paths[0]);
+                    $currentPath = "\t/" . join('/', $paths);
+                } else {
+                    $namespace = $paths[0];
+                    $currentPath = $route->path;
+                }
+                $routes[] = [
+                    $method,
+                    $currentPath,
+                    str_replace(
+                        'App\\Http\\Controllers\\',
+                        '',
+                        $route->action[0]
+                    ),
+                    $route->action[1],
+                    $route->name,
+                    $route->middleware,
+                ];
+            }
         }
+        return $routes;
     }
 }

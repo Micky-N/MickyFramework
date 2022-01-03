@@ -2,25 +2,25 @@
 
 namespace Tests\Core;
 
-use Core\Route;
 use Core\Router;
+use Core\Route;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
 use Tests\Core\Helpers\Route\TestController;
 
 class RouteTest extends TestCase
 {
-    public Route $route;
+    public Router $route;
 
     protected function setUp(): void
     {
-        $this->route = new Route();
+        $this->route = new Router();
     }
 
     public function testMatchRoute()
     {
         $request = new ServerRequest('GET', '/go');
-        $router = new Router('go', [TestController::class, 'index']);
+        $router = new Route('go', [TestController::class, 'index']);
 
         $this->assertTrue($router->match($request));
     }

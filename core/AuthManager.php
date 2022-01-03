@@ -6,6 +6,7 @@ namespace Core;
 
 use App\Models\User;
 use Core\Facades\Route;
+use Exception;
 
 class AuthManager
 {
@@ -22,8 +23,8 @@ class AuthManager
     /**
      * Retourne l'utilisateur connecté
      *
-     * @return User|null|\Core\Route
-     * @throws \Exception
+     * @return User|null|Router
+     * @throws Exception
      */
     public function getAuth()
     {
@@ -49,7 +50,7 @@ class AuthManager
     /**
      * Déconnecte l'utilisateur d la session
      *
-     * @return \Core\Route
+     * @return Router
      */
     public function logout()
     {

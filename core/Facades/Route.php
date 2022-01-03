@@ -2,12 +2,12 @@
 
 namespace Core\Facades;
 
-use Core\Route as CoreRoute;
+use Core\Router as CoreRouter;
 
 
 /**
- * @method static \Core\Router get(string $path, $action)
- * @method static \Core\Router post(string $path, $action)
+ * @method static \Core\Route get(string $path, $action)
+ * @method static \Core\Route post(string $path, $action)
  * @method static bool namespaceRoute(string $route = '')
  * @method static array routesByName()
  * @method static void crud(string $namespace, $controller, array $only = [])
@@ -15,22 +15,22 @@ use Core\Route as CoreRoute;
  * @method static string generateUrlByName(string $routeName, array $params = [])
  * @method static bool|string currentRoute(string $route = '')
  * @method static void run(\Psr\Http\Message\ServerRequestInterface $request)
- * @method static \Core\Route redirectName(string $name)
- * @method static \Core\Route redirect(string $url)
- * @method static \Core\Route withError(array $errors)
- * @method static \Core\Route withSuccess(array $success)
- * @method static \Core\Route with(array $messages)
- * @method static \Core\Route back()
+ * @method static \Core\Router redirectName(string $name)
+ * @method static \Core\Router redirect(string $url)
+ * @method static \Core\Router withError(array $errors)
+ * @method static \Core\Router withSuccess(array $success)
+ * @method static \Core\Router with(array $messages)
+ * @method static \Core\Router back()
  * @method static array toArray()
  *
- * @see \Core\Route
+ * @see \Core\Router
  */
 class Route{
 
     /**
-     * @var CoreRoute|null
+     * @var CoreRouter|null
      */
-    public static ?CoreRoute $route;
+    public static ?CoreRouter $router;
 
     /**
      * @param $method
@@ -39,9 +39,9 @@ class Route{
      */
     public static function __callStatic($method, $arguments)
     {
-        if(empty(self::$route)){
-            self::$route = new CoreRoute();
+        if(empty(self::$router)){
+            self::$router = new CoreRouter();
         }
-        return call_user_func_array([self::$route, $method], $arguments);
+        return call_user_func_array([self::$router, $method], $arguments);
     }
 }

@@ -3,6 +3,7 @@
 namespace Core\Validate;
 
 use Core\Facades\Route;
+use Core\Router;
 use Exception;
 
 class Validator
@@ -50,7 +51,7 @@ class Validator
      *
      * @param array $data
      * @param array $rules
-     * @return array|\Core\Route
+     * @return array|Router
      * @throws Exception
      */
     public static function check(array $data, array $rules)
@@ -95,10 +96,16 @@ class Validator
         return $this->errors;
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     * @throws Exception
+     */
     public function __get($key)
     {
-        if(property_exists($this, $key)){
+        if(method_exists($this, "get".ucfirst($key))){
             return $this->{'get'.ucfirst($key)}();
         }
+        throw new Exception("la variable $key n'existe pas");
     }
 }

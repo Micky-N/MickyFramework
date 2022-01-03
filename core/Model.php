@@ -71,7 +71,7 @@ abstract class Model
      * Récupère un enregistrement
      *
      * @param mixed $id
-     * @return self|bool
+     * @return $this|bool
      * @throws Exception
      */
     public static function find($id)
@@ -115,7 +115,7 @@ abstract class Model
      *
      * @param array $data
      * @param string $table
-     * @return Model|bool
+     * @return $this|bool
      * @throws ReflectionException
      */
     public static function create(array $data, string $table = '')
@@ -148,7 +148,7 @@ abstract class Model
      *
      * @param $id
      * @param array $data
-     * @return bool|Model
+     * @return bool|$this
      * @throws ReflectionException
      */
     public static function update($id, array $data)
@@ -307,6 +307,7 @@ abstract class Model
     /**
      * Récupère les enregistrements de la table
      * lié avec la table actuel par la table d'association
+     *
      * @param string $model
      * @param string $pivot
      * @param string $foreignKeyOne
@@ -314,7 +315,6 @@ abstract class Model
      * @return array|bool|mixed
      * @throws ReflectionException
      * @example Many to Many
-     *
      */
     public function belongsToMany(string $model, string $pivot = '', string $foreignKeyOne = '', string $foreignKeyTwo = '')
     {
@@ -523,7 +523,7 @@ abstract class Model
      *
      * @param $table
      * @param array $data
-     * @return bool|Model
+     * @return bool|$this
      * @throws ReflectionException
      */
     public function attach($table, array $data)

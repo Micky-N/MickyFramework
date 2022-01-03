@@ -8,7 +8,7 @@ use Core\Facades\Permission;
 use Core\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RouterMiddleware
+class RouteMiddleware
 {
 
     private int $index = 0;
