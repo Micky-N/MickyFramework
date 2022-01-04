@@ -7,7 +7,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
-use Pusher\PushNotifications\PushNotifications;
 
 
 // HOMEPAGE
@@ -17,24 +16,9 @@ Route::post('subscription/:subscribe', [NotificationController::class, 'subscrib
     ->middleware('auth')
     ->name('notification.subscribe');
 
-Route::get('pusher/beams-auth', function(){
-    $beamsClient = new PushNotifications(array(
-        "instanceId" => _env('BEAMS_PUBLIC_KEY'),
-        "secretKey" => _env('BEAMS_PRIVATE_KEY'),
-    ));
-    $userID = "App.Models.User.".auth()->id; // If you use a different auth system, do your checks here
-    $userIDInQueryParam = \GuzzleHttp\Psr7\ServerRequest::fromGlobals()->getQueryParams()['user_id'];
-    if ($userID != $userIDInQueryParam) {
-        echo json_encode(['status' => '400', 'message' => 'Inconsistent request']);die;
-    } else {
-        $beamsToken = $beamsClient->generateToken($userID);
-        echo json_encode($beamsToken);die;
-    }
-});
-
 // APPLICATION CRUD
 Route::crud('categories', CategoryController::class);
-Route::crud('products', ProductController::class, ['index']);
+Route::crud('products', ProductController::class, ['index', 'create']);
 Route::get('products/:product', [ProductController::class, 'show'])->name('products.show')->middleware('can:edit,product');
 Route::crud('products.suppliers', ProductController::class, ['update', 'create', 'delete']);
 Route::crud('suppliers', SupplierController::class);

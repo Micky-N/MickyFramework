@@ -38,7 +38,7 @@
                                 <span class="text-muted">Créer un produit</span>
                             </h4>
                         </div>
-                        <form action="{{ route('products/create') }}" class="px-2 pt-4">
+                        <form action="{{ route('products.create') }}" class="px-2 pt-4">
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for="name">Nom</label>

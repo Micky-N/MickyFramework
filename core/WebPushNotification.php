@@ -47,8 +47,7 @@ class WebPushNotification
             foreach ($this->webPush->flush() as $report) {
                 $endpoint = $report->getRequest()->getUri()->__toString();
 
-                if($report->isSuccess()){
-                } else {
+                if(!$report->isSuccess()){
                     echo sprintf("message failed for %s: %s.<br>", $endpoint, $report->getReason());
                 }
             }

@@ -26,7 +26,7 @@ class Permission
     public function can(string $permission, $subject = null)
     {
         if($this->test($permission, $subject) === false){
-            return Controller::forbidden();
+            return ErrorController::forbidden();
         }
         return true;
     }

@@ -5,8 +5,8 @@ require_once 'public/index.php';
 return
     [
         'paths' => [
-            'migrations' => ROOT . 'database/migrations',
-            'seeds' => ROOT . 'database/seeds'
+            'migrations' => 'database/migrations',
+            'seeds' => 'database/seeds'
         ],
         'environments' => [
             'default_environment' => 'local',

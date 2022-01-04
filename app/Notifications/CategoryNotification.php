@@ -24,7 +24,7 @@ class CategoryNotification implements NotificationInterface
 
     public function via($notifiable)
     {
-        return ['webPush'];
+        return ['notification'];
     }
 
     public function toWebPush($notifiable)

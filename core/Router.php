@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Exceptions\Router\RouteNeedParamsException;
+use Core\Exceptions\Router\RouteNotFoundException;
 use Core\Facades\Session;
 use Exception;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -77,11 +79,11 @@ class Router
         $action = '';
         $controllerName = get_plural(strtolower(str_replace('Controller', '', str_replace('App\\Http\\Controllers\\', '', $controller))));
         $id = "/:" . strtolower(str_replace('Controller', '', get_singular($controllerName)));
-        if (strpos($namespace, '.')) {
+        if(strpos($namespace, '.')){
             $namespaces = explode('.', $namespace);
             $namespace = end($namespaces);
             foreach ($namespaces as $key => $name) {
-                if ($key < count($namespaces) - 1) {
+                if($key < count($namespaces) - 1){
                     $path .= "$name/:" . get_singular($name) . '/';
                 }
             }
@@ -140,13 +142,13 @@ class Router
             ],
         ];
         foreach ($crudActions as $key => $crudAction) {
-            if (!empty($only) && in_array($key, $only)) {
+            if(!empty($only) && in_array($key, $only)){
                 $route = call_user_func_array(
                     [$this, $crudAction['request']],
                     [$crudAction['path'], $crudAction['action']]
                 );
                 call_user_func_array([$route, 'name'], [$crudAction['name']]);
-            } elseif (empty($only)) {
+            } elseif(empty($only)) {
                 $route = call_user_func_array(
                     [$this, $crudAction['request']],
                     [$crudAction['path'], $crudAction['action']]
@@ -161,23 +163,24 @@ class Router
      * d'un paramètre
      *
      * @param string $path
+     * @param array $params
      * @return string
      * @throws Exception
      */
-    public function routeNeedParams(string $path): string
+    public function routeNeedParams(string $path, array $params = []): string
     {
-        $needed = [];
-        $pathArray = explode('/', $path);
-        $needed = array_map(function ($p) use ($needed) {
-            if (strpos($p, ':') === 0) {
-                $p = str_replace(':', '', $p);
-                return $p;
+        $path = explode('/', $path);
+        foreach ($path as $key => $value) {
+            if(strpos($value, ':') === 0){
+                $value = str_replace(':', '', $value);
+                if(!empty($params) && isset($params[$value])){
+                    $path[$key] = $params[$value];
+                } else {
+                    throw new RouteNeedParamsException("Le paramètre $value est requis");
+                }
             }
-        }, $pathArray);
-        $needed = array_filter($needed);
-        if (!empty($needed)) {
-            throw new Exception('need params');
         }
+        $path = implode('/', $path);
         return $path;
     }
 
@@ -192,42 +195,16 @@ class Router
      */
     public function generateUrlByName(string $routeName, array $params = []): string
     {
-        $path = '';
-        $err = 0;
         $requestTest = '';
-        $routesTest = [];
         foreach ($this->routes as $request => $routesByRequest) {
             $requestTest = $request;
-            $routesTest = $routesByRequest;
             foreach ($routesByRequest as $route) {
-                if ($route->name === $routeName) {
-                    $path = $route->path;
-                    if (!empty($params)) {
-                        $path = explode('/', $path);
-                        foreach ($path as $key => $value) {
-                            if (strpos($value, ':') === 0) {
-                                $value = str_replace(':', '', $value);
-                                if (isset($params[$value])) {
-                                    $path[$key] = $params[$value];
-                                } else {
-                                    throw new Exception(
-                                        "Le paramètre '$value' est requie",
-                                        13
-                                    );
-                                }
-                            }
-                        }
-                        $path = implode('/', $path);
-                    }
-                } else {
-                    $err += 1;
+                if($route->name === $routeName){
+                    return $this->routeNeedParams($route->path, $params);
                 }
             }
         }
-        if ($err == count((array)$routesTest)) {
-            throw new Exception("La route '$routeName' n'existe pas dans la requête $requestTest.", 13);
-        }
-        return $this->routeNeedParams($path);
+        throw new RouteNotFoundException("La route '$routeName' n'existe pas dans la requête $requestTest.", 404);
     }
 
     /**
@@ -241,7 +218,7 @@ class Router
         $currentRoute = ServerRequest::fromGlobals()
             ->getUri()
             ->getPath();
-        if ($route) {
+        if($route){
             return $currentRoute === $route;
         }
         return $currentRoute;
@@ -259,7 +236,7 @@ class Router
             ->getUri()
             ->getPath();
         $currentRouteArray = explode('/', trim($currentRoute, '/'));
-        if ($route) {
+        if($route){
             return $currentRouteArray[0] === $route;
         }
         return false;
@@ -269,17 +246,17 @@ class Router
      * Démarre la recherche de la route
      *
      * @param ServerRequestInterface $request
-     * @return void
+     * @return void|View
      * @throws Exception
      */
     public function run(ServerRequestInterface $request)
     {
         foreach ($this->routes[$request->getMethod()] as $route) {
-            if ($route->match($request)) {
+            if($route->match($request)){
                 return $route->execute($request);
             }
         }
-        ErrorController::error(400, sprintf("La route %s n'existe pas", $request->getUri()->getPath()));
+        throw new RouteNotFoundException(sprintf('la route %s n\'existe pas', $request->getUri()->getPort()));
     }
 
     /**
@@ -373,7 +350,7 @@ class Router
         foreach ($this->routes as $method => $routes) {
             foreach ($routes as $route) {
                 $paths = explode('/', trim($route->path, '/'));
-                if (in_array($namespace, $paths)) {
+                if(in_array($namespace, $paths)){
                     unset($paths[0]);
                     $currentPath = "\t/" . join('/', $paths);
                 } else {

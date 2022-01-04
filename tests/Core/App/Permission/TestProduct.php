@@ -1,7 +1,8 @@
 <?php
 
 
-namespace Tests\Core\Helpers\Permission;
+namespace Tests\Core\App\Permission;
+
 
 
 use App\Models\User;

@@ -7,7 +7,7 @@ if(!function_exists('route')){
         try {
             return Route::generateUrlByName($routeName, $params);
         } catch (\Exception $ex) {
-            return $ex;
+            die($ex->getMessage());
         }
     }
 }

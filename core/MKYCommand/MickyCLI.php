@@ -324,6 +324,7 @@ class MickyCLI
         $columns = [];
         foreach ($data as $row_key => $row) {
             foreach ($row as $cell_key => $cell) {
+                var_dump($cell);
                 $length = strlen($cell);
                 if (empty($columns[$cell_key]) || $columns[$cell_key] || $length) {
                     $columns[$cell_key] = 20;

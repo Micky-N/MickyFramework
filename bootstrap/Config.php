@@ -2,9 +2,9 @@
 
 return [
     'app_name' => _env('APP_NAME', 'MICKYFRAMEWORK'),
-    'cache' => ROOT . 'cache',
+    'cache' => dirname(__DIR__) . '/cache',
     'env' => _env('ENV', 'local'),
-    'debugMode' => true,
+    'debugMode' => _env('ENV') == 'local',
     'connection' => [
         'mysql' => [
             'user' => _env('DB_USER', 'root'),
@@ -14,8 +14,8 @@ return [
         ]
     ],
     'mkyengine' => [
-        'views' => ROOT . 'views',
-        'cache' => ROOT . 'cache/views',
+        'views' => dirname(__DIR__) . '/views',
+        'cache' => dirname(__DIR__) . '/cache/views',
         'layouts' => 'layouts'
     ]
 ];

@@ -55,7 +55,7 @@ class Route
             $method = $this->action[1];
             $this->routesDebugBar($request, $params, $controller, $method);
             return call_user_func_array([$controller, $method], $params);
-        }else if(is_callable($this->action)){
+        } else if(is_callable($this->action)){
             return call_user_func_array($this->action, $params);
         }
     }

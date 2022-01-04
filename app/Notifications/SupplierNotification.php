@@ -24,23 +24,23 @@ class SupplierNotification implements NotificationInterface
 
     public function via($notifiable)
     {
-        return ['beams'];
+        return ['webPush'];
     }
 
-    public function toBeams($notifiable)
+    public function toWebPush($notifiable)
     {
         switch ($this->action):
             default:
-                return [
-                    'notification' => [
-                        'title' => "Fournisseur Affiché",
-                        'body' => sprintf("Le fournisseur %s est affiché", $this->process->name),
-                        'icon' => "http://pngimg.com/uploads/php/php_PNG49.png",
-                        'image' => 'https://www.synolia.com/wp-content/uploads/2019/12/header-vue-js.jpg',
-                        'deep_link' => 'https://mickyframework.loc/' . route('suppliers.show', ['supplier' => $this->process->code_supplier]),
-                        'hide_notification_if_site_has_focus' => false,
-                    ]
-                ];
+                return WebPushMessage::create()
+                    ->icon('http://pngimg.com/uploads/php/php_PNG49.png')
+                    ->image('https://www.synolia.com/wp-content/uploads/2019/12/header-vue-js.jpg')
+                    ->link(route('suppliers.show', ['supplier' => $this->process->code_supplier]))
+                    ->title('Fournisseur Affiché')
+                    ->body(sprintf("Le fournisseur %s est affiché", $this->process->name))
+                    ->actions([
+                        ['action' => 'open', 'title' => 'Ouvrir'],
+                        ['action' => 'markAsRead', 'title' => 'Marquer comme lu']
+                    ])->toArray();
                 break;
         endswitch;
     }

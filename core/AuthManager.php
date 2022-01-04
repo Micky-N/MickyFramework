@@ -3,7 +3,7 @@
 
 namespace Core;
 
-
+use Core\Facades\Session;
 use App\Models\User;
 use Core\Facades\Route;
 use Exception;
@@ -17,7 +17,7 @@ class AuthManager
 
     public function __construct()
     {
-        $this->auth = (new Session())->get('auth');
+        $this->auth = Session::get('auth');
     }
 
     /**
@@ -43,7 +43,7 @@ class AuthManager
     public function login($logId)
     {
         if(!$this->isLoggin()){
-            (new Session())->set('auth', $logId);
+            Session::set('auth', $logId);
         }
     }
 
@@ -54,7 +54,7 @@ class AuthManager
      */
     public function logout()
     {
-        (new Session())->delete('auth');
+        Session::delete('auth');
         $this->auth = null;
         if(!currentRoute(route('home.index'))){
             return Route::redirectName('auth.signin');

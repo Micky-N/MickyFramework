@@ -6,7 +6,7 @@ use Symfony\Component\Dotenv\Dotenv;
 function configEnv()
 {
     $dotenv = new Dotenv();
-    $dotenv->load((defined('ROOT') ? ROOT : './') . '.env');
+    $dotenv->load(dirname(__DIR__).'/../.env');
 }
 
 if (!function_exists('_env')) {
@@ -21,7 +21,7 @@ if (!function_exists('config')) {
     function config($configName)
     {
         try {
-            $config = include (defined('ROOT') ? ROOT : './') . 'bootstrap/Config.php';
+            $config = include dirname(__DIR__).'/../bootstrap/Config.php';
             $configName = array_filter(explode('.', $configName));
             foreach ($configName as $c) {
                 if (isset($config[$c])) {

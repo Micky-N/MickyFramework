@@ -35,8 +35,20 @@ class App
      */
     public static function Providers(string $key = '')
     {
-        $provider = include (defined('ROOT') ? ROOT : './') . 'bootstrap/Provider.php';
+        $provider = include dirname(__DIR__) . '/bootstrap/Provider.php';
         return $key && isset($provider[$key]) ? $provider[$key] : $provider;
+    }
+
+    public static function EventServiceProviders(string $key = '')
+    {
+        $eventServiceProvider = include dirname(__DIR__) . '/bootstrap/EventServiceProvider.php';
+        return $key && isset($eventServiceProvider[$key]) ? $eventServiceProvider[$key] : $eventServiceProvider;
+    }
+
+    public static function MiddlewareServiceProviders(string $key = '')
+    {
+        $middlewareServiceProvider = include dirname(__DIR__) . '/bootstrap/MiddlewareServiceProvider.php';
+        return $key && isset($middlewareServiceProvider[$key]) ? $middlewareServiceProvider[$key] : $middlewareServiceProvider;
     }
 
     /**
@@ -44,7 +56,7 @@ class App
      */
     public static function setMiddlewares()
     {
-        self::$middlewares = self::Providers('middlewares');
+        self::$middlewares = self::MiddlewareServiceProviders('middlewares');
     }
 
     /**
@@ -52,7 +64,7 @@ class App
      */
     public static function setEvents()
     {
-        self::$events = self::Providers('events');
+        self::$events = self::EventServiceProviders();
     }
 
     /**
@@ -60,7 +72,7 @@ class App
      */
     public static function setVoters()
     {
-        $voters = self::Providers('voters');
+        $voters = self::MiddlewareServiceProviders('voters');
         foreach ($voters as $voter) {
             Permission::addVoter(new $voter());
         }
@@ -72,13 +84,15 @@ class App
      */
     public static function setRoutes()
     {
-        return includeAll(ROOT . 'routes');
+        return includeAll(dirname(__DIR__) . '/routes');
     }
 
     /**
      * Lance le remplissage de providers
      * et envoi la requête dans la route
      * @param ServerRequestInterface $request
+     * @return View
+     * @throws Exception
      */
     public static function run(ServerRequestInterface $request)
     {
@@ -86,7 +100,11 @@ class App
         self::setEvents();
         self::setVoters();
         self::setRoutes();
-        Route::run($request);
+        try {
+            Route::run($request);
+        } catch (Exception $ex) {
+            return ErrorController::error($ex->getCode(), $ex->getMessage());
+        }
         self::debugMode();
     }
 
@@ -117,10 +135,7 @@ class App
      */
     public static function getMiddleware(string $middleware)
     {
-        if(isset(self::$middlewares[$middleware])){
-            return self::$middlewares[$middleware];
-        }
-        return null;
+        return self::$middlewares[$middleware] ?? null;
     }
 
     /**
@@ -140,10 +155,7 @@ class App
      */
     public static function getListeners(string $event)
     {
-        if(isset(self::$events[$event])){
-            return self::$events[$event];
-        }
-        return null;
+        return self::$events[$event] ?? null;
     }
 
     /**
@@ -155,7 +167,7 @@ class App
      */
     public static function getListenerActions(string $event, string $action)
     {
-        if(isset(self::$events[$event]) && isset(self::$events[$event][$action])){
+        if (isset(self::$events[$event]) && isset(self::$events[$event][$action])) {
             return self::$events[$event][$action];
         }
         return null;
@@ -169,10 +181,7 @@ class App
      */
     public static function getAlias(string $key)
     {
-        if(isset(self::Providers('alias')[$key])){
-            return self::Providers('alias')[$key];
-        }
-        return null;
+        return self::Providers('alias')[$key] ?? null;
     }
 
     /**
@@ -182,7 +191,7 @@ class App
      */
     public static function debugMode()
     {
-        if(config('debugMode')){
+        if (config('debugMode')) {
             echo _debugRender();
         }
     }

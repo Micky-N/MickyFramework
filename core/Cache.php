@@ -28,7 +28,7 @@ class Cache
         $start = '';
         foreach ($array as $file) {
             $start .= $file;
-            if (strpos($file, '.') !== false) {
+            if(strpos($file, '.') !== false){
                 file_put_contents($start, $data);
             } else {
                 if(!file_exists($start)){
@@ -45,25 +45,21 @@ class Cache
      */
     public function removeCache(string $file)
     {
-        function recursiveRemove($dir)
-        {
-            $structure = glob(rtrim($dir, "/") . '/*');
-            if (is_array($structure)) {
-                foreach ($structure as $file) {
-                    if (is_dir($file)) recursiveRemove($file);
-                    elseif (is_file($file)) unlink($file);
-                }
-            }
-
-            if (stripos($dir, '/') != false) {
-                if (is_dir($dir)) {
-                    rmdir($dir);
-                } else {
-                    unlink($dir);
-                }
+        $structure = glob(rtrim($file, "/") . '/*');
+        if(is_array($structure)){
+            foreach ($structure as $file) {
+                if(is_dir($file)) $this->removeCache($file);
+                elseif(is_file($file)) unlink($file);
             }
         }
-        recursiveRemove($file);
+
+        if(stripos($file, '/') != false){
+            if(is_dir($file)){
+                rmdir($file);
+            } else {
+                unlink($file);
+            }
+        }
     }
 
     /**
