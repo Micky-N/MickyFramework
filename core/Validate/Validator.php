@@ -9,8 +9,8 @@ use Exception;
 class Validator
 {
 
-    private array $data = [];
-    private array $rules = [];
+    private array $data;
+    private array $rules;
     private array $errors = [];
 
 

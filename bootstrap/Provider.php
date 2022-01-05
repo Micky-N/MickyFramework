@@ -3,6 +3,6 @@
 
 return [
     'alias' => [
-        'webPush' => \Core\WebPushNotification::class,
+        'webPush' => \App\Utils\WebPushNotification::class,
     ]
 ];

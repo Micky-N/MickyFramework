@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\User;
 use Core\Controller;
 use Core\Facades\Route;
 use Core\Facades\View;
-
+use HTML\Paginate;
 
 
 class ProductController extends Controller
@@ -17,13 +18,10 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::where('user_id', auth()->id)->get();
-        foreach ($products as $product) {
-            $product->with('stock', ['quantity']);
-            $product->selling_price =  $product->getSelling_price();
-            $product->with('category', ['name']);
+        foreach ($products as $product){
+            $product->category = $product->category->name;
         }
-        $categories = Category::all();
-        return View::render('admin.products.index', compact('products', 'categories'));
+        return View::render('admin.products.index', compact('products'));
     }
 
     public function show($product)

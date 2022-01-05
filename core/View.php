@@ -22,7 +22,7 @@ class View
             $mkyengine = new MkyEngine(config('mkyengine'));
             return $mkyengine->view($view, $params);
         } catch (Exception $ex) {
-            throw $ex;
+            dd($ex);
         }
     }
 }

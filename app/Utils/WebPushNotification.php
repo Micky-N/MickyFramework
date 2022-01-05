@@ -1,8 +1,7 @@
 <?php
 
 
-namespace Core;
-
+namespace App\Utils;
 
 use App\Models\Notifiables;
 use ErrorException;

@@ -4,11 +4,7 @@ use Core\Facades\Route;
 
 if(!function_exists('route')){
     function route($routeName, $params = []){
-        try {
-            return Route::generateUrlByName($routeName, $params);
-        } catch (\Exception $ex) {
-            die($ex->getMessage());
-        }
+        return Route::generateUrlByName($routeName, $params);
     }
 }
 

@@ -4,8 +4,8 @@
 namespace App\Notifications;
 
 
+use App\Utils\WebPushMessage;
 use Core\Interfaces\NotificationInterface;
-use Core\WebPushMessage;
 
 class CategoryNotification implements NotificationInterface
 {
