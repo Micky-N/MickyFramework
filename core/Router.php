@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Exceptions\Router\RouteAlreadyExistException;
 use Core\Exceptions\Router\RouteNeedParamsException;
 use Core\Exceptions\Router\RouteNotFoundException;
 use Core\Facades\Session;
@@ -30,6 +31,9 @@ class Router
      */
     public function get(string $path, $action): Route
     {
+        if(!$this->checkIfAlreadyRouteExist('GET', $path)){
+            throw new RouteAlreadyExistException("La route $path existe déjà dans GET");
+        }
         $route = new Route($path, $action);
         $this->routes['GET'][] = $route;
         return $route;
@@ -43,9 +47,31 @@ class Router
      */
     public function post(string $path, $action): Route
     {
+        if(!$this->checkIfAlreadyRouteExist('POST', $path)){
+            throw new RouteAlreadyExistException("La route $path existe déjà dans POST");
+        }
         $route = new Route($path, $action);
         $this->routes['POST'][] = $route;
         return $route;
+    }
+
+    /**
+     * Vérifie si la route existe déjà
+     *
+     * @param string $request
+     * @param string $path
+     * @return bool
+     */
+    private function checkIfAlreadyRouteExist(string $request, string $path)
+    {
+        if(isset($this->routes[$request])){
+            foreach ($this->routes[$request] as $route) {
+                if(trim($path, '/') === trim($route->getPath(), '/')){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -251,9 +277,11 @@ class Router
      */
     public function run(ServerRequestInterface $request)
     {
-        foreach ($this->routes[$request->getMethod()] as $route) {
-            if($route->match($request)){
-                return $route->execute($request);
+        if(isset($this->routes[$request->getMethod()])){
+            foreach ($this->routes[$request->getMethod()] as $route) {
+                if($route->match($request)){
+                    return $route->execute($request);
+                }
             }
         }
         throw new RouteNotFoundException(sprintf('la route %s n\'existe pas', $request->getUri()->getPort()));

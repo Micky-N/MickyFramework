@@ -13,4 +13,8 @@ class TestController extends Controller
     public function show($id){
         return 'red '.$id;
     }
+
+    public function post(array $data){
+        return $data['name'];
+    }
 }
