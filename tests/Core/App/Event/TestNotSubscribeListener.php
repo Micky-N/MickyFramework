@@ -14,6 +14,6 @@ class TestNotSubscribeListener
      */
     public function handle(EventInterface $event)
     {
-        // TODO: Implement handle() method.
+        return true;
     }
 }
