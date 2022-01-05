@@ -10,7 +10,7 @@ class Session
     const FLASH = 'FLASH_MESSAGES';
     const FLASH_ERROR = 'error';
     const FLASH_SUCCESS = 'success';
-    const FLASH_MESSAGE = 'message';
+    const FLASH_MESSAGE = 'flashMessage';
 
     /**
      * Assure que la session est démarré

@@ -76,7 +76,7 @@ class MkyEngine
             extract($data);
             $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
             $success = Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS'));
-            $messages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));
+            $flashMessages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));
             require $cachePath;
             echo ob_get_clean();
         }

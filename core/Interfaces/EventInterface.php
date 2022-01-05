@@ -3,6 +3,8 @@
 namespace Core\Interfaces;
 
 
+use Core\Traits\Dispatcher;
+
 interface EventInterface
 {
 
@@ -21,4 +23,29 @@ interface EventInterface
      * @return bool
      */
     public function isPropagationStopped(): bool;
+
+    /**
+     * Retourne les actions de l'event
+     * @return array
+     */
+    public function getActions(): array;
+
+    /**
+     * Retourne les paramètres de l'event
+     * @return array
+     */
+    public function getParams(): array;
+
+    /**
+     * Retourne un paramètre de l'event
+     * @param string $key
+     * @return mixed
+     */
+    public function getParam(string $key);
+
+    /**
+     * Retourne la cible de l'event
+     * @return mixed
+     */
+    public function getTarget();
 }

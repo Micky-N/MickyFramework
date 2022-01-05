@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\CategoryEvent;
+use App\Listeners\TestCategoryListener;
 use App\Models\User;
 use App\Notifications\CategoryNotification;
 use Core\Controller;
@@ -45,7 +46,8 @@ class CategoryController extends Controller
     public function update($category, array $data)
     {
         $update_category = Category::update($category, $data);
-        Notification::send(User::all(), new CategoryNotification($update_category, 'create'));
+        CategoryEvent::dispatch($update_category, [TestCategoryListener::class, 'update'], ['username' => auth()->username]);
+//        Notification::send(User::all(), new CategoryNotification($update_category, 'create'));
         return Route::redirectName('categories.index');
     }
     

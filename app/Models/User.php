@@ -26,11 +26,7 @@ class User extends Model
     public function routeNotificationFor(string $channel)
     {
         switch ($channel):
-            case 'beams':
-                $class = str_replace('\\', '.', get_class($this));
-                return $class . '.' . $this->id;
-                break;
-            case 'webPush':
+            default:
                 return $this->webPushUser();
                 break;
         endswitch;

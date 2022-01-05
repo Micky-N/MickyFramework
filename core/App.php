@@ -17,16 +17,16 @@ class App
     /**
      * @var MiddlewareInterface[]
      */
-    private static array $middlewares;
+    private static array $middlewares = [];
 
     /**
      * @var VoterInterface[]
      */
-    private static array $voters;
+    private static array $voters = [];
     /**
      * @var EventInterface[]
      */
-    private static array $events;
+    private static array $events = [];
 
     /**
      * Retourne la liste du provider

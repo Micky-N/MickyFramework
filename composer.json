@@ -11,9 +11,7 @@
         "nesbot/carbon": "^2.54",
         "minishlink/web-push": "^6.0",
         "ext-json": "*",
-        "ext-pdo": "*",
-        "pusher/pusher-push-notifications": "^1.1",
-        "pusher/pusher-php-server": "^7.0"
+        "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {

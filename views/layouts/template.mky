@@ -62,6 +62,11 @@
     </header>
     <main role="main" class="flex-shrink-0">
         <div class="container">
+            @if(!empty($flashMessages))
+            @foreach($flashMessages as $flashMessage)
+            <div class="alert alert-primary">{{ $flashMessage }}</div>
+            @endforeach
+            @endif
             <div class="container my-5">
                 <!-- Toutes les vues seront dans cette variable -->
                 @yield('content')

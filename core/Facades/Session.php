@@ -9,9 +9,7 @@ use Core\Session as CoreSession;
  * @method static void set(string $key, $value)
  * @method static void delete(string $key)
  * @method static void setFlashMessageOnType(string $type, string $name, string $message)
- * @method static void setFlashMessage(string $name, string $message)
  * @method static void getFlashMessagesByType(string $type)
- * @method static void getFlashMessage()
  * @method static string getConstant(string $constant)
  * @method static array getAll()
  *

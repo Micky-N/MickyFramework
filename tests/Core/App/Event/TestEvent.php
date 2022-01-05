@@ -1,12 +1,13 @@
 <?php
 
 
-namespace App\Events;
+namespace Tests\Core\App\Event;
+
 
 use Core\Interfaces\EventInterface;
 use Core\Traits\Dispatcher;
 
-class CategoryEvent implements EventInterface
+class TestEvent implements EventInterface
 {
     use Dispatcher;
 
@@ -27,8 +28,8 @@ class CategoryEvent implements EventInterface
     public function __construct($target, array $actions, array $params = [])
     {
         $this->target = $target;
-        $this->params = $params;
         $this->actions = $actions;
+        $this->params = $params;
     }
 
     /**
