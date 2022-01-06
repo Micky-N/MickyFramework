@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Core\App\Permission;
+namespace Tests\App\Permission;
 
 
 use Core\Interfaces\VoterInterface;
@@ -18,13 +18,13 @@ class PermissionClass
     /**
      * Autorise l'accès si true
      *
-     * @param User $user
+     * @param object $user
      * @param string $permission
      * @param null $subject
      * @return bool
      * @throws Exception
      */
-    public function can(User $user, string $permission, $subject = null): bool
+    public function can($user, string $permission, $subject = null): bool
     {
         if($this->test($user, $permission, $subject) === false){
             return false;
@@ -45,13 +45,13 @@ class PermissionClass
     /**
      * Test la permission
      *
-     * @param User $user
+     * @param mixed $user
      * @param string $permission
      * @param null $subject
      * @return bool
      * @throws Exception
      */
-    public function test(User $user, string $permission, $subject = null): bool
+    public function test($user, string $permission, $subject = null): bool
     {
         foreach ($this->voters as $voter) {
             if($voter->canVote($permission, $subject)){

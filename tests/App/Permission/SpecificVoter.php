@@ -1,10 +1,9 @@
 <?php
 
 
-namespace Tests\Core\App\Permission;
+namespace Tests\App\Permission;
 
 
-use App\Models\User;
 
 class SpecificVoter implements \Core\Interfaces\VoterInterface
 {
@@ -14,7 +13,7 @@ class SpecificVoter implements \Core\Interfaces\VoterInterface
         return $permission === 'specific';
     }
 
-    public function vote(User $user, string $permission, $subject = null): bool
+    public function vote($user, string $permission, $subject = null): bool
     {
         return true;
     }

@@ -34,6 +34,10 @@ class Validator
     public function passed(): bool
     {
         $rules = new Rules($this->data, $this->rules);
+        if(count($this->data) < 1 && count($this->rules) > 0){
+            $this->errors['form'] = 'Le formulaire ne doit pas être vide';
+            return false;
+        }
         foreach ($this->data as $key => $d) {
             $rules->checkRule($key, $d);
         }
@@ -57,6 +61,9 @@ class Validator
     public static function check(array $data, array $rules)
     {
         $rules = new Rules($data, $rules);
+        if(empty($data) && !empty($rules)){
+            return Route::back()->withError(['form' => 'Le formulaire ne doit pas être vide']);
+        }
         foreach ($data as $key => $d) {
             $data[$key] = $rules->checkRule($key, $d);
         }
@@ -94,18 +101,5 @@ class Validator
     public function getErrors()
     {
         return $this->errors;
-    }
-
-    /**
-     * @param $key
-     * @return mixed
-     * @throws Exception
-     */
-    public function __get($key)
-    {
-        if(method_exists($this, "get".ucfirst($key))){
-            return $this->{'get'.ucfirst($key)}();
-        }
-        throw new Exception("la variable $key n'existe pas");
     }
 }

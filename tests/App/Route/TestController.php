@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Core\App\Route;
+namespace Tests\App\Route;
 
 use Core\Controller;
 

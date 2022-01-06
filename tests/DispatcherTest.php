@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Core;
+namespace Tests;
 
 use Core\App;
 use Core\Exceptions\Dispatcher\EventNotFoundException;
@@ -8,12 +8,12 @@ use Core\Exceptions\Dispatcher\EventNotImplementException;
 use Core\Exceptions\Dispatcher\ListenerNotFoundException;
 use Core\Exceptions\Dispatcher\ListenerNotImplementException;
 use PHPUnit\Framework\TestCase;
-use Tests\Core\App\Event\TestEvent;
-use Tests\Core\App\Event\TestNotFoundEvent;
-use Tests\Core\App\Event\TestNotImplementEvent;
-use Tests\Core\App\Event\TestNoAliasListener;
-use Tests\Core\App\Event\TestNotSubscribeListener;
-use Tests\Core\App\Event\TodoTestClass;
+use Tests\App\Event\TestEvent;
+use Tests\App\Event\TestNotFoundEvent;
+use Tests\App\Event\TestNotImplementEvent;
+use Tests\App\Event\TestNoAliasListener;
+use Tests\App\Event\TestNotSubscribeListener;
+use Tests\App\Event\TodoTestClass;
 
 class DispatcherTest extends TestCase
 {

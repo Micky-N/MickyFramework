@@ -20,10 +20,10 @@ interface VoterInterface
     /**
      * Retourne le vote du Voter
      *
-     * @param User $user
+     * @param mixed $user
      * @param string $permission
      * @param null $subject
      * @return bool
      */
-    public function vote(User $user, string $permission, $subject = null): bool;
+    public function vote($user, string $permission, $subject = null): bool;
 }

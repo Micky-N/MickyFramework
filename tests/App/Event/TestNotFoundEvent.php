@@ -1,12 +1,13 @@
 <?php
 
 
-namespace Tests\Core\App\Event;
+namespace Tests\App\Event;
 
 
+use Core\Interfaces\EventInterface;
 use Core\Traits\Dispatcher;
 
-class TestNotFoundEvent implements \Core\Interfaces\EventInterface
+class TestNotFoundEvent implements EventInterface
 {
     use Dispatcher;
 

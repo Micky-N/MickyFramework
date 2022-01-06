@@ -1,10 +1,9 @@
 <?php
 
 
-namespace Tests\Core\App\Permission;
+namespace Tests\App\Permission;
 
 
-use App\Models\User;
 use Core\Interfaces\VoterInterface;
 
 class AlwaysYesVoter implements VoterInterface
@@ -15,7 +14,7 @@ class AlwaysYesVoter implements VoterInterface
         return true;
     }
 
-    public function vote(User $user, string $permission, $subject = null): bool
+    public function vote($user, string $permission, $subject = null): bool
     {
         return true;
     }

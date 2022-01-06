@@ -18,7 +18,7 @@ class ProductVoter implements VoterInterface
         return !empty($constants) && in_array($permission, $constants) && ($product instanceof Product);
     }
 
-    public function vote(User $user, string $permission, $product = null): bool
+    public function vote($user, string $permission, $product = null): bool
     {
         if(!$product instanceof Product){
             throw new RuntimeException('le sujet doit être une instance de Product.');
@@ -34,12 +34,12 @@ class ProductVoter implements VoterInterface
         throw new \Exception('Le vote ne peut pas être validé');
     }
 
-    private function canEdit(User $user, Product $product)
+    private function canEdit($user, Product $product)
     {
         return $user->id === $product->user_id;
     }
 
-    private function canDelete(User $user, Product $product)
+    private function canDelete($user, Product $product)
     {
         return $user->id === $product->user_id;
     }

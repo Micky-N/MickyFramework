@@ -1,10 +1,9 @@
 <?php
 
 
-namespace Tests\Core\App\Permission;
+namespace Tests\App\Permission;
 
 
-use App\Models\User;
 use Core\Interfaces\VoterInterface;
 use RuntimeException;
 
@@ -17,7 +16,7 @@ class SellerVoter implements VoterInterface
         return ($permission === self::EDIT) && ($subject instanceof TestProduct);
     }
 
-    public function vote(User $user, string $permission, $subject = null): bool
+    public function vote($user, string $permission, $subject = null): bool
     {
         if(!$subject instanceof TestProduct){
             throw new RuntimeException('le sujet doit être une instance de '. TestProduct::class);

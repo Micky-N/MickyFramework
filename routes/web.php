@@ -29,6 +29,3 @@ Route::get('admin/products', [\App\Http\Controllers\Admin\ProductController::cla
 Route::get('admin/products/:product', [\App\Http\Controllers\Admin\ProductController::class, 'show'])->middleware(['auth', 'can:edit,product'])->name('admin.products.show');
 Route::post('admin/products/update/:product', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->middleware(['auth', 'can:edit,product'])->name('admin.products.update');
 Route::get('admin/products/delete/:product', [\App\Http\Controllers\Admin\ProductController::class, 'delete'])->middleware(['auth', 'can:delete,product'])->name('admin.products.delete');
-
-Route::get('chat', [\App\Http\Controllers\ChatMessageController::class, 'index']);
-Route::post('chat/add', [\App\Http\Controllers\ChatMessageController::class, 'addMessage']);

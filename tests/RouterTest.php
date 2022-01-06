@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Core;
+namespace Tests;
 
 use Core\Exceptions\Router\RouteAlreadyExistException;
 use Core\Exceptions\Router\RouteNeedParamsException;
@@ -8,7 +8,7 @@ use Core\Exceptions\Router\RouteNotFoundException;
 use Core\Router;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\ServerRequest;
-use Tests\Core\App\Route\TestController;
+use Tests\App\Route\TestController;
 
 class RouterTest extends TestCase
 {

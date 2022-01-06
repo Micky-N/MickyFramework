@@ -25,7 +25,7 @@ class RoleVoter implements VoterInterface
     /**
      * @inheritDoc
      */
-    public function vote(User $user, string $permission, $subject = null): bool
+    public function vote($user, string $permission, $subject = null): bool
     {
         switch ($permission):
             case self::SELLER :
@@ -37,12 +37,12 @@ class RoleVoter implements VoterInterface
         throw new \Exception('Le vote ne peut pas être validé');
     }
 
-    private function canSeller(User $user)
+    private function canSeller($user)
     {
         return $user->role_id != Role::where('name', 'BUYER')->first()->id;
     }
 
-    private function canAdmin(User $user)
+    private function canAdmin($user)
     {
         return $user->role_id == Role::where('name', 'ADMIN')->first()->id;
     }

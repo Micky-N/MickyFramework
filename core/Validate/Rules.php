@@ -2,6 +2,7 @@
 
 namespace Core\Validate;
 
+use Core\Exceptions\Validator\RuleNotFoundException;
 use Exception;
 
 class Rules
@@ -52,6 +53,9 @@ class Rules
                 return $subject;
             }, 'le champ %s doit être d\'au plus %s'),
             'confirmed' => new Rule(function (string $field, string $subject) {
+                if(strpos($field, 'field.') === false){
+                    return false;
+                }
                 $field = $this->testField($field);
                 if ($field !== $subject) {
                     return false;
@@ -118,9 +122,9 @@ class Rules
                 $function = array_shift($ruleArgs);
                 $ruleArgs[] = $subject;
                 if(!isset($this->callbacks[$function])){
-                    throw new Exception("La régle de validation $function n'existe pas");
+                    throw new RuleNotFoundException("La régle de validation $function n'existe pas");
                 }
-                if (call_user_func_array($this->callbacks[$function]->callback, $ruleArgs) == false) {
+                if (call_user_func_array($this->callbacks[$function]->callback, $ruleArgs) === false) {
                     array_pop($ruleArgs);
                     $ruleArgs = array_map(function ($ra) use ($function) {
                         if (is_int(stripos($ra, self::FIELD))) {
@@ -146,7 +150,7 @@ class Rules
      */
     public function testField(string $field)
     {
-        if (stripos($field, self::FIELD) === 0) {
+        if (strpos($field, self::FIELD) === 0) {
             return $this->data[str_replace(self::FIELD, '', $field)];
         }
         return $field;

@@ -1,6 +1,5 @@
 namespace App\Voters;
 
-use App\Models\User;
 use Core\Interfaces\VoterInterface;
 use RuntimeException;
 !modelName
@@ -15,7 +14,7 @@ class !name implements VoterInterface
         return !empty($constants) && in_array($permission, $constants) && (!modellower instanceof !model);
     }
 
-    public function vote(User $user, string $permission, !modellower = null): bool
+    public function vote($user, string $permission, !modellower = null): bool
     {
         if(!!modellower instanceof !model){
             throw new RuntimeException('le sujet doit être une instance de !model.');

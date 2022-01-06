@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Core\App\Event;
+namespace Tests\App\Event;
 
 
 use Core\Interfaces\EventInterface;

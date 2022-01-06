@@ -1,12 +1,13 @@
 <?php
 
 
-namespace Tests\Core\App\Event;
+namespace Tests\App\Event;
 
 
 use Core\Interfaces\EventInterface;
+use Core\Interfaces\ListenerInterface;
 
-class TestNoAliasListener implements \Core\Interfaces\ListenerInterface
+class TestPropagationListener implements ListenerInterface
 {
 
     public function __construct()
@@ -18,6 +19,6 @@ class TestNoAliasListener implements \Core\Interfaces\ListenerInterface
      */
     public function handle(EventInterface $event)
     {
-        $event->getTarget()->setName('burger eaten');
+        $event->stopPropagation(true);
     }
 }

@@ -1,21 +1,18 @@
 <?php
 
 
-namespace Tests\Core\App\Permission;
+namespace Tests\App\Permission;
 
-
-
-use App\Models\User;
 
 class TestProduct
 {
 
     /**
-     * @var User
+     * @var mixed
      */
-    private User $user;
+    private $user;
 
-    public function __construct(User $user)
+    public function __construct($user)
     {
         $this->user = $user;
     }
