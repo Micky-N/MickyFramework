@@ -25,7 +25,8 @@ class DispatcherTest extends TestCase
     public function setUp(): void
     {
         $this->todoTest = new TodoTestClass(1, 'eat burger', false, 'Micky');
-        App::setEvents();
+        App::setEvents(\Tests\App\Event\TestEvent::class, 'test', \Tests\App\Event\TestAliasListener::class);
+        App::setEvents(\Tests\App\Event\TestEvent::class, 'propagation', \Tests\App\Event\TestPropagationListener::class);
     }
 
     public function testConstructor()

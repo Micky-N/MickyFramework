@@ -4,8 +4,9 @@
 namespace Tests\App\Notification;
 
 
-class NotificationTest implements \Core\Interfaces\NotificationInterface
+class NotificationNotSendTest implements \Core\Interfaces\NotificationInterface
 {
+
     /**
      * @var mixed
      */
@@ -23,12 +24,11 @@ class NotificationTest implements \Core\Interfaces\NotificationInterface
      */
     public function via($notifiable)
     {
-        return ['test'];
+        return ['notSend'];
     }
 
-    public function toTest($notifiable)
+    public function toNotSend($notifiable)
     {
-        $action = $this->action !== '' ? $this->action : 'default';
-        return $this->process[$action];
+        return true;
     }
 }

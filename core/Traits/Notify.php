@@ -5,6 +5,11 @@ namespace Core\Traits;
 
 
 use Core\App;
+use Core\Exceptions\Notification\NotificationException;
+use Core\Exceptions\Notification\NotificationNotAliasException;
+use Core\Exceptions\Notification\NotificationNotMessageException;
+use Core\Exceptions\Notification\NotificationNotViaException;
+use Core\Exceptions\Notification\NotificationSystemException;
 use Core\Interfaces\NotificationInterface;
 use Exception;
 use ReflectionClass;
@@ -17,17 +22,40 @@ trait Notify
      * Déclenche le système de notification
      *
      * @param NotificationInterface $notification
+     * @return bool
+     * @throws NotificationException
+     * @throws NotificationNotAliasException
+     * @throws NotificationNotViaException
+     * @throws NotificationSystemException
      * @throws ReflectionException
+     * @throws NotificationNotMessageException
      */
     public function notify(NotificationInterface $notification)
     {
+        if(!method_exists($notification, '__construct')){
+            throw new NotificationException(sprintf('La classe %s doit être instanciable', get_class($notification)));
+        }
+        if(!is_array($notification->via($this)) || count($notification->via($this)) < 1){
+            throw new NotificationNotViaException(sprintf('Inscrire les systèmes de notification dans la methode %s::via', get_class($notification)));
+        }
         foreach ($notification->via($this) as $via){
-            $class = new ReflectionClass(App::getAlias($via));
+            $alias = App::getAlias($via);
+            if(is_null($alias)){
+                throw new NotificationNotAliasException("L'alias $via n'est pas définie dans le Provider");
+            }
+            $class = new ReflectionClass($alias);
+            if(!method_exists($notification, 'to'.ucfirst($via))){
+                throw new NotificationException(sprintf("La classe %s doit implementer la méthode %s", get_class($notification), 'to'.ucfirst($via)));
+            }
             $message = $notification->{'to'.ucfirst($via)}($this);
             if(empty($message)){
-                throw new Exception('Le message ne peut pas être vide.', 2);
+                throw new NotificationNotMessageException(sprintf('%s::%s() Le message ne peut pas être vide.', get_class($notification), 'to'.ucfirst($via)));
+            }
+            if(!method_exists($class->newInstance(), 'send')){
+                throw new NotificationSystemException(sprintf("La classe %s doit implementer la méthode send", $class->getName()));
             }
             call_user_func_array([$class->newInstance(), 'send'], [$this, $message]);
         }
+        return true;
     }
 }

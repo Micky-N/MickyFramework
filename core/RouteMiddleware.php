@@ -12,7 +12,7 @@ class RouteMiddleware
 {
 
     private int $index = 0;
-    private array $middlewares;
+    private array $routeMiddlewares;
 
     public function __construct($appMiddlewares, array $matches)
     {
@@ -22,11 +22,11 @@ class RouteMiddleware
             if (stripos($middleware, 'can') !== false) {
                 $this->permissionCan($middleware, $matches);
             } else {
-                $routeMiddlewares[] = App::getMiddleware($middleware);
+                $routeMiddlewares[] = App::getRouteMiddlewares($middleware);
             }
         }
         $routeMiddlewares = array_filter($routeMiddlewares);
-        $this->middlewares = $routeMiddlewares;
+        $this->routeMiddlewares = $routeMiddlewares;
     }
 
     /**
@@ -37,11 +37,11 @@ class RouteMiddleware
      */
     public function process(ServerRequestInterface $request)
     {
-        if ($this->index < count($this->middlewares)) {
+        if ($this->index < count($this->routeMiddlewares)) {
             $index = $this->index;
             $this->index++;
-            if (!empty($this->middlewares[$index]) && new $this->middlewares[$index]() instanceof MiddlewareInterface) {
-                return call_user_func([new $this->middlewares[$index](), 'process'], [$this, 'process'], $request);
+            if (!empty($this->routeMiddlewares[$index]) && new $this->routeMiddlewares[$index]() instanceof MiddlewareInterface) {
+                return call_user_func([new $this->routeMiddlewares[$index](), 'process'], [$this, 'process'], $request);
             }
         }
         $this->index = 0;

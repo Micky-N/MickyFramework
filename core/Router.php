@@ -401,4 +401,12 @@ class Router
         }
         return $routes;
     }
+
+    /**
+     * @return Route[]
+     */
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
 }

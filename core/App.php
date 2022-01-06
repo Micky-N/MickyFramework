@@ -14,92 +14,119 @@ use Psr\Http\Message\ServerRequestInterface;
 class App
 {
 
-    /**
-     * @var MiddlewareInterface[]
-     */
-    private static array $middlewares = [];
+    private static array $middlewareServiceProviders = [];
 
-    /**
-     * @var VoterInterface[]
-     */
-    private static array $voters = [];
     /**
      * @var EventInterface[]
      */
     private static array $events = [];
+    private static array $providers = [];
+
+    /**
+     * @var Route[]
+     */
+    private static array $routes = [];
 
     /**
      * Retourne la liste du provider
-     * @param string $key
+     *
      * @return mixed
      */
-    public static function Providers(string $key = '')
+    public static function Providers()
     {
-        $provider = include dirname(__DIR__) . '/bootstrap/Provider.php';
-        return $key && isset($provider[$key]) ? $provider[$key] : $provider;
-    }
-
-    public static function EventServiceProviders(string $key = '')
-    {
-        $eventServiceProvider = include dirname(__DIR__) . '/bootstrap/EventServiceProvider.php';
-        return $key && isset($eventServiceProvider[$key]) ? $eventServiceProvider[$key] : $eventServiceProvider;
-    }
-
-    public static function MiddlewareServiceProviders(string $key = '')
-    {
-        $middlewareServiceProvider = include dirname(__DIR__) . '/bootstrap/MiddlewareServiceProvider.php';
-        return $key && isset($middlewareServiceProvider[$key]) ? $middlewareServiceProvider[$key] : $middlewareServiceProvider;
+        self::$providers = include dirname(__DIR__) . '/bootstrap/Provider.php';
+        return self::$providers;
     }
 
     /**
-     * Inscrit les middlewares à partir des providers
+     * Retourne les events et les listeners
+     *
+     * @return array|EventInterface[]|mixed
      */
-    public static function setMiddlewares()
+    public static function EventServiceProviders()
     {
-        self::$middlewares = self::MiddlewareServiceProviders('middlewares');
+        self::$events = include dirname(__DIR__) . '/bootstrap/EventServiceProvider.php';
+        return self::$events;
     }
 
     /**
-     * Inscrit les events et listeners à partir des providers
+     * Retourne les middlewares, routeMiddlewares et voters
+     *
+     * @return array|mixed
      */
-    public static function setEvents()
+    public static function MiddlewareServiceProviders()
     {
-        self::$events = self::EventServiceProviders();
+        self::$middlewareServiceProviders = include dirname(__DIR__) . '/bootstrap/MiddlewareServiceProvider.php';
+        return self::$middlewareServiceProviders;
     }
 
     /**
      * Inscrit les voters à partir des providers
      */
-    public static function setVoters()
+    public static function VotersInit()
     {
-        $voters = self::MiddlewareServiceProviders('voters');
-        foreach ($voters as $voter) {
+        foreach (self::$middlewareServiceProviders['voters'] as $voter) {
             Permission::addVoter(new $voter());
         }
-        self::$voters = $voters;
+    }
+
+    /**
+     * Inscrit les events et listeners à partir des providers
+     *
+     * @param string $event
+     * @param string $key
+     * @param string $class
+     */
+    public static function setEvents(string $event, string $key, string $class)
+    {
+        self::$events[$event][$key] = $class;
+    }
+
+    /**
+     * Inscrit un alias dans le Provider
+     *
+     * @param string $key
+     * @param string $class
+     */
+    public static function setAlias(string $key, string $class)
+    {
+        self::$providers['alias'][$key] = $class;
+    }
+
+    public static function setMiddleware(string $middleware)
+    {
+        self::$middlewareServiceProviders['middlewares'][] = $middleware;
+    }
+
+    public static function setRouteMiddleware(string $alias, string $routeMiddleware)
+    {
+        self::$middlewareServiceProviders['routeMiddlewares'][$alias] = $routeMiddleware;
     }
 
     /**
      * Inscrit les routes à partir des providers
      */
-    public static function setRoutes()
+    public static function RoutesInit()
     {
-        return includeAll(dirname(__DIR__) . '/routes');
+        includeAll(dirname(__DIR__) . '/routes');
+        self::$routes = Route::getRoutes();
     }
 
     /**
      * Lance le remplissage de providers
      * et envoi la requête dans la route
+     *
      * @param ServerRequestInterface $request
      * @return View
      * @throws Exception
      */
     public static function run(ServerRequestInterface $request)
     {
-        self::setMiddlewares();
-        self::setEvents();
-        self::setVoters();
-        self::setRoutes();
+        self::Providers();
+        self::MiddlewareServiceProviders();
+        self::EventServiceProviders();
+        self::VotersInit();
+        self::RoutesInit();
         try {
             Route::run($request);
         } catch (Exception $ex) {
@@ -115,27 +142,35 @@ class App
      */
     public static function getVoters(): array
     {
-        return self::$voters;
+        return self::$middlewareServiceProviders['voters'];
     }
 
     /**
-     * Retourne les middlewares
+     * Retourne les middlewares ou le middleware
      *
-     * @return MiddlewareInterface[]
+     * @param string|null $middleware
+     * @return MiddlewareInterface[]|MiddlewareInterface|null
      */
-    public static function getMiddlewares(): array
+    public static function getMiddlewares(string $middleware = null)
     {
-        return self::$middlewares;
+        if($middleware){
+            return self::$middlewareServiceProviders['middlewares'][$middleware] ?? null;
+        }
+        return self::$middlewareServiceProviders['middlewares'];
     }
 
     /**
-     * Retourne le middleware
-     * @param string $middleware
-     * @return MiddlewareInterface|null
+     * Retourne les routeMiddlewares ou le routeMiddleware
+     *
+     * @param string|null $routeMiddleware
+     * @return MiddlewareInterface[]|MiddlewareInterface|null
      */
-    public static function getMiddleware(string $middleware)
+    public static function getRouteMiddlewares(string $routeMiddleware = null)
     {
-        return self::$middlewares[$middleware] ?? null;
+        if($routeMiddleware){
+            return self::$middlewareServiceProviders['routeMiddlewares'][$routeMiddleware] ?? null;
+        }
+        return self::$middlewareServiceProviders['middlewares'];
     }
 
     /**
@@ -181,7 +216,7 @@ class App
      */
     public static function getAlias(string $key)
     {
-        return self::Providers('alias')[$key] ?? null;
+        return self::$providers['alias'][$key] ?? null;
     }
 
     /**
@@ -194,5 +229,21 @@ class App
         if (config('debugMode')) {
             echo _debugRender();
         }
+    }
+
+    /**
+     * @return array
+     */
+    public static function getProviders(): array
+    {
+        return self::$providers;
+    }
+
+    /**
+     * @return Route[]
+     */
+    public static function getRoutes(): array
+    {
+        return self::$routes;
     }
 }

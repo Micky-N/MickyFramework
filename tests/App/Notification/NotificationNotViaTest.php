@@ -4,7 +4,9 @@
 namespace Tests\App\Notification;
 
 
-class NotificationTest implements \Core\Interfaces\NotificationInterface
+use Core\Interfaces\NotificationInterface;
+
+class NotificationNotViaTest implements NotificationInterface
 {
     /**
      * @var mixed
@@ -18,17 +20,8 @@ class NotificationTest implements \Core\Interfaces\NotificationInterface
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function via($notifiable)
     {
-        return ['test'];
-    }
-
-    public function toTest($notifiable)
-    {
-        $action = $this->action !== '' ? $this->action : 'default';
-        return $this->process[$action];
+        return ;
     }
 }

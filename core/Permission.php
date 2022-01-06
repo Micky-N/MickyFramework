@@ -25,10 +25,13 @@ class Permission
      */
     public function can(string $permission, $subject = null)
     {
-        if($this->test($permission, $subject) === false){
-            return ErrorController::forbidden();
+        $auth = new AuthManager();
+        if($auth->isLoggin()){
+            if($this->test($auth->getAuth(), $permission, $subject) === false){
+                return ErrorController::forbidden();
+            }
+            return true;
         }
-        return true;
     }
 
     /**
@@ -44,24 +47,22 @@ class Permission
     /**
      * Test la permission
      *
+     * @param mixed $user
      * @param string $permission
      * @param null $subject
      * @return bool
      * @throws Exception
      */
-    public function test(string $permission, $subject = null): bool
+    public function test($user, string $permission, $subject = null): bool
     {
         foreach ($this->voters as $voter) {
             if($voter->canVote($permission, $subject)){
-                $auth = new AuthManager();
-                if($auth->isLoggin()){
-                    $vote = $voter->vote($auth->getAuth(), $permission, $subject);
-                    if(config('env') === 'local'){
-                        $this->voterDebugBar($voter, $vote, $permission);
-                    }
-                    if($vote === true){
-                        return true;
-                    }
+                $vote = $voter->vote($user, $permission, $subject);
+                if(config('env') === 'local'){
+                    $this->voterDebugBar($voter, $vote, $permission);
+                }
+                if($vote === true){
+                    return true;
                 }
             }
         }
