@@ -32,6 +32,7 @@ class Permission
             }
             return true;
         }
+        return ErrorController::forbidden();
     }
 
     /**
@@ -76,10 +77,11 @@ class Permission
      * @param bool $vote
      * @param string $permission
      */
-    private function voterDebugBar(VoterInterface $voter, bool $vote, string $permission){
+    private function voterDebugBar(VoterInterface $voter, bool $vote, string $permission)
+    {
         $className = get_class($voter);
         $type = $vote ? 'info' : 'error';
-        $message = "$className : ".($vote ? "yes" : "no")." on $permission";
+        $message = "$className : " . ($vote ? "yes" : "no") . " on $permission";
         StandardDebugBar::addMessage('Voters', $message, $type);
     }
 }

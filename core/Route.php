@@ -35,7 +35,8 @@ class Route
      * de la route
      *
      * @param ServerRequestInterface $request
-     * @return void
+     * @return void|bool
+     * @throws Exceptions\Router\RouteMiddlewareException
      */
     public function execute(ServerRequestInterface $request)
     {
@@ -45,7 +46,9 @@ class Route
         }
         if(!empty($this->middleware)){
             $routeMiddleware = new RouteMiddleware($this->middleware, $this->matches);
-            $routeMiddleware->process($request);
+            if(!$routeMiddleware->process($request)){
+                return false;
+            }
         }
         if($request->getParsedBody()){
             $params[] = $request->getParsedBody();

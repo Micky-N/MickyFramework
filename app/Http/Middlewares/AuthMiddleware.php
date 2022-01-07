@@ -17,9 +17,9 @@ class AuthMiddleware implements MiddlewareInterface
      */
     public function process(callable $next, ServerRequestInterface $request)
     {
-        if(auth()){
-            return $next($request);
+        if(!isLoggin()){
+            Route::redirectName('auth.signin');
         }
-        Route::redirectName('auth.signin');
+        return $next($request);
     }
 }

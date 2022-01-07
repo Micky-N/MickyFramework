@@ -4,6 +4,7 @@
 namespace Core;
 
 
+use Core\Exceptions\Router\RouteMiddlewareException;
 use Core\Facades\Permission;
 use Core\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,9 +20,12 @@ class RouteMiddleware
         $routeMiddlewares = [];
         $middlewares = is_array($appMiddlewares) ? $appMiddlewares : [$appMiddlewares];
         foreach ($middlewares as $middleware) {
-            if (stripos($middleware, 'can') !== false) {
+            if (stripos($middleware, 'can') === 0) {
                 $this->permissionCan($middleware, $matches);
             } else {
+                if(is_null(App::getRouteMiddlewares($middleware))){
+                    throw new RouteMiddlewareException(sprintf('No middleware found for ths alias %s', $middleware));
+                }
                 $routeMiddlewares[] = App::getRouteMiddlewares($middleware);
             }
         }
@@ -45,7 +49,7 @@ class RouteMiddleware
             }
         }
         $this->index = 0;
-        return $request;
+        return true;
     }
 
     /**

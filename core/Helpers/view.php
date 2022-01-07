@@ -26,6 +26,7 @@ if(!function_exists('isLoggin')){
 if(!function_exists('permission')){
     function permission(string $permission, $subject = null)
     {
+        if(!isLoggin()) return false;
         return \Core\Facades\Permission::test($permission, $subject);
     }
 }

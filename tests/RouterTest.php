@@ -60,8 +60,8 @@ class RouterTest extends TestCase
     {
         $this->router->get('boo', [TestController::class, 'index']);
         $this->router->get('boo/:id', [TestController::class, 'show']);
-        $this->assertTrue($this->router->run(new ServerRequest('get', 'boo')) == 'green');
-        $this->assertTrue($this->router->run(new ServerRequest('get', 'boo/12')) == 'red 12');
+        $this->assertEquals('green', $this->router->run(new ServerRequest('get', 'boo')));
+        $this->assertEquals('red 12', $this->router->run(new ServerRequest('get', 'boo/12')));
     }
 
     public function testPostRouteToController()
