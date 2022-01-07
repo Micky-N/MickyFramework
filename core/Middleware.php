@@ -37,7 +37,7 @@ class Middleware
     }
 
     /**
-     * Lance le process de middleware en static
+     * Construct singleton and run process
      *
      * @param string[]|string $middlewares
      * @return bool
@@ -46,7 +46,7 @@ class Middleware
     public static function run($middlewares)
     {
         if(empty($middlewares)){
-            throw new MiddlewareException("Il n'y a aucun middleware");
+            throw new MiddlewareException("Method need middlewares");
         }
         if(!is_array($middlewares)){
             $middlewares = [$middlewares];
@@ -68,6 +68,8 @@ class Middleware
     }
 
     /**
+     * Get all middlewares
+     *
      * @param mixed|null $key
      * @return string[]|null
      */

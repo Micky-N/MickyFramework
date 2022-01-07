@@ -11,7 +11,6 @@ use Core\Exceptions\Dispatcher\ListenerNotFoundException;
 use Core\Exceptions\Dispatcher\ListenerNotImplementException;
 use Core\Interfaces\EventInterface;
 use Core\Interfaces\ListenerInterface;
-use Exception;
 use ReflectionClass;
 use ReflectionException;
 
@@ -19,7 +18,7 @@ trait Dispatcher
 {
 
     /**
-     * Déclenche l'événement et les écouteurs
+     * Run events and listeners
      *
      * @param null $target
      * @param array|string $actions
@@ -39,7 +38,7 @@ trait Dispatcher
         }
         $event = $class->newInstance($target, $actions, $params);
         if(!($event instanceof EventInterface)){
-            throw new EventNotImplementException(sprintf("L'event %s doit implementer l'interface %s", $class->getName(), EventInterface::class));
+            throw new EventNotImplementException(sprintf("%s must implement %s interface", $class->getName(), EventInterface::class));
         }
         if(!in_array(null, $event->getActions())){
             if(!is_null(App::getListeners($class->getName()))){
@@ -50,16 +49,16 @@ trait Dispatcher
                     $actionName = $action;
                     $action = class_exists($action) ? $action : App::getListenerActions($class->getName(), $action);
                     if(is_null($action)){
-                        throw new ListenerNotFoundException(sprintf("L'event %s n'a pas de listener pour l'action %s dans l'EventServiceProvider", $class->getName(), $actionName));
+                        throw new ListenerNotFoundException(sprintf("%s doesn't have a listener for '%s' action in the EventServiceProvider", $class->getName(), $actionName));
                     }
                     $action = (new $action());
                     if(!($action instanceof ListenerInterface)){
-                        throw new ListenerNotImplementException(sprintf("L'event %s doit implementer l'interface %s", $actionName, ListenerInterface::class));
+                        throw new ListenerNotImplementException(sprintf("%s must implement %s interface", $actionName, ListenerInterface::class));
                     }
                     $action->handle($event);
                 }
             } else {
-                throw new EventNotFoundException(sprintf("L'event %s n'est pas renseigné dans l'EventServiceProvider", $class->getName()));
+                throw new EventNotFoundException(sprintf("%s is not defined in the EventServiceProvider", $class->getName()));
             }
         }
         return $event;

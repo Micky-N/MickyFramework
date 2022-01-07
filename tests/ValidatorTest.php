@@ -80,6 +80,7 @@ class ValidatorTest extends TestCase
         $validator_same = new Validator($data, $same_rule);
         $validator_different = new Validator($data, $different_rule);
 
+        $validator_different->passed();
         $this->assertTrue($validator_confirm->passed());
         $this->assertTrue($validator_same->passed());
         $this->assertTrue($validator_different->passed());
@@ -136,7 +137,7 @@ class ValidatorTest extends TestCase
         $this->assertCount(1, $validator_block->getErrors());
 
         // Get the last error_message
-        $this->assertEquals('le champ text doit être identique à code', $validator_block->getErrors()['text']);
+        $this->assertEquals('text field must be same as code', $validator_block->getErrors()['text']);
     }
 
     public function testErrors()

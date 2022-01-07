@@ -16,7 +16,7 @@ class Permission
     private array $voters = [];
 
     /**
-     * Autorise l'accès si true
+     * Authorize if true
      *
      * @param string $permission
      * @param null $subject
@@ -36,7 +36,7 @@ class Permission
     }
 
     /**
-     * Ajoute un voter
+     * Add voter
      *
      * @param VoterInterface $voter
      */
@@ -46,7 +46,7 @@ class Permission
     }
 
     /**
-     * Test la permission
+     * Test permission
      *
      * @param mixed $user
      * @param string $permission
@@ -71,7 +71,7 @@ class Permission
     }
 
     /**
-     * Inscrit le voter dans le debugBar
+     * Add authorized voter to debugBar
      *
      * @param VoterInterface $voter
      * @param bool $vote

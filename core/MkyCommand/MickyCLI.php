@@ -2,12 +2,13 @@
 
 namespace Core\MKYCommand;
 
+use Core\MkyCommand\MkyCommandException;
 use Exception;
 
 class MickyCLI
 {
 
-    const BASE_MKY = 'core/MKYCommand';
+    const BASE_MKY = 'core/MkyCommand';
 
     const EXTENSION = 'temp';
 
@@ -18,9 +19,9 @@ class MickyCLI
     private int $retval = 0;
 
     /**
-     * Liste des commande
-     * required: a besoin d'un paramètre
-     * novalue: pas de paramètre requis
+     * Command list
+     * required: param is required
+     * novalue: no param
      *
      * @var array|string[]
      */
@@ -55,9 +56,9 @@ class MickyCLI
     ];
 
     /**
-     * Architecture des commandes
-     * required: commande obligatoire
-     * optional: commande optionnelle
+     * Command architecture
+     * required: command required
+     * optional: command optional
      *
      * @var array|string[][][]
      */
@@ -126,8 +127,8 @@ class MickyCLI
     }
 
     /**
-     * Retourne la valeur de la clé
-     * d'une option
+     * Get key value of option
+     * 
      * @param string $option
      * @return mixed|string
      */
@@ -137,7 +138,7 @@ class MickyCLI
     }
 
     /**
-     * Formate les options pour le cli
+     * Rewrite options for CLI
      *
      * @return array|string[]
      */
@@ -160,8 +161,8 @@ class MickyCLI
     }
 
     /**
-     * Retourne la commande dans l'architecture
-     * des commandes
+     * Get command in the command architecture
+     * 
      * @param mixed ...$args
      * @return array|mixed|string[][]|string[][][]
      */
@@ -177,8 +178,8 @@ class MickyCLI
     }
 
     /**
-     * Vérifie si l'option existe dans la liste
-     * des options
+     * Check if option exist in the option list
+     * 
      * @param string $option
      * @return bool
      */
@@ -191,25 +192,24 @@ class MickyCLI
     }
 
     /**
-     * Vérifie si la présence d'une commande
+     * Check if command is in the CLI command write
      *
      * @return bool
-     * @throws Exception
+     * @throws MkyCommandException
      */
     public function isInputCli()
     {
         if (!empty((array_keys($this->cli)))) {
             return true;
         }
-        throw new Exception("Saisir une option (--option).");
+        throw new MkyCommandException("No option please use --option command.");
     }
 
     /**
-     * Concatène la commande et le résultat
-     * avec la liste des commande saisie
+     * Concatenate the CLI command and the result 
      *
      * @return string
-     * @throws Exception
+     * @throws MkyCommandException
      */
     private function sendOptions()
     {
@@ -220,20 +220,18 @@ class MickyCLI
             } elseif ($option == false) {
                 $send[] = "--$cli";
             } else {
-                throw new Exception("Erreur de commande mky.");
+                throw new MkyCommandException("Error mky command.");
             }
         }
         return join(' ', $send);
     }
 
     /**
-     * Vérifié l'existence de la commande
-     * dans l'architecture et si la commande est
-     * obligatoire
+     * Check if command is required
      *
      * @param string $cliKey
      * @return bool
-     * @throws Exception
+     * @throws MkyCommandException
      */
     private function checkCLI(string $cliKey)
     {
@@ -246,7 +244,7 @@ class MickyCLI
                     if (!isset($req[$cli])) {
                         unset($this->cli[$cli]);
                     } elseif ($req[$cli] == 'required' && empty($this->cli[$cli])) {
-                        throw new Exception("La commande $cli est requie.");
+                        throw new MkyCommandException("$cli command is required.");
                     }
                 }
             }
@@ -256,8 +254,7 @@ class MickyCLI
     }
 
     /**
-     * Execute le script en cli
-     * sur le fichier exec.php compilé
+     * Run CLI script in the compiled exec.php file
      *
      * @throws Exception
      */
@@ -270,10 +267,9 @@ class MickyCLI
     }
 
     /**
-     * Lance la vérification de toute la commande
-     * compile et execute la commande
+     * Run the CLI command
      *
-     * @throws Exception
+     * @throws MkyCommandException
      */
     public function run()
     {
@@ -291,7 +287,7 @@ class MickyCLI
                         break;
                     }
                 } else {
-                    throw new Exception("L'option $cli est invalide.");
+                    throw new MkyCommandException("Invalid $cli option.");
                 }
             }
             $this->compileExec($compile);
@@ -301,8 +297,7 @@ class MickyCLI
     }
 
     /**
-     * Lance la compilation du fichier de construction
-     * sur le fichier exec.php
+     * Compile construct file on the exec.php file
      *
      * @param string $compile
      */
@@ -313,7 +308,7 @@ class MickyCLI
     }
 
     /**
-     * Retourne un tableau de données formater
+     * Get table data
      *
      * @param $data
      * @return string

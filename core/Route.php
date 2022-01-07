@@ -31,8 +31,7 @@ class Route
     }
 
     /**
-     * Execute le controller et la méthode
-     * de la route
+     * Control route and run route callback
      *
      * @param ServerRequestInterface $request
      * @return void|bool
@@ -64,8 +63,7 @@ class Route
     }
 
     /**
-     * Compare la requête et l'url de la route
-     * et récupère les paramètres
+     * Check if url match wih one route and get params
      *
      * @param ServerRequestInterface $request
      * @return bool
@@ -93,7 +91,7 @@ class Route
     }
 
     /**
-     * Retourne le nom de la route
+     * Get route name
      *
      * @return string
      */
@@ -103,7 +101,7 @@ class Route
     }
 
     /**
-     * Retourne le middleware
+     * Get route middleware
      *
      * @return array|string
      */
@@ -113,7 +111,7 @@ class Route
     }
 
     /**
-     * Inscrit un nom de la route
+     * Set name to route
      *
      * @param string $name
      * @return Route
@@ -125,7 +123,7 @@ class Route
     }
 
     /**
-     * Inscrit un middleware a la route
+     * Set middleware to route
      *
      * @param string|array $middleware
      * @return Route
@@ -137,7 +135,7 @@ class Route
     }
 
     /**
-     * Retourne l'url de la route
+     * Get route uri
      *
      * @return string
      */
@@ -147,7 +145,7 @@ class Route
     }
 
     /**
-     * Retourne l'action de la route
+     * Get route action
      *
      * @return array|callable
      */
@@ -157,7 +155,7 @@ class Route
     }
 
     /**
-     * Affiche la route dans le DebugBar
+     * Render the route to debugBar
      *
      * @param ServerRequestInterface $request
      * @param array $params
@@ -179,5 +177,6 @@ class Route
         if(isset($this->{$name})){
             return $this->{'get' . ucfirst($name)}();
         }
+        return null;
     }
 }

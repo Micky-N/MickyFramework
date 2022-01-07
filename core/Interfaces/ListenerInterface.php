@@ -7,8 +7,7 @@ interface ListenerInterface
 {
 
     /**
-     * Action à faire à l'ecoute de
-     * l'évènement
+     * Action on event listening
      *
      * @param EventInterface $event
      * @return mixed

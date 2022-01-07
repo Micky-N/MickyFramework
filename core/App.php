@@ -28,7 +28,7 @@ class App
     private static array $routes = [];
 
     /**
-     * Retourne la liste du provider
+     * Get Provider list
      *
      * @return mixed
      */
@@ -39,7 +39,7 @@ class App
     }
 
     /**
-     * Retourne les events et les listeners
+     * Get events and listeners list
      *
      * @return array|EventInterface[]|mixed
      */
@@ -50,7 +50,7 @@ class App
     }
 
     /**
-     * Retourne les middlewares, routeMiddlewares et voters
+     * Get middlewares, routeMiddlewares and voters list
      *
      * @return array|mixed
      */
@@ -61,7 +61,7 @@ class App
     }
 
     /**
-     * Inscrit les voters à partir des providers
+     * Add voters list to Permission
      */
     public static function VotersInit()
     {
@@ -71,7 +71,7 @@ class App
     }
 
     /**
-     * Inscrit les events et listeners à partir des providers
+     * Add event and listener
      *
      * @param string $event
      * @param string $key
@@ -83,7 +83,7 @@ class App
     }
 
     /**
-     * Inscrit un alias dans le Provider
+     * Add alias and class to Provider
      *
      * @param string $key
      * @param string $class
@@ -93,18 +93,31 @@ class App
         self::$providers['alias'][$key] = $class;
     }
 
+    /**
+     * Set middleware
+     * 
+     * @param string $middleware
+     * @return void
+     */
     public static function setMiddleware(string $middleware)
     {
         self::$middlewareServiceProviders['middlewares'][] = $middleware;
     }
 
+    /**
+     * Set routeMiddleware
+     * 
+     * @param string $alias
+     * @param string $routeMiddleware
+     * @return void
+     */
     public static function setRouteMiddleware(string $alias, string $routeMiddleware)
     {
         self::$middlewareServiceProviders['routeMiddlewares'][$alias] = $routeMiddleware;
     }
 
     /**
-     * Inscrit les routes à partir des providers
+     * Get all route file in routes folder
      */
     public static function RoutesInit()
     {
@@ -113,8 +126,7 @@ class App
     }
 
     /**
-     * Lance le remplissage de providers
-     * et envoi la requête dans la route
+     * Run the application
      *
      * @param ServerRequestInterface $request
      * @return View
@@ -136,7 +148,7 @@ class App
     }
 
     /**
-     * Retourne les voters
+     * Get voters
      *
      * @return VoterInterface[]
      */
@@ -146,7 +158,8 @@ class App
     }
 
     /**
-     * Retourne les middlewares ou le middleware
+     * Get all middlewares
+     * or specific middleware 
      *
      * @param string|null $middleware
      * @return MiddlewareInterface[]|MiddlewareInterface|null
@@ -160,7 +173,8 @@ class App
     }
 
     /**
-     * Retourne les routeMiddlewares ou le routeMiddleware
+     * Get all routeMiddlewares
+     * or specific routeMiddleware
      *
      * @param string|null $routeMiddleware
      * @return MiddlewareInterface[]|MiddlewareInterface|null
@@ -174,7 +188,7 @@ class App
     }
 
     /**
-     * Retourne les events
+     * Get all events
      *
      * @return EventInterface[]|null
      */
@@ -184,7 +198,8 @@ class App
     }
 
     /**
-     * Retourne les listeners d'un event
+     * Get event listeners
+     * 
      * @param string $event
      * @return ListenerInterface[]|null
      */
@@ -194,7 +209,7 @@ class App
     }
 
     /**
-     * Retourne le listener de l'action de l'event
+     * Get event listener on action
      *
      * @param string $event
      * @param string $action
@@ -209,7 +224,7 @@ class App
     }
 
     /**
-     * Retourne les classes par l'alias
+     * Get class by alias
      *
      * @param string $key
      * @return mixed|null
@@ -220,7 +235,7 @@ class App
     }
 
     /**
-     * Lance le debugbar si activer
+     * Run debugBar if active
      *
      * @throws Exception
      */
@@ -232,6 +247,8 @@ class App
     }
 
     /**
+     * Get all providers
+     * 
      * @return array
      */
     public static function getProviders(): array
@@ -240,6 +257,8 @@ class App
     }
 
     /**
+     * Get all routes
+     * 
      * @return Route[]
      */
     public static function getRoutes(): array

@@ -13,7 +13,7 @@ class Session
     const FLASH_MESSAGE = 'flashMessage';
 
     /**
-     * Assure que la session est démarré
+     * Run new session
      */
     public function __construct()
     {
@@ -23,8 +23,8 @@ class Session
     }
 
     /**
-     * Retourne la valeur d'une clé de session
-     * sinon retourne la valeur par defaut
+     * Get session value from key
+     * if not get default value
      *
      * @param string $key
      * @param null $default
@@ -36,7 +36,7 @@ class Session
     }
 
     /**
-     * Inscrit une clé valeur dans la session
+     * Set key value to session
      *
      * @param string $key
      * @param $value
@@ -47,7 +47,7 @@ class Session
     }
 
     /**
-     * Supprime une clé de la session
+     * Delete session key
      *
      * @param string $key
      */
@@ -57,8 +57,7 @@ class Session
     }
 
     /**
-     * Inscrit un type de flash et un message
-     * dans la session
+     * Set message on flash session type
      *
      * @param string $type
      * @param string $name
@@ -73,7 +72,7 @@ class Session
     }
 
     /**
-     * Retourne les messages d'un type de flash
+     * Get flash type message
      *
      * @param string $type
      * @return array|void
@@ -89,7 +88,7 @@ class Session
     }
 
     /**
-     * Retourne toute la session
+     * Get all session value
      *
      * @return array
      */
@@ -99,7 +98,7 @@ class Session
     }
 
     /**
-     * Retourne la valeur d'une constante
+     * Get constant variable value
      *
      * @param $const
      * @return mixed
@@ -109,5 +108,6 @@ class Session
         if(defined("self::$const")){
             return constant("self::$const");
         }
+        return null;
     }
 }

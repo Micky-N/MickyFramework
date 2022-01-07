@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Compiler;
+namespace Core\MkyCompiler;
 
 use Exception;
 use Core\Facades\Cache;
@@ -33,7 +33,7 @@ class MkyEngine
     }
 
     /**
-     * Affiche la view compilée
+     * Compile and send the view
      *
      * @param string $viewName
      * @param array $data
@@ -51,7 +51,7 @@ class MkyEngine
         }
 
         if(!file_exists($viewPath)){
-            throw new Exception(sprintf('la view %s n\'existe pas', $viewPath));
+            throw new Exception(sprintf('View %s does not exist', $viewPath));
         }
 
         $this->view = file_get_contents($viewPath);
@@ -67,7 +67,7 @@ class MkyEngine
             (filemtime($cachePath) < filemtime($viewPath)) ||
             (filemtime($cachePath) < filemtime($this->viewPath))
         ){
-            echo '<!-- cache modifié -->';
+            echo '<!-- cache file updated -->';
             Cache::addCache($cachePath, $this->view);
         }
 
@@ -83,7 +83,7 @@ class MkyEngine
     }
 
     /**
-     * Réecrit le nom de la view
+     * Format the view file
      *
      * @param string $viewName
      * @return string
@@ -95,7 +95,7 @@ class MkyEngine
     }
 
     /**
-     * Lance la compilation de la view
+     * Compile the view
      */
     public function parse()
     {
@@ -108,7 +108,7 @@ class MkyEngine
     }
 
     /**
-     * Compile les variables dans l'echo
+     * Compile echo variables
      */
     public function parseVariables(): void
     {
@@ -119,7 +119,7 @@ class MkyEngine
 
 
     /**
-     * Retourn la valeur de la config
+     * Get config value
      *
      * @param string $key
      * @return mixed
@@ -130,7 +130,7 @@ class MkyEngine
     }
 
     /**
-     * Compile les fichiers inclus
+     * Compile included files
      */
     public function parseIncludes(): void
     {
@@ -140,7 +140,7 @@ class MkyEngine
     }
 
     /**
-     * Compile le layout
+     * Compile the layout
      */
     public function parseExtends(): void
     {
@@ -150,7 +150,7 @@ class MkyEngine
     }
 
     /**
-     * compile les blocks du layout
+     * compile layout yield block
      */
     public function parseYields(): void
     {
@@ -160,7 +160,7 @@ class MkyEngine
     }
 
     /**
-     * Compile les sections de la view
+     * Compile view sections
      */
     public function parseSections(): void
     {
@@ -176,7 +176,7 @@ class MkyEngine
     }
 
     /**
-     * Compile les directives
+     * Compile directives
      *
      * @see MkyCompile
      */

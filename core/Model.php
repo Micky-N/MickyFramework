@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Exceptions\Mysql\MysqlException;
 use Core\Traits\QueryMysql;
 use Exception;
 use ReflectionClass;
@@ -15,20 +16,18 @@ abstract class Model
     protected string $table;
     protected string $primaryKey = 'id';
     /**
-     * Stocke le champ de date pour
-     * automatiser les enregistrements
-     * ['creation' => colonne création, 'update' => colonne modifié]
+     * Store date fields for automatic registration
+     * ['creation' => creation column, 'update' => update column]
      *
      * @var array
      */
     protected array $datetimes = [];
 
     /**
-     * Récupère le nom de la table
-     * du model actuel
+     * Get the model table name
      *
      * @return string
-     * @throws Exception
+     * @throws MysqlException
      */
     public function getTable(): string
     {
@@ -39,14 +38,13 @@ abstract class Model
             if(get_plural($table)){
                 return get_plural($table);
             }
-            throw new Exception("La table $table n'existe pas", 14);
+            throw new MysqlException("Table $table doesn't exist");
         }
         return $this->table;
     }
 
     /**
-     * Récupère le nom de la clé primaire
-     * du model actuel
+     * Get the model primary key
      *
      * @return string|null
      */
@@ -56,7 +54,7 @@ abstract class Model
     }
 
     /**
-     * Récupère l'instance du model actuel
+     * Get the model current instance
      *
      * @return object
      * @throws ReflectionException
@@ -68,7 +66,7 @@ abstract class Model
     }
 
     /**
-     * Récupère un enregistrement
+     * Get a record
      *
      * @param mixed $id
      * @return $this|bool
@@ -83,7 +81,7 @@ abstract class Model
     }
 
     /**
-     * Retourn tous les enregistrement
+     * Get all records
      *
      * @return array
      */
@@ -93,7 +91,7 @@ abstract class Model
     }
 
     /**
-     * Retourne le nombre d'enregistrement
+     * Get the number of records
      *
      * @return int
      * @throws ReflectionException
@@ -110,8 +108,7 @@ abstract class Model
     }
 
     /**
-     * Enregistrement une nouvelle donnée
-     * dans la table actuel
+     * Records a new data in table
      *
      * @param array $data
      * @param string $table
@@ -143,8 +140,7 @@ abstract class Model
     }
 
     /**
-     * Modifie un enregistrement
-     * de la table actuel
+     * Update a record
      *
      * @param $id
      * @param array $data
@@ -175,8 +171,7 @@ abstract class Model
     }
 
     /**
-     * Supprime un enregistrement
-     * de la table actuel
+     * Delete a record
      *
      * @param $id
      * @return array
@@ -195,8 +190,7 @@ abstract class Model
     }
 
     /**
-     * Supprime l'instance actuel
-     * dans sa table
+     * Delete instance itself in database
      *
      * @return array
      * @throws ReflectionException
@@ -214,8 +208,7 @@ abstract class Model
     }
 
     /**
-     * Récupère une valeur d'une
-     * clé primaire au hasard
+     * Get random key of table
      *
      * @return string
      * @throws ReflectionException
@@ -228,13 +221,13 @@ abstract class Model
     }
 
     /**
-     * Récupère les enregistrements de
-     * la table porteuse de la clé primaire
+     * Get all records of the one-to-many relation table
      *
      * @param string $model
      * @param string $foreignKey
      * @return array|bool|mixed
      * @throws ReflectionException
+     * @throws MysqlException
      */
     public function hasMany(string $model, string $foreignKey = '')
     {
@@ -262,12 +255,13 @@ abstract class Model
     }
 
     /**
-     * Récupère l'enregistrement de la table
-     * lié avec la table actuel par la clé étrangère
+     * Get record from the foreign table
+     *
      * @param string $model
      * @param string $foreignKey
      * @return array|bool|mixed
      * @throws ReflectionException
+     * @throws MysqlException
      * @example One to Many
      *
      */
@@ -305,8 +299,7 @@ abstract class Model
     }
 
     /**
-     * Récupère les enregistrements de la table
-     * lié avec la table actuel par la table d'association
+     * Get all records from the foreign table
      *
      * @param string $model
      * @param string $pivot
@@ -363,12 +356,13 @@ abstract class Model
     }
 
     /**
-     * Récupère l'enregistrement de
-     * la table porteuse de la clé primaire
+     * Get record from the foreign table
+     *
      * @param string $model
      * @param string $foreignKey
      * @return array|bool|mixed
      * @throws ReflectionException
+     * @throws MysqlException
      * @example One to One
      *
      */
@@ -399,8 +393,7 @@ abstract class Model
     }
 
     /**
-     * Récupère les données des champs
-     * séléctionnés à partir d'une relation
+     * Get selected field from the relation table
      *
      * @param string $relation
      * @param array $properties
@@ -444,8 +437,8 @@ abstract class Model
     }
 
     /**
-     * Modifie l'enregistrement de l'instance
-     * actuel
+     * Update record from current instance
+     *
      * @param array $data
      * @return $this
      * @throws ReflectionException
@@ -476,13 +469,14 @@ abstract class Model
     }
 
     /**
-     * Modifie tous les engeristrements d'une
-     * relation
+     * Update all relation table records
+     *
      * @param string $relation
      * @param $id
      * @param array $data
      * @return $this
      * @throws ReflectionException
+     * @throws MysqlException
      * @example One to Many
      *
      */
@@ -513,13 +507,12 @@ abstract class Model
             }
             return $this;
         } else {
-            throw new Exception(sprintf('la relation %s n\'existe pas', $relation));
+            throw new MysqlException(sprintf('No relationship with %s', $relation));
         }
     }
 
     /**
-     * Créer un nouvel enregistrement dans
-     * la table en relation
+     * Create new record in the relation table
      *
      * @param $table
      * @param array $data
@@ -535,8 +528,7 @@ abstract class Model
     }
 
     /**
-     * Récupère le nom de chaque colonne
-     * de la table
+     * Get the name of table column
      *
      * @return array
      * @throws ReflectionException
@@ -549,8 +541,7 @@ abstract class Model
     }
 
     /**
-     * Filtre les données selon les colonnes
-     * de la table
+     * Filter needed column
      *
      * @param array $data
      * @return array
@@ -569,8 +560,7 @@ abstract class Model
     }
 
     /**
-     * Met les champs datetimes de
-     * l'instance actuel à la date aujourd'hui
+     * Put today date to dateTimes field
      *
      * @param array $data
      * @return array
@@ -589,8 +579,8 @@ abstract class Model
     }
 
     /**
-     * Met le champs datetimes update de
-     * l'instance actuel à la date aujourd'hui
+     * Put today date to update dateTimes field
+     *
      * @param array $data
      * @return array
      * @throws ReflectionException
@@ -611,5 +601,6 @@ abstract class Model
             }
             return $this->$key();
         }
+        return null;
     }
 }

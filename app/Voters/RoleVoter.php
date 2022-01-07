@@ -34,7 +34,7 @@ class RoleVoter implements VoterInterface
                 return $this->canAdmin($user);
         endswitch;
 
-        throw new \Exception('Le vote ne peut pas être validé');
+        throw new \Exception('Not valid vote');
     }
 
     private function canSeller($user)

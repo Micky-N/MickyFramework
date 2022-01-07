@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Compiler;
+namespace Core\MkyCompiler;
 
 use Closure;
 
@@ -252,7 +252,7 @@ class MkyCompile
     }
 
     /**
-     * Inscrit une directive
+     * Set a directive
      *
      * @param string $key
      * @param string[] $directives
@@ -267,7 +267,7 @@ class MkyCompile
 
 
     /**
-     * Inscrit une condition
+     * Set a condition
      *
      * @param string $key
      * @param bool $value
@@ -280,7 +280,7 @@ class MkyCompile
     }
 
     /**
-     * Retourne les directives
+     * Get all directives
      *
      * @return array
      */

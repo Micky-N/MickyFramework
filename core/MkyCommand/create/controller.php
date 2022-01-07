@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 use Core\MKYCommand\MickyCLI;
+use Core\MkyCommand\MkyCommandException;
 
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
@@ -11,7 +12,7 @@ if (php_sapi_name() === "cli") {
     $crud = isset($cli['crud']) ? file_get_contents(MickyCLI::BASE_MKY."/templates/controller/crud.".MickyCLI::EXTENSION) : null;
     $model = isset($cli['model']) ? $cli['model'] : null;
     if (!strpos($controllerName, 'Controller')) {
-        throw new Exception("Le controller $controllerName doit avoir un suffix Controller.");
+        throw new MkyCommandException("$controllerName controller must have be suffixed by Controller");
     }
     $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
     $template = str_replace('!name', $controllerName, $template);
@@ -19,13 +20,13 @@ if (php_sapi_name() === "cli") {
     $template = str_replace('!model', $model ? "use App\\Models\\".ucfirst($model).";" : '', $template);
     $template = str_replace('!crud', $crud ? "\n".$crud : '', $template);
     if (file_exists("app/Http/Controllers/$path$controllerName.php")) {
-        throw new Exception("Le controller $controllerName existe déjà.");
+        throw new MkyCommandException("$controllerName controller already exist");
     }
     if (!is_dir("app/Http/Controllers".($path ? "/".$path : ''))) {
         mkdir("app/Http/Controllers".($path ? "/".$path : ''), 0777, true); // true for recursive create
     }
-    $controller = fopen("app/Http/Controllers/".($path ? "$path/" : '')."$controllerName.php", "w") or die("Le controller $controllerName n'existe pas.");
+    $controller = fopen("app/Http/Controllers/".($path ? "$path/" : '')."$controllerName.php", "w") or die("Unable to open file $controllerName");
     $start = "<"."?"."php\n\n";
     fwrite($controller, $start.$template);
-    print("Le controller $controllerName a été créé.");
+    print("$controllerName controller created");
 }

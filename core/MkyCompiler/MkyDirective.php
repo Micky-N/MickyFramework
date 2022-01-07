@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Compiler;
+namespace Core\MkyCompiler;
 
 use Closure;
 
@@ -26,7 +26,7 @@ class MkyDirective
     }
 
     /**
-     * Retourne les caractères encodés
+     * Get all encodes
      *
      * @return string[]
      */
@@ -36,7 +36,7 @@ class MkyDirective
     }
 
     /**
-     * Retourne les fonctions
+     * Get all callbacks
      *
      * @return Closure[]
      */

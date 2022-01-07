@@ -2,9 +2,8 @@
 
 namespace App\Voters;
 
-use App\Models\User;
+use Core\Exceptions\Voter\VoterException;
 use Core\Interfaces\VoterInterface;
-use RuntimeException;
 use App\Models\Product;
 
 class ProductVoter implements VoterInterface
@@ -21,7 +20,7 @@ class ProductVoter implements VoterInterface
     public function vote($user, string $permission, $product = null): bool
     {
         if(!$product instanceof Product){
-            throw new RuntimeException('le sujet doit être une instance de Product.');
+            throw new VoterException('Subject must be an instance of Product');
         }
         switch ($permission) {
             case self::EDIT:
@@ -31,7 +30,7 @@ class ProductVoter implements VoterInterface
                 break;
         }
 
-        throw new \Exception('Le vote ne peut pas être validé');
+        throw new \Exception('Not valid vote');
     }
 
     private function canEdit($user, Product $product)

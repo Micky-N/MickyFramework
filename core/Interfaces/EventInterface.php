@@ -9,42 +9,44 @@ interface EventInterface
 {
 
     /**
-     * Indique si la propagation des events
-     * doit être stopper
+     * Set if propagation must be stopped
      *
      * @param bool $flag
      */
     public function stopPropagation(bool $flag);
 
     /**
-     * Retourne si la propagation est
-     * stoppée
-     *
+     * Get if propagation is stopped
+     * 
      * @return bool
      */
     public function isPropagationStopped(): bool;
 
     /**
-     * Retourne les actions de l'event
+     * Get event actions
+     * 
      * @return array
      */
     public function getActions(): array;
 
     /**
-     * Retourne les paramètres de l'event
+     * Get event params
+     * 
      * @return array
      */
     public function getParams(): array;
 
     /**
-     * Retourne un paramètre de l'event
+     * Get event param
+     * 
      * @param string $key
      * @return mixed
      */
     public function getParam(string $key);
 
     /**
-     * Retourne la cible de l'event
+     * Get event target
+     * 
      * @return mixed
      */
     public function getTarget();

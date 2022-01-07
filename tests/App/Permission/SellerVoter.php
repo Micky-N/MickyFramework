@@ -19,7 +19,7 @@ class SellerVoter implements VoterInterface
     public function vote($user, string $permission, $subject = null): bool
     {
         if(!$subject instanceof TestProduct){
-            throw new RuntimeException('le sujet doit être une instance de '. TestProduct::class);
+            throw new RuntimeException('Subject must be an instance of '. TestProduct::class);
         }
 
         return $subject->getSeller() === $user;

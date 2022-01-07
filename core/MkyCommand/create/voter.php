@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 use Core\MKYCommand\MickyCLI;
+use Core\MkyCommand\MkyCommandException;
 
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
@@ -13,7 +14,7 @@ if (php_sapi_name() === "cli") {
     $action = isset($cli['action']) ? strtoupper($cli['action']): null;
     $actionlower = $action ? strtolower($action) : null;
     if (!strpos($name, 'Voter')) {
-        throw new Exception("Le voter $name doit avoir un suffix Voter.");
+        throw new MkyCommandException("$name msut be suffixed by Voter");
     }
     $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
     $template = str_replace('!name', $name, $template);
@@ -22,12 +23,12 @@ if (php_sapi_name() === "cli") {
     $template = str_replace('!model', $model, $template);
     $template = str_replace('!action', $action ? "const $action = '$actionlower';" : '', $template);
     if (file_exists("app/Voters/$name.php")) {
-        throw new Exception("Le voter $name existe déjà.");
+        throw new MkyCommandException("$name voter already exist");
     }
     if (!is_dir("app/Voters")) {
         mkdir("app/Voters", 0777, true);
     }
-    $voter = fopen("app/Voters/$name.php", "w") or die("Impossible d'ouvre le fichier $name !");
+    $voter = fopen("app/Voters/$name.php", "w") or die("Unable to open file $name");
     $start = "<"."?"."php\n\n";
     fwrite($voter, $start.$template);
     $arr = _readLine(dirname(__DIR__)."/../bootstrap/MiddlewareServiceProvider.php");
@@ -37,5 +38,5 @@ if (php_sapi_name() === "cli") {
     $arr = implode("\n", $arr);
     $ptr = fopen(dirname(__DIR__)."/../bootstrap/MiddlewareServiceProvider.php", "w");
     fwrite($ptr, $arr);
-    print("Le voter $name a été créé !");
+    print("$name voter created");
 }

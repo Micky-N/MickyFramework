@@ -16,8 +16,7 @@ class Cache
     }
 
     /**
-     * Créer et ajouter un ficher/dossier
-     * dans le cache
+     * Add file or folder to cache directory
      *
      * @param string $directory
      * @param string $data
@@ -40,7 +39,7 @@ class Cache
     }
 
     /**
-     * Supprime un fichier/dossier dans le cache
+     * Delete file or folder in cache directory
      * @param string $file
      */
     public function removeCache(string $file)
@@ -63,7 +62,7 @@ class Cache
     }
 
     /**
-     * Retourne le nom du fichier/dossier
+     * Get file name
      *
      * @param string $file
      * @return string

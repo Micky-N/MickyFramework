@@ -23,35 +23,35 @@ class Rules
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s est requie'),
+            }, '%s field is required'),
             'minL' => new Rule(function (string $field, $subject) {
                 $field = $this->testField($field);
                 if (strlen($subject) < (int) $field) {
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit avoir au moins %s caractères'),
+            }, '%s field must have at least %s characters'),
             'maxL' => new Rule(function (string $field, $subject) {
                 $field = $this->testField($field);
                 if (strlen($subject) > (int) $field) {
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit avoir au plus %s caractères'),
+            }, '%s field must have at most %s characters'),
             'min' => new Rule(function (string $field, $subject) {
                 $field = $this->testField($field);
                 if ((float) $subject < (float) $field) {
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit être d\'au moins %s'),
+            }, '%s field must be greater than %s'),
             'max' => new Rule(function (string $field, $subject) {
                 $field = $this->testField($field);
                 if ((float) $subject > (float) $field) {
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit être d\'au plus %s'),
+            }, '%s field must be less than %s'),
             'confirmed' => new Rule(function (string $field, string $subject) {
                 if(strpos($field, 'field.') === false){
                     return false;
@@ -61,21 +61,21 @@ class Rules
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit etre confirmé'),
+            }, '%s field must be confirmed by %s'),
             'same' => new Rule(function (string $field, string $subject) {
                 $field = $this->testField($field);
                 if ($field !== $subject) {
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit être identique à %s'),
+            }, '%s field must be same as %s'),
             'different' => new Rule(function (string $field, string $subject) {
                 $field = $this->testField($field);
                 if ($field === $subject) {
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit etre different du champ %s'),
+            }, '%s field must be different from %s'),
             'beforeDate' => new Rule(function (string $field, string $subject) {
                 if ($field == 'now') {
                     $field = "Y-m-d";
@@ -85,7 +85,7 @@ class Rules
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit être antèrieur à la date %s'),
+            }, '%s field must be before %s'),
             'afterDate' => new Rule(function (string $field, string $subject) {
                 if ($field == 'now') {
                     $field = "Y-m-d H:i:s";
@@ -95,14 +95,13 @@ class Rules
                     return false;
                 }
                 return $subject;
-            }, 'le champ %s doit etre ulterieur à la date %s')
+            }, '%s field must be after %s')
         ];
     }
 
     /**
-     * Vérifie si la règle existe dans
-     * la liste des règle et lance le contrôle
-     * des règles
+     * Check if the rule exist in the rule list
+     * and run the callable
      *
      * @param string $key
      * @param $subject
@@ -122,18 +121,18 @@ class Rules
                 $function = array_shift($ruleArgs);
                 $ruleArgs[] = $subject;
                 if(!isset($this->callbacks[$function])){
-                    throw new RuleNotFoundException("La régle de validation $function n'existe pas");
+                    throw new RuleNotFoundException("Rule $function doesn't exist");
                 }
-                if (call_user_func_array($this->callbacks[$function]->callback, $ruleArgs) === false) {
+                if (call_user_func_array($this->callbacks[$function]->getCallback(), $ruleArgs) === false) {
                     array_pop($ruleArgs);
-                    $ruleArgs = array_map(function ($ra) use ($function) {
-                        if (is_int(stripos($ra, self::FIELD))) {
+                    $ruleArgs = array_map(function ($ra) {
+                        if (stripos($ra, self::FIELD) !== false) {
                             $field = str_replace(self::FIELD, '', $ra);
                             $ra = "$field:" . $this->data[str_replace(self::FIELD, '', $ra)];
                         }
                         return $ra;
                     }, $ruleArgs);
-                    $this->errors[$key] = sprintf($this->callbacks[$function]->errorMessage, ...[$key, ...$ruleArgs]);
+                    $this->errors[$key] = sprintf($this->callbacks[$function]->getErrorMessage(), ...[$key, ...$ruleArgs]);
                     return false;
                 }
             }
@@ -142,8 +141,7 @@ class Rules
     }
 
     /**
-     * Vérifie si le champ existe dans les
-     * données du formulaire
+     * Check if the field is in form data
      *
      * @param string $field
      * @return mixed|string
@@ -157,7 +155,7 @@ class Rules
     }
 
     /**
-     * Retourne les erreurs
+     * Return all errors
      */
     public function getErrors()
     {

@@ -7,8 +7,8 @@ namespace Core\Interfaces;
 interface NotificationInterface
 {
     /**
-     * Indique quelle système de notification
-     * utiliser
+     * Set notification application
+     * (one or many)
      *
      * @param $notifiable
      * @return mixed

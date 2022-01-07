@@ -21,7 +21,7 @@ class AuthManager
     }
 
     /**
-     * Retourne l'utilisateur connecté
+     * Get logged user
      *
      * @return User|null|Router
      * @throws Exception
@@ -35,7 +35,7 @@ class AuthManager
     }
 
     /**
-     * Connecte l'utilisateur à la session
+     * Log user to session
      *
      * @param mixed $logId
      * @return void
@@ -48,7 +48,7 @@ class AuthManager
     }
 
     /**
-     * Déconnecte l'utilisateur d la session
+     * logout user from session
      *
      * @return Router
      */
@@ -63,7 +63,7 @@ class AuthManager
     }
 
     /**
-     * Vérifie si l'utilisateur est connecté
+     * Check if logged
      *
      * @return bool
      */

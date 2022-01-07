@@ -175,7 +175,8 @@ class QueryBuilderMysql
     }
 
     /**
-     * Crée un tableau avec les champs
+     * Make array with selected field
+     *
      * @param string $key
      * @param mixed $value
      * @return array
@@ -194,15 +195,15 @@ class QueryBuilderMysql
     }
 
     /**
-     * Récupere les données du champ $key
-     * sous forme de tableau
+     * Get all key column data
+     *
      * @param mixed $key
      * @param array $query
      * @return array
      */
     private function mapping($key, array $query = []): array
     {
-        $keymap = array_map(function ($km) use ($key) {
+        return array_map(function ($km) use ($key) {
             if (is_string($key)) {
                 return $km[$key];
             }
@@ -212,7 +213,6 @@ class QueryBuilderMysql
             }
             return $map;
         }, $query);
-        return $keymap;
     }
 
     /**
@@ -299,7 +299,7 @@ class QueryBuilderMysql
     }
 
     /**
-     * Récupere les enregistrement
+     * Get all records
      *
      * @return array|bool
      * @throws Exception
@@ -310,8 +310,7 @@ class QueryBuilderMysql
     }
 
     /**
-     * Récupere les enregistrement
-     * sous forme de tableau
+     * Get all records as array
      *
      * @return array|bool
      * @throws Exception
@@ -322,7 +321,7 @@ class QueryBuilderMysql
     }
 
     /**
-     * Recupere le premier enregistrement de la requête
+     * Get the first record
      *
      * @return Model|bool
      * @throws Exception
@@ -334,7 +333,7 @@ class QueryBuilderMysql
     }
 
     /**
-     * Recupere le dernier enregistrement de la requête
+     * Get the last record
      *
      * @return Model|bool
      * @throws Exception
@@ -347,7 +346,7 @@ class QueryBuilderMysql
     }
 
     /**
-     * Retourne la requète en texte
+     * Get request as string
      *
      * @return string
      * @throws Exception
@@ -364,7 +363,7 @@ class QueryBuilderMysql
     }
 
     /**
-     * Récuperer le model en cours
+     * Get the current model
      *
      * @return Model
      */

@@ -6,7 +6,7 @@ use Core\QueryBuilderMysql;
 
 
 /**
- * Trait et facade de \Core\QueryBuilderMysql
+ * Trait and facade for \Core\QueryBuilderMysql
  *
  * @method static \Core\QueryBuilderMysql where()
  * @method static \Core\QueryBuilderMysql select()

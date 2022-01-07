@@ -17,7 +17,7 @@ class Rule
     }
 
     /**
-     * Retourne la valeur du callback
+     * Get callback value
      */ 
     public function getCallback()
     {
@@ -25,17 +25,10 @@ class Rule
     }
 
     /**
-     * Retourne la valeur de l'erreur
+     * Get error message
      */ 
     public function getErrorMessage()
     {
         return $this->errorMessage;
-    }
-
-    public function __get($key)
-    {
-        if(method_exists($this, 'get'.ucfirst($key))){
-            return $this->{'get'.ucfirst($key)}();
-        }
     }
 }

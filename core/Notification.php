@@ -4,20 +4,21 @@
 namespace Core;
 
 
-use Core\Interfaces\NotificationInterface;
-use Core\Traits\Notify;
 use Exception;
 use ReflectionClass;
+use Core\Traits\Notify;
 use ReflectionException;
+use Core\Interfaces\NotificationInterface;
+use Core\Exceptions\Notification\NotificationException;
 
 class Notification
 {
     /**
-     * Envoi la notification à tous
-     * les utilisateurs séléctionnés
+     * Send notification with notification application
      *
      * @param array $notifiables
      * @param NotificationInterface $notification
+     * @throws NotificationException
      * @throws ReflectionException
      */
     public static function send(array $notifiables, NotificationInterface $notification)
@@ -30,7 +31,7 @@ class Notification
             if($usingTrait == true){
                 $notifiable->notify($notification);
             }else{
-                throw new Exception(sprintf('Le model %s doit utiliser le trait %s', get_class($notifiable), Notify::class));
+                throw new NotificationException(sprintf('Model %s must use %s trait', get_class($notifiable), Notify::class));
             }
         }
     }

@@ -4,15 +4,16 @@ namespace HTML;
 
 /**
  * Class FormHelper
- * Permet de générer un formulaire rapidement et simplement
+ * Generate a html form
  */
 class Form
 {
 
     /**
-     * Tableau d'option class, id,...
+     * Option array
+     * @example html class, id...
+     * 
      * @param array $options
-     *
      * @return string
      */
     public static function FormOptions(array $options)
@@ -29,11 +30,11 @@ class Form
     }
 
     /**
-     * ouvre la balise form
+     * Open form
+     * 
      * @param null $action
      * @param $method
      * @param array|null $options
-     *
      * @return string
      */
     public static function open(string $action = null, string $method, array $options = null)
@@ -43,7 +44,8 @@ class Form
     }
 
     /**
-     * ferme la balise form
+     * Close form
+     * 
      * @return string
      */
     public static function close()
@@ -53,11 +55,11 @@ class Form
 
 
     /**
-     * créer une balise label
+     * Label
+     * 
      * @param string $for
      * @param string $name
      * @param array|null $options
-     *
      * @return string
      */
     public static function label(string $name, string $for, array $options = null)
@@ -67,11 +69,11 @@ class Form
     }
 
     /**
-     * créer une balise input type text
+     * Text input
+     * 
      * @param string $name
      * @param string|null $value
      * @param array $options
-     *
      * @return string
      */
     public static function text(string $name, string $value = null, array $options = null)
@@ -81,11 +83,11 @@ class Form
     }
 
     /**
-     * créer une balise input type email
+     * Email input
+     * 
      * @param string $name
      * @param string|null $value
      * @param array $options
-     *
      * @return string
      */
     public static function email(string $name, string $value = null, array $options = null)
@@ -95,10 +97,10 @@ class Form
     }
 
     /**
-     * créer une balise input type file
+     * File input
+     * 
      * @param string $name
      * @param array $options
-     *
      * @return string
      */
     public static function file(string $name, array $options = null)
@@ -108,12 +110,12 @@ class Form
     }
 
     /**
-     * créer une balise input type checkbox
+     * Checkbox input
+     * 
      * @param string $name
      * @param string $value
      * @param bool|false $checked
      * @param array $options
-     *
      * @return string
      */
     public static function checkbox(string $name, string $value, bool $checked = false, array $options = null)
@@ -123,12 +125,12 @@ class Form
     }
 
     /**
-     * créer une balise input type radio
+     * Radio input
+     * 
      * @param string $name
      * @param string $value
      * @param bool|false $checked
      * @param array $options
-     *
      * @return string
      */
     public static function radio(string $name, string $value, bool $checked = false, array $options = null)
@@ -138,10 +140,10 @@ class Form
     }
 
     /**
-     * créer une balise input type password
+     * Password input
+     * 
      * @param string $name
      * @param array $options
-     *
      * @return string
      */
     public static function password(string $name, array $options = null)
@@ -151,11 +153,11 @@ class Form
     }
 
     /**
-     * Créer une balise textarea
+     * Textarea
+     * 
      * @param string $name
      * @param string|null $value
      * @param array $options
-     *
      * @return string
      */
     public static function textarea(string $name, string $value = null, array $options = null)
@@ -165,13 +167,13 @@ class Form
     }
 
     /**
-     * Créer une balise select
+     * Select
+     * 
      * @param string $name
      * @param array $list
      * @param string $placeholder
      * @param mixed|null $selected
      * @param array|null $options
-     *
      * @return string
      */
     public static function select(string $name, array $list, $selected = null, string $placeholder = '', array $options = null)
@@ -197,11 +199,11 @@ class Form
     }
 
     /**
-     * créer une balise input type number
+     * Number input
+     * 
      * @param string $name
      * @param string|null $value
      * @param array $options
-     *
      * @return string
      */
     public static function number(string $name, string $value = null, array $options = null)
@@ -211,11 +213,11 @@ class Form
     }
 
     /**
-     * créer une balise input type date
+     * Date input
+     * 
      * @param string $name
      * @param string|null $value
      * @param array $options
-     *
      * @return string
      */
     public static function date(string $name, string $value = null, array $options = null)
@@ -225,7 +227,8 @@ class Form
     }
 
     /**
-     * Créer un bouton submit
+     * Submit button
+     * 
      * @param string $btn
      * @param array|null $options
      * @return string

@@ -23,7 +23,7 @@ class Router
     }
 
     /**
-     * Inscrit la route en GET
+     * Set GET method route
      *
      * @param string $path
      * @param callable|array $action
@@ -32,8 +32,8 @@ class Router
      */
     public function get(string $path, $action): Route
     {
-        if(!$this->checkIfAlreadyRouteExist('GET', $path)){
-            throw new RouteAlreadyExistException("Route $path not found in GET routes");
+        if($this->checkIfAlreadyRouteExist('GET', $path)){
+            throw new RouteAlreadyExistException("Route $path already exist in GET routes");
         }
         $route = new Route($path, $action);
         $this->routes['GET'][] = $route;
@@ -41,7 +41,8 @@ class Router
     }
 
     /**
-     * Inscrit la route en POST
+     * Set POST method route
+     *
      * @param string $path
      * @param callable|array $action
      * @return Route
@@ -49,8 +50,8 @@ class Router
      */
     public function post(string $path, $action): Route
     {
-        if(!$this->checkIfAlreadyRouteExist('POST', $path)){
-            throw new RouteAlreadyExistException("Route $path not found in POST routes");
+        if($this->checkIfAlreadyRouteExist('POST', $path)){
+            throw new RouteAlreadyExistException("Route $path already exist in POST routes");
         }
         $route = new Route($path, $action);
         $this->routes['POST'][] = $route;
@@ -58,26 +59,26 @@ class Router
     }
 
     /**
-     * Vérifie si la route existe déjà
+     * Check if route already exist in request method
      *
-     * @param string $request
+     * @param string $requestMethod
      * @param string $path
      * @return bool
      */
-    private function checkIfAlreadyRouteExist(string $request, string $path)
+    private function checkIfAlreadyRouteExist(string $requestMethod, string $path)
     {
-        if(isset($this->routes[$request])){
-            foreach ($this->routes[$request] as $route) {
+        if(isset($this->routes[$requestMethod])){
+            foreach ($this->routes[$requestMethod] as $route) {
                 if(trim($path, '/') === trim($route->getPath(), '/')){
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**
-     * Retourne les routes par nom
+     * Get all routes by name
      *
      * @return Route[]
      */
@@ -93,8 +94,7 @@ class Router
     }
 
     /**
-     * Créé un ensemble de routes selon
-     * le model CRUD
+     * Create all crud model routes
      *
      * @param string $namespace
      * @param string $controller
@@ -187,8 +187,7 @@ class Router
     }
 
     /**
-     * Vérifié si la route a besoin
-     * d'un paramètre
+     * Check if route needs params
      *
      * @param string $path
      * @param array $params
@@ -213,8 +212,7 @@ class Router
     }
 
     /**
-     * Génère la url de la route
-     * par son nom
+     * Generate url by route name
      *
      * @param string $routeName
      * @param array $params
@@ -236,7 +234,8 @@ class Router
     }
 
     /**
-     * Retourne la route actuel
+     * Get the current route
+     * or if route is the currently used
      *
      * @param string $route
      * @return bool|string
@@ -253,10 +252,11 @@ class Router
     }
 
     /**
-     * Retourn le namespace de la route
-     *
+     * Get route namespace
      * @param string $route
      * @return bool
+     * @example namespace(x/y/z) = x
+     *
      */
     public function namespaceRoute(string $route = '')
     {
@@ -271,7 +271,7 @@ class Router
     }
 
     /**
-     * Démarre la recherche de la route
+     * Run router application
      *
      * @param ServerRequestInterface $request
      * @return void|View
@@ -290,7 +290,7 @@ class Router
     }
 
     /**
-     * Redirection par url
+     * Redirect to url
      *
      * @param string $url
      */
@@ -300,7 +300,7 @@ class Router
     }
 
     /**
-     * Redirection par nom de route
+     * Redirect to route name url
      *
      * @param string $name
      * @return Router
@@ -314,8 +314,7 @@ class Router
     }
 
     /**
-     * Inscrit un message d'erreur
-     * dans la session
+     * Redirect with errors flash message
      *
      * @param array $errors
      * @return $this
@@ -329,7 +328,8 @@ class Router
     }
 
     /**
-     * Inscrit un message de succes
+     * Redirect with success flash message
+     *
      * @param array $success
      * @return $this
      */
@@ -342,7 +342,7 @@ class Router
     }
 
     /**
-     * Inscrit un message
+     * Redirect with flash message
      *
      * @param array $messages
      * @return $this
@@ -356,7 +356,8 @@ class Router
     }
 
     /**
-     * Redirection a arriere
+     * Back redirection
+     *
      * @return Router
      */
     public function back(): self
@@ -374,7 +375,7 @@ class Router
     public function toArray(): array
     {
         includeAll('routes');
-        $routes = [];
+        $routesArray = [];
         $namespace = '/';
         $currentPath = "\t";
         foreach ($this->routes as $method => $routes) {
@@ -387,7 +388,7 @@ class Router
                     $namespace = $paths[0];
                     $currentPath = $route->path;
                 }
-                $routes[] = [
+                $routesArray[] = [
                     $method,
                     $currentPath,
                     str_replace(
@@ -401,7 +402,7 @@ class Router
                 ];
             }
         }
-        return $routes;
+        return $routesArray;
     }
 
     /**

@@ -13,7 +13,7 @@ class ErrorController extends Controller
 {
 
     /**
-     * Affiche l'erreur dans le view Error
+     * Render error view with params
      *
      * @param $code
      * @param string $text
@@ -31,7 +31,7 @@ class ErrorController extends Controller
     }
 
     /**
-     * Retourne le code status et le message
+     * Get statut code and message 
      *
      * @param int $code
      * @return array

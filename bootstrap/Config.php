@@ -13,7 +13,7 @@ return [
             'host' => _env('DB_HOST', 'localhost')
         ]
     ],
-    'mkyengine' => [
+    'mkyEngine' => [
         'views' => dirname(__DIR__) . '/views',
         'cache' => dirname(__DIR__) . '/cache/views',
         'layouts' => 'layouts'

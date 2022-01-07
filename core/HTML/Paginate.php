@@ -24,7 +24,8 @@ class Paginate
     }
 
     /**
-     * Le nombre maximum éléments par page
+     * Get the max number of elements by page
+     * 
      * @return int
      */
     public function getMaxLength(): int
@@ -33,7 +34,8 @@ class Paginate
     }
 
     /**
-     * Obtenir les éléments de la page (page -> perpage)
+     * Get current page elements
+     * 
      * @return array
      */
     public function getSlice(): array
@@ -45,7 +47,8 @@ class Paginate
     }
 
     /**
-     * Saisir la page actuelle
+     * Set the current page
+     *  
      * @param int $currentPage
      * @return Paginate
      */
@@ -56,7 +59,8 @@ class Paginate
     }
 
     /**
-     * Page actuelle
+     * Get the current page
+     * 
      * @return int
      */
     public function getCurrentPage(): int
@@ -65,7 +69,8 @@ class Paginate
     }
 
     /**
-     * Nombre de donnée
+     * Get the number of elements
+     * 
      * @return int
      */
     public function getCount(): int
@@ -74,8 +79,9 @@ class Paginate
     }
 
     /**
-     * Calcule le derniere élément de la liste 
-     * a partir de la page actuelle jusqu'au maximum par page
+     * Calculates the last item in the list from 
+     * the current page to the maximum per page
+     * 
      * @return int
      */
     public function getOffsetPage(): int
@@ -85,7 +91,8 @@ class Paginate
     }
 
     /**
-     * Toutes les pages
+     * Get all pages
+     * 
      * @return array
      */
     public function getPages(): array
@@ -99,9 +106,6 @@ class Paginate
     public function __get($key)
     {
         if (method_exists($this, 'get' . ucfirst($key))) {
-            return $this->{'get' . ucfirst($key)}();
-        }
-        if(property_exists($this, $key)){
             return $this->{'get' . ucfirst($key)}();
         }
     }

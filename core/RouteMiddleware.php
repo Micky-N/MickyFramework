@@ -34,7 +34,7 @@ class RouteMiddleware
     }
 
     /**
-     * Lance le contrôle des middlewares
+     * Run middlewares control
      *
      * @param ServerRequestInterface $request
      * @return mixed|ServerRequestInterface
@@ -53,7 +53,7 @@ class RouteMiddleware
     }
 
     /**
-     * Lance le contrôle des permissions
+     * Run permission control
      *
      * @param string $middleware
      * @param array $matches

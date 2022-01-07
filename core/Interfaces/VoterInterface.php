@@ -9,7 +9,7 @@ use App\Models\User;
 interface VoterInterface
 {
     /**
-     * Verifie si le Voter peut voter
+     * Check if Voter can vote
      *
      * @param string $permission
      * @param null $subject
@@ -18,7 +18,7 @@ interface VoterInterface
     public function canVote(string $permission, $subject = null): bool;
 
     /**
-     * Retourne le vote du Voter
+     * Get Voter vote
      *
      * @param mixed $user
      * @param string $permission

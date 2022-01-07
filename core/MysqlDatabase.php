@@ -5,15 +5,13 @@ namespace Core;
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use Exception;
 use PDO;
-use Core\Database;
-use Core\Interfaces\DatabaseInterface;
 
-class MysqlDatabase extends Database implements DatabaseInterface
+class MysqlDatabase
 {
+    private static $connection;
 
     /**
-     * Créer et récupère la connection
-     * à la base de données
+     * Create and get PDO connection
      *
      * @return TraceablePDO|PDO
      * @throws Exception
@@ -34,7 +32,7 @@ class MysqlDatabase extends Database implements DatabaseInterface
     }
 
     /**
-     * Requète query à la base de données
+     * Run query request
      *
      * @param $statement
      * @param null $class_name
@@ -50,7 +48,7 @@ class MysqlDatabase extends Database implements DatabaseInterface
     }
 
     /**
-     * Requète preparée à la base de données
+     * Run prepare request
      *
      * @param $statement
      * @param $attribute
@@ -73,17 +71,4 @@ class MysqlDatabase extends Database implements DatabaseInterface
         $class_name === null ? $req->setFetchMode(PDO::FETCH_OBJ) : $req->setFetchMode(PDO::FETCH_CLASS, $class_name);
         return $one ? $req->fetch() : $req->fetchAll();
     }
-
-    /**
-     * Récupère le dernier enregistrement
-     * de la table
-     *
-     * @return string
-     * @throws Exception
-     */
-    public static function lastInsertId(): string
-    {
-        return self::getConnection()->lastInsertId();
-    }
-
 }

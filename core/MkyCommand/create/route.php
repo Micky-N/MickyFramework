@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 use Core\MKYCommand\MickyCLI;
+use Core\MkyCommand\MkyCommandException;
 
 if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
@@ -10,13 +11,13 @@ if (php_sapi_name() === "cli") {
     $template = '';
     $request = $cli['request'];
     if($request != 'crud'){
-        if(!in_array(strtoupper($request), ['GET', 'POST', 'PUT', 'DELETE'])){
-            throw new \Exception("Le requete doit être parmi GET, POST, PUT, DELETE.");
+        if(!in_array(strtoupper($request), ['GET', 'POST'])){
+            throw new MkyCommandException("Request method must be GET or POST");
         }
         $url = $cli['url'];
         $controller = $cli['controller'];
         if(stripos($controller, 'Controller') === false){
-            throw new \Exception("Le controller doit avoir un suffix Controller.");
+            $controller .= 'Controller';
         }
         $method = $cli['method'];
         $routename = !empty($cli['routename']) ? $cli['routename'] : null;
@@ -26,7 +27,7 @@ if (php_sapi_name() === "cli") {
             $plural = json_decode(file_get_contents('lang/plural_word.json'), true);
             $name = str_replace('Controller', '', $controller);
             if(isset($plural[strtolower($name)])){
-                $routename = $routename == false ? $plural[strtolower($name)].".".$method : $routename;
+                $routename = $cli['routename'] == false ? $plural[strtolower($name)].".".$method : $routename;
             }
         }
         $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
@@ -39,7 +40,7 @@ if (php_sapi_name() === "cli") {
     }else{
         $controller = $cli['controller'];
         if(!strpos($controller, 'Controller')){
-            throw new \Exception("Le controller doit avoir un suffix Controller.");
+            $controller .= 'Controller';
         }
         $namespace = $cli['namespace'];
         $template = file_get_contents(MickyCLI::BASE_MKY."/templates/route/crud.".MickyCLI::EXTENSION);
@@ -52,8 +53,8 @@ if (php_sapi_name() === "cli") {
         $model = fopen("routes/$path.php", "w");
         fwrite($model, $template);
     }else{
-        $model = fopen("routes/$path.php", "a") or die("Impossible d'ouvre le fichier $routename !");
+        $model = fopen("routes/$path.php", "a") or die("Unable to open file $routename");
         fwrite($model, "\n".$template);
     }
-    print("La route $routename a été créé !");
+    print("$routename route created");
 }

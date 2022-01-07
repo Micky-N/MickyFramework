@@ -27,7 +27,7 @@ if (!function_exists('config')) {
                 if (isset($config[$c])) {
                     $config = $config[$c];
                 } else {
-                    throw new Exception("Le point de config '$c' n'existe pas", 12);
+                    throw new Exception("Config '$c' does not exist", 12);
                 }
             }
             return $config;

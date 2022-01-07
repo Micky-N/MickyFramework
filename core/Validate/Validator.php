@@ -25,9 +25,8 @@ class Validator
     }
 
     /**
-     * Lance la vérification de chaque point de contrôle
-     * mode instancier
-     *
+     * Run rules control (instantiate mode)
+     * 
      * @return bool
      * @throws Exception
      */
@@ -35,7 +34,7 @@ class Validator
     {
         $rules = new Rules($this->data, $this->rules);
         if(count($this->data) < 1 && count($this->rules) > 0){
-            $this->errors['form'] = 'Le formulaire ne doit pas être vide';
+            $this->errors['form'] = 'Form must be filled';
             return false;
         }
         foreach ($this->data as $key => $d) {
@@ -49,9 +48,8 @@ class Validator
     }
 
     /**
-     * Lance la vérification de chaque point de contrôle
-     * mode static avec redirection en arriere
-     * avec les erreurs si présent
+     * Run rules control and back redirection
+     * if error
      *
      * @param array $data
      * @param array $rules
@@ -62,7 +60,7 @@ class Validator
     {
         $rules = new Rules($data, $rules);
         if(empty($data) && !empty($rules)){
-            return Route::back()->withError(['form' => 'Le formulaire ne doit pas être vide']);
+            return Route::back()->withError(['form' => 'Form must be filled']);
         }
         foreach ($data as $key => $d) {
             $data[$key] = $rules->checkRule($key, $d);
@@ -74,7 +72,7 @@ class Validator
     }
 
     /**
-     * Retourne les données du formulaire
+     * Get data form
      *
      * @return array
      */
@@ -84,7 +82,7 @@ class Validator
     }
 
     /**
-     * Retourne les règles saisie
+     * Get all rules
      *
      * @return array
      */
@@ -94,7 +92,7 @@ class Validator
     }
 
     /**
-     * Retourne les erreurs
+     * Get all errors
      *
      * @return array
      */

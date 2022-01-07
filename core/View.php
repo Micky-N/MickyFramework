@@ -3,13 +3,12 @@
 namespace Core;
 
 use Exception;
-use Core\Compiler\MkyEngine;
+use Core\MkyCompiler\MkyEngine;
 
 class View
 {
     /**
-     * Affiche le rendu d'une view
-     * sur le site
+     * Displays the rendering of the view on the site
      *
      * @param string $view
      * @param array $params
@@ -19,8 +18,8 @@ class View
     public function render(string $view, array $params = [])
     {
         try {
-            $mkyengine = new MkyEngine(config('mkyengine'));
-            return $mkyengine->view($view, $params);
+            $mkyEngine = new MkyEngine(config('mkyEngine'));
+            return $mkyEngine->view($view, $params);
         } catch (Exception $ex) {
             dd($ex);
         }
