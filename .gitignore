@@ -8,3 +8,4 @@
 cache/views/*.cache.php
 tests/report/
 database/
+/*.php
