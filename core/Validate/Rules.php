@@ -106,7 +106,7 @@ class Rules
      * @param string $key
      * @param $subject
      * @return bool
-     * @throws Exception
+     * @throws RuleNotFoundException
      */
     public function checkRule(string $key, $subject)
     {

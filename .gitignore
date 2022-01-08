@@ -4,3 +4,7 @@
 /.idea
 /.vscode
 /cache/*
+!cache/views
+cache/views/*.cache.php
+tests/report/
+database/

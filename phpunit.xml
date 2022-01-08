@@ -5,4 +5,15 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <coverage>
+        <include>
+            <directory suffix=".php">tests</directory>
+        </include>
+<!--        <exclude>-->
+<!--            <directory suffix=".php">tests/App</directory>-->
+<!--        </exclude>-->
+        <report>
+            <html outputDirectory="tests/report" lowUpperBound="50" highLowerBound="90"/>
+        </report>
+    </coverage>
 </phpunit>

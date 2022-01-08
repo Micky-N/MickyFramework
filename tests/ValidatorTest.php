@@ -140,12 +140,15 @@ class ValidatorTest extends TestCase
         $this->assertEquals('text field must be same as code', $validator_block->getErrors()['text']);
     }
 
-    public function testErrors()
+    public function testException()
     {
-        // same wrong type samed
+        // error on named same as samed
         $rules = ['text' => 'required|max:5|samed:code'];
         $validator = new Validator(['text' => 'code'], $rules);
-        $this->expectException(RuleNotFoundException::class);
-        $validator->passed();
+        try {
+            $validator->passed();
+        }catch (RuleNotFoundException $ex){
+            $this->assertInstanceOf(RuleNotFoundException::class, $ex);
+        }
     }
 }

@@ -22,7 +22,7 @@ class RouterTest extends TestCase
     public function testNameRoute()
     {
         $route = $this->router->get('boo', function () {
-            return;
+            return 'boo';
         })->name('booName');
         $this->assertTrue($route->getName() == 'booName');
         $this->assertTrue($this->router->generateUrlByName('booName') == '/boo');
@@ -31,7 +31,7 @@ class RouterTest extends TestCase
     public function testMatchRoute()
     {
         $route = $this->router->get('boo', function () {
-            return;
+            return 'boo';
         });
         $this->assertTrue($route->match(new ServerRequest('get', '/boo')));
         $this->assertFalse($route->match(new ServerRequest('get', '/boo2')));
@@ -44,7 +44,7 @@ class RouterTest extends TestCase
         });
         $this->assertTrue($this->router->run(new ServerRequest('get', '/boo')));
         $this->expectException(RouteNotFoundException::class);
-        $this->assertTrue($this->router->run(new ServerRequest('get', '/boo2')));
+        $this->router->run(new ServerRequest('get', '/boo2'));
     }
 
     public function testRunWithParams()
