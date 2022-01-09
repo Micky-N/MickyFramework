@@ -21,67 +21,86 @@ use Tests\App\Notification\UserNotify;
 
 class NotifyTest extends TestCase
 {
+    /**
+     * @var UserNotify
+     */
+    private UserNotify $user;
+
     public function setUp(): void
     {
+        $this->user = new UserNotify(1, 'micky');
         App::setAlias('test', \Tests\App\Notification\NotificationSystem::class);
         App::setAlias('notSend', \Tests\App\Notification\NotificationNotSendSystem::class);
     }
 
     public function testActionNotification()
     {
-        $user = new UserNotify(1, 'micky');
         $process = [
-            'default' => ['test'=> 'default'],
-            'action' => ['test'=> 'action'],
+            'default' => ['test' => 'default'],
+            'action' => ['test' => 'action'],
         ];
         // No Action
-        $user->notify(new NotificationTest($process));
+        $this->user->notify(new NotificationTest($process));
         $this->assertEquals($process['default'], ReturnNotificationClass::getReturn());
 
         // With Action
-        $user->notify(new NotificationTest($process, 'action'));
+        $this->user->notify(new NotificationTest($process, 'action'));
         $this->assertEquals($process['action'], ReturnNotificationClass::getReturn());
     }
 
     public function testNotInstantiableNotification()
     {
-        $user = new UserNotify(1, 'micky');
-        $this->expectException(NotificationException::class);
-        $user->notify(new NotificationNotInstantiableTest());
+        try {
+            $this->user->notify(new NotificationNotInstantiableTest());
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(NotificationException::class, $ex);
+        }
     }
 
     public function testNotViaNotification()
     {
-        $user = new UserNotify(1, 'micky');
-        $this->expectException(NotificationNotViaException::class);
-        $user->notify(new NotificationNotViaTest(['test'=> true]));
+        try {
+            $this->user->notify(new NotificationNotViaTest(['test' => true]));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(NotificationNotViaException::class, $ex);
+        }
     }
 
     public function testNotAliasNotification()
     {
-        $user = new UserNotify(1, 'micky');
-        $this->expectException(NotificationNotAliasException::class);
-        $user->notify(new NotificationNotAliasTest(['test'=> true]));
+        try {
+            $this->user->notify(new NotificationNotAliasTest(['test' => true]));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(NotificationNotAliasException::class, $ex);
+        }
     }
 
     public function testNotToMethodNotification()
     {
-        $user = new UserNotify(1, 'micky');
-        $this->expectException(NotificationException::class);
-        $user->notify(new NotificationNotToMethodTest(['test'=> true]));
+        try {
+            $this->user->notify(new NotificationNotToMethodTest(['test' => true]));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(NotificationException::class, $ex);
+        }
     }
 
     public function testNotMessageNotification()
     {
-        $user = new UserNotify(1, 'micky');
-        $this->expectException(NotificationNotMessageException::class);
-        $user->notify(new NotificationNotMessageTest(['test'=> true]));
+        try {
+            $this->user->notify(new NotificationNotMessageTest(['test' => true]));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(NotificationNotMessageException::class, $ex);
+        }
+
     }
 
     public function testNotSendNotification()
     {
-        $user = new UserNotify(1, 'micky');
-        $this->expectException(NotificationSystemException::class);
-        $user->notify(new NotificationNotSendTest(['test'=> true]));
+        try {
+            $this->user->notify(new NotificationNotSendTest(['test' => true]));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(NotificationSystemException::class, $ex);
+        }
+
     }
 }

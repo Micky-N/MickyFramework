@@ -147,7 +147,7 @@ class ValidatorTest extends TestCase
         $validator = new Validator(['text' => 'code'], $rules);
         try {
             $validator->passed();
-        }catch (RuleNotFoundException $ex){
+        }catch (\Exception $ex){
             $this->assertInstanceOf(RuleNotFoundException::class, $ex);
         }
     }

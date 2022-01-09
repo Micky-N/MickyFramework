@@ -21,18 +21,14 @@ class RouterTest extends TestCase
 
     public function testNameRoute()
     {
-        $route = $this->router->get('boo', function () {
-            return 'boo';
-        })->name('booName');
+        $route = $this->router->get('boo', function () {})->name('booName');
         $this->assertTrue($route->getName() == 'booName');
         $this->assertTrue($this->router->generateUrlByName('booName') == '/boo');
     }
 
     public function testMatchRoute()
     {
-        $route = $this->router->get('boo', function () {
-            return 'boo';
-        });
+        $route = $this->router->get('boo', function () {});
         $this->assertTrue($route->match(new ServerRequest('get', '/boo')));
         $this->assertFalse($route->match(new ServerRequest('get', '/boo2')));
     }
@@ -43,14 +39,16 @@ class RouterTest extends TestCase
             return true;
         });
         $this->assertTrue($this->router->run(new ServerRequest('get', '/boo')));
-        $this->expectException(RouteNotFoundException::class);
-        $this->router->run(new ServerRequest('get', '/boo2'));
+        try {
+            $this->router->run(new ServerRequest('get', '/boo2'));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(RouteNotFoundException::class, $ex);
+        }
     }
 
     public function testRunWithParams()
     {
         $route = $this->router->get('boo/:id', function ($id) {
-            return;
         });
         $this->assertTrue($route->match(new ServerRequest('get', '/boo/1')));
         $this->assertFalse($route->match(new ServerRequest('get', '/boo')));
@@ -74,23 +72,31 @@ class RouterTest extends TestCase
 
     public function testRouteAlreadyExistError()
     {
-        $this->router->get('boo', [TestController::class, 'index']);
-        $this->expectException(RouteAlreadyExistException::class);
-        $this->router->get('boo', [TestController::class, 'index']);
+        try {
+            $this->router->get('boo', [TestController::class, 'index']);
+            $this->router->get('boo', [TestController::class, 'index']);
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(RouteAlreadyExistException::class, $ex);
+        }
     }
 
     public function testRouteNotFoundError()
     {
-        $this->expectException(RouteNotFoundException::class);
-        $this->router->run(new ServerRequest('get', 'boo'));
+        try {
+            $this->router->run(new ServerRequest('get', 'boo'));
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(RouteNotFoundException::class, $ex);
+        }
     }
 
     public function testRouteGetNeedParamsError()
     {
-        $this->router->get('boo/:id', function ($id) {
-            return;
-        })->name('boo');
-        $this->expectException(RouteNeedParamsException::class);
-        $this->router->generateUrlByName('boo');
+        try {
+            $this->router->get('boo/:id', function ($id) {
+            })->name('boo');
+            $this->router->generateUrlByName('boo');
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(RouteNeedParamsException::class, $ex);
+        }
     }
 }

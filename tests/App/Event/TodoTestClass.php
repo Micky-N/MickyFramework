@@ -6,25 +6,13 @@ namespace Tests\App\Event;
 
 class TodoTestClass
 {
-    private $id;
     private $name;
     private $completed;
-    private $user;
 
-    public function __construct($id, $name, $completed, $user)
+    public function __construct($name, $completed)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->completed = $completed;
-        $this->user = $user;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
     /**
@@ -33,14 +21,6 @@ class TodoTestClass
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

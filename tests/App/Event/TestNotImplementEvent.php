@@ -4,13 +4,15 @@
 namespace Tests\App\Event;
 
 
+use Core\Event;
 use Core\Traits\Dispatcher;
 
 class TestNotImplementEvent
 {
-    use Dispatcher;
 
+    use Dispatcher;
     public function __construct()
     {
+
     }
 }
