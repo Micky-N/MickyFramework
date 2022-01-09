@@ -286,7 +286,7 @@ class Router
                 }
             }
         }
-        throw new RouteNotFoundException(sprintf('Route %s not found', $request->getUri()->getPort()), 404);
+        throw new RouteNotFoundException(sprintf('Route %s not found', $request->getUri()->getPath()), 404);
     }
 
     /**

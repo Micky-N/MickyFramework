@@ -54,6 +54,12 @@ class RouterTest extends TestCase
         $this->assertFalse($route->match(new ServerRequest('get', '/boo')));
     }
 
+    public function testSlugRoute()
+    {
+        $this->router->get('boo/b:id/fa:fa', [TestController::class, 'multiple']);
+        $this->assertEquals(['12', 'lm'], $this->router->run(new ServerRequest('get', 'boo/b12/falm')));
+    }
+
     public function testRouteToController()
     {
         $this->router->get('boo', [TestController::class, 'index']);

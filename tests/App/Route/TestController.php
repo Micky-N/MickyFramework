@@ -17,4 +17,9 @@ class TestController extends Controller
     public function post(array $data){
         return $data['name'];
     }
+
+    public function multiple($id, $fa)
+    {
+        return [$id, $fa];
+    }
 }

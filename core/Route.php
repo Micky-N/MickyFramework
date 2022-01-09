@@ -76,12 +76,13 @@ class Route
         $pathToMatch = "#^$path$#";
         if(preg_match($pathToMatch, $url, $matches)){
             $key = array_map(function ($pa) {
-                if(strpos($pa, ':') == 0){
-                    $pa = str_replace(':', '', $pa);
+                if(strpos($pa, ':') !== false){
+                    $pa = preg_match('/:(.*)?/', $pa, $matches);
+                    return $matches[1];
                 }
-                return $pa;
-            }, explode('/:', trim($this->path, '/')));
-            array_shift($key);
+                return null;
+            }, explode('/', trim($this->path, '/')));
+            $key = array_filter($key);
             array_shift($matches);
             $matches = $matches != [] ? array_combine($key, $matches) : $matches;
             $this->matches = $matches;
