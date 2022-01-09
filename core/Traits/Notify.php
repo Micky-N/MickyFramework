@@ -31,9 +31,6 @@ trait Notify
      */
     public function notify(NotificationInterface $notification)
     {
-        if(!method_exists($notification, '__construct')){
-            throw new NotificationException(sprintf('%s class must be instantiable', get_class($notification)));
-        }
         if(!is_array($notification->via($this)) || count($notification->via($this)) < 1){
             throw new NotificationNotViaException(sprintf('Notification application is required in the method %s::via()', get_class($notification)));
         }

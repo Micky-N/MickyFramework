@@ -48,15 +48,6 @@ class NotifyTest extends TestCase
         $this->assertEquals($process['action'], ReturnNotificationClass::getReturn());
     }
 
-    public function testNotInstantiableNotification()
-    {
-        try {
-            $this->user->notify(new NotificationNotInstantiableTest());
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf(NotificationException::class, $ex);
-        }
-    }
-
     public function testNotViaNotification()
     {
         try {
