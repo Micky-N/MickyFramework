@@ -26,7 +26,7 @@ class Permission
     public function can(string $permission, $subject = null)
     {
         $auth = new AuthManager();
-        if($auth->isLoggin()){
+        if($auth->isLogin()){
             if($this->test($auth->getAuth(), $permission, $subject) === false){
                 return ErrorController::forbidden();
             }

@@ -7,5 +7,5 @@ const beamsTokenProvider = new PusherPushNotifications.TokenProvider({
 });
 
 beamsClient.start()
-    .then(() => beamsClient.setUserId("App.Models.User."+auth.id, beamsTokenProvider))
+    .then(() => beamsClient.setUserId("ProductModule.Models.User."+auth.id, beamsTokenProvider))
     .catch(console.error);

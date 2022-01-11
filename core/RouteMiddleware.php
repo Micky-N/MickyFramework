@@ -65,7 +65,7 @@ class RouteMiddleware
         $args = explode(',', $middlewares[1]);
         $permission = $args[0];
         $subject = $args[1];
-        $model = "\\App\\Models\\" . ucfirst($subject);
+        $model = "\\ProductModule\\Models\\" . ucfirst($subject);
         $subject = $model::find($matches[$subject]);
         return call_user_func([Permission::class, 'can'], $permission, $subject);
     }

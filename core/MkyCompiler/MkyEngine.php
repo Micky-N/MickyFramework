@@ -48,8 +48,9 @@ class MkyEngine
             $this->viewName = $viewName;
             $this->data = $data;
             $this->viewPath = $viewPath;
+        }else{
+            $viewPath = $this->getConfig('layouts') . '/' . $this->parseViewName($viewName);
         }
-
         if(!file_exists($viewPath)){
             throw new Exception(sprintf('View %s does not exist', $viewPath));
         }
@@ -145,7 +146,7 @@ class MkyEngine
     public function parseExtends(): void
     {
         $this->view = preg_replace_callback('/@extends\(\'(.*?)\'\)/', function ($viewName) {
-            return $this->view($this->getConfig('layouts') . '/' . $viewName[1], $this->data, true);
+            return $this->view($viewName[1], $this->data, true);
         }, str_replace(' (', '(', $this->view));
     }
 

@@ -1,0 +1,104 @@
+home:
+    index:
+        path: /
+        action: App\Http\Controllers\HomeController::index
+        method: GET
+
+categories:
+    index:
+        path: /categories
+        action: App\Http\Controllers\CategoryController::index
+        method: GET
+
+    show:
+        path: /categories/:category
+        action: App\Http\Controllers\CategoryController::show
+        method: GET
+
+    create:
+        path: /categories
+        action: App\Http\Controllers\CategoryController::create
+        method: POST
+
+    update:
+        path: /categories/update/:category
+        action: App\Http\Controllers\CategoryController::update
+        method: POST
+
+    delete:
+        path: /categories/delete/:category
+        action: App\Http\Controllers\CategoryController::delete
+        method: GET
+
+suppliers:
+    index:
+        path: /suppliers
+        action: App\Http\Controllers\SupplierController::index
+        method: GET
+
+    show:
+        path: /suppliers/:supplier
+        action: App\Http\Controllers\SupplierController::show
+        method: GET
+        middleware: can:edit,product
+
+    create:
+        path: /suppliers
+        action: App\Http\Controllers\SupplierController::show
+        method: POST
+
+    update:
+        path: /suppliers/update/:supplier
+        action: App\Http\Controllers\SupplierController::update
+        method: POST
+
+    delete:
+        path: /suppliers/delete/:supplier
+        action: App\Http\Controllers\SupplierController::delete
+        method: GET
+
+#ADMIN ROUTES
+
+notification:
+    subscribe:
+        path: /subscription/:subscribe
+        action: App\Http\Controllers\Admin\NotificationController::subscribe
+        method: POST
+        middleware: auth
+
+admin:
+    products:
+        index:
+            path: /admin/products
+            action: App\Http\Controllers\Admin\ProductController::index
+            method: GET
+            middleware: auth
+
+        show:
+            path: /admin/products/:product
+            action: App\Http\Controllers\Admin\ProductController::show
+            method: GET
+            middleware:
+                - auth
+                - can:edit,product
+
+        update:
+            path: /admin/products/update/:product
+            action: App\Http\Controllers\Admin\ProductController::update
+            method: POST
+            middleware:
+                - auth
+                - can:edit,product
+
+        delete:
+            path: /admin/products/delete/:product
+            action: App\Http\Controllers\Admin\ProductController::delete
+            method: GET
+            middleware:
+                - auth
+                - can:edit,product
+
+test:
+    path: /test/:id
+    action: func::getUser
+    method: GET

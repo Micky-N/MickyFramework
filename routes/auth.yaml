@@ -1,0 +1,25 @@
+auth:
+    signin:
+        path: /login
+        action: App\Http\Controllers\AuthController::signIn
+        method: GET
+
+    login:
+        path: /login
+        action: App\Http\Controllers\AuthController::login
+        method: POST
+
+    logout:
+        path: /logout
+        action: App\Http\Controllers\AuthController::logout
+        method: GET
+
+    subscribe:
+        path: /subscribe
+        action: App\Http\Controllers\AuthController::subscribe
+        method: GET
+
+    subscribe_post:
+        path: /subscribe
+        action: App\Http\Controllers\AuthController::create
+        method: POST

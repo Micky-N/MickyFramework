@@ -19,15 +19,22 @@ class Route
     private $middleware;
 
     private array $matches;
+    private ?string $module;
 
     /**
      * @param string $path
      * @param array|callable $action
+     * @param string $name
+     * @param null|array|string $middleware
+     * @param string|null $module
      */
-    public function __construct(string $path, $action)
+    public function __construct(string $path, $action, string $name = '', $middleware = null, string $module = null)
     {
         $this->path = '/' . trim($path, '/');
         $this->action = $action;
+        $this->name = $name;
+        $this->middleware = $middleware;
+        $this->module = $module;
     }
 
     /**
@@ -40,6 +47,9 @@ class Route
     public function execute(ServerRequestInterface $request)
     {
         $params = [];
+        if(config('structure') === 'HMVC'){
+            App::setCurrentModule(new $this->module());
+        }
         if($this->matches){
             $params = $this->matches;
         }
@@ -60,6 +70,14 @@ class Route
         } else if(is_callable($this->action)){
             return call_user_func_array($this->action, $params);
         }
+    }
+
+    public function setPrefix(string $prefix)
+    {
+        if(strpos($this->path, $prefix) === false){
+            $this->path = $prefix . '/' . trim($this->path, '/');
+        }
+        return $this;
     }
 
     /**
@@ -112,30 +130,6 @@ class Route
     }
 
     /**
-     * Set name to route
-     *
-     * @param string $name
-     * @return Route
-     */
-    public function name(string $name): Route
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * Set middleware to route
-     *
-     * @param string|array $middleware
-     * @return Route
-     */
-    public function middleware($middleware): Route
-    {
-        $this->middleware = $middleware;
-        return $this;
-    }
-
-    /**
      * Get route uri
      *
      * @return string
@@ -179,5 +173,13 @@ class Route
             return $this->{'get' . ucfirst($name)}();
         }
         return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getModule(): ?string
+    {
+        return $this->module;
     }
 }

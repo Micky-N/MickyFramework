@@ -127,7 +127,7 @@ class MkyCompile
             ]),
             'auth' => new MkyDirective(['auth', 'else', 'endauth'], [
                 function () {
-                    return '<?php if(isLoggin()): ?>';
+                    return '<?php if(isLogin()): ?>';
                 },
                 function () {
                     return '<?php else: ?>';
@@ -138,7 +138,7 @@ class MkyCompile
             ]),
             'guest' => new MkyDirective(['guest', 'else', 'endguest'], [
                 function () {
-                    return '<?php if(!isLoggin()): ?>';
+                    return '<?php if(!isLogin()): ?>';
                 },
                 function () {
                     return '<?php else: ?>';

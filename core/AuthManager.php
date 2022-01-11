@@ -28,7 +28,7 @@ class AuthManager
      */
     public function getAuth()
     {
-        if($this->isLoggin()){
+        if($this->isLogin()){
             return !is_null($this->auth) ? (User::find($this->auth) ?? $this->logout()) : $this->logout();
         }
         return null;
@@ -42,7 +42,7 @@ class AuthManager
      */
     public function login($logId)
     {
-        if(!$this->isLoggin()){
+        if(!$this->isLogin()){
             Session::set('auth', $logId);
         }
     }
@@ -67,7 +67,7 @@ class AuthManager
      *
      * @return bool
      */
-    public function isLoggin()
+    public function isLogin()
     {
         return $this->auth !== null;
     }

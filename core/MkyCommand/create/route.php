@@ -16,8 +16,8 @@ if (php_sapi_name() === "cli") {
         }
         $url = $cli['url'];
         $controller = $cli['controller'];
-        if(stripos($controller, 'Controller') === false){
-            $controller .= 'Controller';
+        if(stripos($controller, 'Controllers') === false){
+            $controller .= 'Controllers';
         }
         $method = $cli['method'];
         $routename = !empty($cli['routename']) ? $cli['routename'] : null;
@@ -25,7 +25,7 @@ if (php_sapi_name() === "cli") {
         $middleware = !empty($cli['middleware']) ? $cli['middleware'] : null;
         if(isset($cli['routename']) && $routename == null){
             $plural = json_decode(file_get_contents('lang/plural_word.json'), true);
-            $name = str_replace('Controller', '', $controller);
+            $name = str_replace('Controllers', '', $controller);
             if(isset($plural[strtolower($name)])){
                 $routename = $cli['routename'] == false ? $plural[strtolower($name)].".".$method : $routename;
             }
@@ -39,8 +39,8 @@ if (php_sapi_name() === "cli") {
         $template = str_replace('!middleware', $middleware ? ($permission ? "->middleware(['$middleware','$permission'])" : "->middleware('$middleware')") : '' , $template);
     }else{
         $controller = $cli['controller'];
-        if(!strpos($controller, 'Controller')){
-            $controller .= 'Controller';
+        if(!strpos($controller, 'Controllers')){
+            $controller .= 'Controllers';
         }
         $namespace = $cli['namespace'];
         $template = file_get_contents(MickyCLI::BASE_MKY."/templates/route/crud.".MickyCLI::EXTENSION);

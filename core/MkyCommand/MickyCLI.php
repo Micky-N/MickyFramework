@@ -319,7 +319,12 @@ class MickyCLI
         $columns = [];
         foreach ($data as $row_key => $row) {
             foreach ($row as $cell_key => $cell) {
-                var_dump($cell);
+                if(is_array($cell)){
+                    $cell = join('; ', $cell);
+                }
+                if(is_callable($cell)){
+                    $cell = 'Callable';
+                }
                 $length = strlen($cell);
                 if (empty($columns[$cell_key]) || $columns[$cell_key] || $length) {
                     $columns[$cell_key] = 20;
@@ -332,6 +337,9 @@ class MickyCLI
         foreach ($data as $row_key => $row) {
             $table .= str_pad('', $columns[$cell_key] * count($row), '-') . PHP_EOL;
             foreach ($row as $cell_key => $cell) {
+                if(is_array($cell)){
+                    $cell = join('; ', $cell);
+                }
                 $table .= "|" . str_pad($cell, $columns[$cell_key]);
             }
             $table .= PHP_EOL;

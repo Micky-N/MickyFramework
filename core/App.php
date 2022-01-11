@@ -10,10 +10,15 @@ use Core\Interfaces\MiddlewareInterface;
 use Core\Interfaces\VoterInterface;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class App
 {
-
+    /**
+     * @var string[]
+     */
+    private static array $modules = [];
+    private static ?Module $currentModule = null;
     private static array $middlewareServiceProviders = [];
 
     /**
@@ -95,7 +100,7 @@ class App
 
     /**
      * Set middleware
-     * 
+     *
      * @param string $middleware
      * @return void
      */
@@ -106,7 +111,7 @@ class App
 
     /**
      * Set routeMiddleware
-     * 
+     *
      * @param string $alias
      * @param string $routeMiddleware
      * @return void
@@ -121,7 +126,17 @@ class App
      */
     public static function RoutesInit()
     {
-        includeAll(dirname(__DIR__) . '/routes');
+        foreach (glob(dirname(__DIR__) . '/routes/*.yaml') as $filename) {
+            Route::parseRoutes(Yaml::parseFile($filename));
+        }
+        if(config('structure') === 'HMVC'){
+            foreach (self::$modules as $module) {
+                $currentModule = new $module();
+                foreach (glob($currentModule->getRoot() . '/routes/*.yaml') as $filename) {
+                    Route::parseRoutes(Yaml::parseFile($filename), $currentModule);
+                }
+            }
+        }
         self::$routes = Route::getRoutes();
     }
 
@@ -159,7 +174,7 @@ class App
 
     /**
      * Get all middlewares
-     * or specific middleware 
+     * or specific middleware
      *
      * @param string|null $middleware
      * @return MiddlewareInterface[]|MiddlewareInterface|null
@@ -199,7 +214,7 @@ class App
 
     /**
      * Get event listeners
-     * 
+     *
      * @param string $event
      * @return ListenerInterface[]|null
      */
@@ -217,7 +232,7 @@ class App
      */
     public static function getListenerActions(string $event, string $action)
     {
-        if (isset(self::$events[$event]) && isset(self::$events[$event][$action])) {
+        if(isset(self::$events[$event]) && isset(self::$events[$event][$action])){
             return self::$events[$event][$action];
         }
         return null;
@@ -241,14 +256,14 @@ class App
      */
     public static function debugMode()
     {
-        if (config('debugMode')) {
+        if(config('debugMode')){
             echo _debugRender();
         }
     }
 
     /**
      * Get all providers
-     * 
+     *
      * @return array
      */
     public static function getProviders(): array
@@ -258,11 +273,35 @@ class App
 
     /**
      * Get all routes
-     * 
+     *
      * @return Route[]
      */
     public static function getRoutes(): array
     {
         return self::$routes;
+    }
+
+    /**
+     * @param string[] $modules
+     */
+    public static function setModule(array $modules)
+    {
+        self::$modules = $modules;
+    }
+
+    /**
+     * @return Module|null
+     */
+    public static function getCurrentModule()
+    {
+        return self::$currentModule ?? null;
+    }
+
+    /**
+     * @param Module $currentModule
+     */
+    public static function setCurrentModule(Module $currentModule): void
+    {
+        self::$currentModule = $currentModule;
     }
 }

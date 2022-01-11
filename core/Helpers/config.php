@@ -6,10 +6,10 @@ use Symfony\Component\Dotenv\Dotenv;
 function configEnv()
 {
     $dotenv = new Dotenv();
-    $dotenv->load(dirname(__DIR__).'/../.env');
+    $dotenv->load(dirname(__DIR__) . '/../.env');
 }
 
-if (!function_exists('_env')) {
+if(!function_exists('_env')){
     function _env(string $key, string $default = null)
     {
         configEnv();
@@ -17,14 +17,18 @@ if (!function_exists('_env')) {
     }
 }
 
-if (!function_exists('config')) {
+if(!function_exists('config')){
     function config($configName)
     {
         try {
-            $config = include dirname(__DIR__).'/../bootstrap/Config.php';
+            $config = include dirname(__DIR__) . '/../bootstrap/config.php';
+            if($config['structure'] === 'HMVC'){
+                $configModule = \Core\App::getCurrentModule() ? include \Core\App::getCurrentModule()::CONFIG : null;
+                $config['module'] = array_merge($config['module'], $configModule ?? []);
+            }
             $configName = array_filter(explode('.', $configName));
             foreach ($configName as $c) {
-                if (isset($config[$c])) {
+                if(isset($config[$c])){
                     $config = $config[$c];
                 } else {
                     throw new Exception("Config '$c' does not exist", 12);
@@ -37,7 +41,7 @@ if (!function_exists('config')) {
     }
 }
 
-if (!function_exists('includeAll')) {
+if(!function_exists('includeAll')){
     function includeAll($folder)
     {
         foreach (glob("{$folder}/*.php") as $filename) {

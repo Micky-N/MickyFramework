@@ -1,10 +1,14 @@
 <?php
 
 return [
+    'module' => [
+        'views' => dirname(__DIR__) . '/views',
+        'layouts' => dirname(__DIR__) . '/views/layouts'
+    ],
     'app_name' => _env('APP_NAME', 'MICKYFRAMEWORK'),
     'cache' => dirname(__DIR__) . '/cache',
     'env' => _env('ENV', 'local'),
-    'structure' => 'MVC',
+    'structure' => 'HMVC',
     'debugMode' => _env('ENV') == 'local',
     'connection' => [
         'mysql' => [
@@ -15,8 +19,6 @@ return [
         ]
     ],
     'mkyEngine' => [
-        'views' => dirname(__DIR__) . '/views',
         'cache' => dirname(__DIR__) . '/cache/views',
-        'layouts' => 'layouts'
     ]
 ];

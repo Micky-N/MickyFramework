@@ -8,7 +8,7 @@ if (php_sapi_name() === "cli") {
     $cli = getopt('', MickyCLI::cliLongOptions());
     $option = $cli['create'];
     $model = ucfirst($cli['model']);
-    $modelName = "App\\Models\\".$model;
+    $modelName = "ProductModule\\Models\\".$model;
     $modellower = strtolower($model);
     $name = ucfirst($cli['name']);
     $action = isset($cli['action']) ? strtoupper($cli['action']): null;

@@ -18,7 +18,8 @@ class View
     public function render(string $view, array $params = [])
     {
         try {
-            $mkyEngine = new MkyEngine(config('mkyEngine'));
+            $config = array_merge(config('mkyEngine'), config('module'));
+            $mkyEngine = new MkyEngine($config);
             return $mkyEngine->view($view, $params);
         } catch (Exception $ex) {
             dd($ex);
