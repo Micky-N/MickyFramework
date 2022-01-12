@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Product\Http\Controllers\Admin;
 
 use App\Models\Category;
-use App\Models\Product;
+use App\Product\Models\Product;
 use App\Models\Supplier;
-use App\Models\User;
 use Core\Controller;
 use Core\Facades\Route;
 use Core\Facades\View;
-use HTML\Paginate;
 
 
 class ProductController extends Controller
@@ -21,7 +19,7 @@ class ProductController extends Controller
         foreach ($products as $product){
             $product->category = $product->category->name;
         }
-        return View::render('admin.products.index', compact('products'));
+        return View::render('admin.index', compact('products'));
     }
 
     public function show($product)
@@ -31,7 +29,7 @@ class ProductController extends Controller
         $product->with('suppliers');
         $categories = Category::all();
         $suppliers = Supplier::all();
-        return View::render('admin.products.show', compact('product', 'categories', 'suppliers'));
+        return View::render('admin.show', compact('product', 'categories', 'suppliers'));
     }
 
     public function update($product, array $data)
@@ -43,12 +41,12 @@ class ProductController extends Controller
         }
 
         Product::update($product, $data);
-        return Route::redirectName('admin.products.index');
+        return Route::redirectName('admin.index');
     }
 
     public function delete($product)
     {
         Product::delete($product);
-        return Route::redirectName('admin.products.index');
+        return Route::redirectName('admin.index');
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Product\Models;
 
+use App\Models\User;
 use Core\Model;
 use App\Models\Stock;
 use App\Models\Supplier;

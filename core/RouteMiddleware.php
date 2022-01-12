@@ -65,7 +65,15 @@ class RouteMiddleware
         $args = explode(',', $middlewares[1]);
         $permission = $args[0];
         $subject = $args[1];
-        $model = "\\ProductModule\\Models\\" . ucfirst($subject);
+        $params = ["", ucfirst($subject)];
+        if(config('structure') === 'HMVC'){
+            if(strpos($subject, '/') !== false){
+                $subjectArray = explode('/', $subject);
+                $params = [ucfirst($subjectArray[0])."\\", ucfirst($subjectArray[1])];
+                $subject = end($subjectArray);
+            }
+        }
+        $model = sprintf("\\App\\%sModels\\%s", ...$params);
         $subject = $model::find($matches[$subject]);
         return call_user_func([Permission::class, 'can'], $permission, $subject);
     }

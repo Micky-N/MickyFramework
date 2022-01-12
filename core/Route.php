@@ -47,8 +47,9 @@ class Route
     public function execute(ServerRequestInterface $request)
     {
         $params = [];
-        if(config('structure') === 'HMVC'){
+        if(config('structure') === 'HMVC' && !is_null($this->module)){
             App::setCurrentModule(new $this->module());
+            App::setApplication();
         }
         if($this->matches){
             $params = $this->matches;

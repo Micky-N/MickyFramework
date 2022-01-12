@@ -31,12 +31,12 @@ if (php_sapi_name() === "cli") {
     $voter = fopen("app/Voters/$name.php", "w") or die("Unable to open file $name");
     $start = "<"."?"."php\n\n";
     fwrite($voter, $start.$template);
-    $arr = _readLine(dirname(__DIR__)."/../bootstrap/MiddlewareServiceProvider.php");
+    $arr = _readLine(dirname(__DIR__)."/../Providers/MiddlewareServiceProvider.php");
     $votersLine = array_keys(preg_grep("/'voters' => \[/i", $arr))[0];
     array_splice($arr, $votersLine + 1, 0, "\t    \App\Voters\\{$name}::class,");
     $arr = array_values($arr);
     $arr = implode("\n", $arr);
-    $ptr = fopen(dirname(__DIR__)."/../bootstrap/MiddlewareServiceProvider.php", "w");
+    $ptr = fopen(dirname(__DIR__)."/../Providers/MiddlewareServiceProvider.php", "w");
     fwrite($ptr, $arr);
     print("$name voter created");
 }

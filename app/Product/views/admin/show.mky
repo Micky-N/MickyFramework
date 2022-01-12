@@ -24,7 +24,7 @@
                     <li class="list-group-item p-0 overflow-hidden">
                         <div>
                             <img id="photo" class="w-100 mx-auto p-0" alt="{{ $product->photo }}"
-                                src="{{ $product->photo }}">
+                                src="../../../../public/index.php">
                         </div>
                     </li>
                 @endif
@@ -68,7 +68,7 @@
                         class="fa fa-plus"></i> Ajouter un fournisseur</button>
             </h4>
             <form id="update" method="post"
-                action="{{ route('admin.products.update', ['product' => $product->code_product]) }}">
+                action="../../../../public/index.php">
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label for="name">Nom</label>
@@ -147,7 +147,7 @@
                         </h4>
                     </div>
                     <form id="addpro"
-                        action="{{ route('products.suppliers.create', ['product' => $product->code_product]) }}"
+                        action="../../../../public/index.php"
                         method="post" class="px-2 pt-4">
                         <div class="d-flex justify-content-center">
                             <div class="row">

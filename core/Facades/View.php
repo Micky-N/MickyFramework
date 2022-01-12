@@ -6,7 +6,7 @@ use Core\View as CoreView;
 
 
 /**
- * @method static \Core\View render(string $view, array $params = [])
+ * @method static \Core\View render(string $view, array $params = [], bool $isModuleView = false)
  *
  * @see \Core\View
  */

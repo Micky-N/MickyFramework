@@ -8,7 +8,8 @@ use Core\Permission as CorePermission;
 
 /**
  * @method static \Core\Permission can(string $permission, $subject = null)
- * @method static \Core\Permission test(string $permission, $subject = null)
+ * @method static \Core\Permission authorize($user, string $permission, $subject = null)
+ * @method static \Core\Permission authorizeAuth(string $permission, $subject = null)
  * @method static \Core\Permission addVoter(VoterInterface $voter)
  *
  * @see \Core\Permission

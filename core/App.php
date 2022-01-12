@@ -31,6 +31,10 @@ class App
      * @var Route[]
      */
     private static array $routes = [];
+    /**
+     * @var mixed
+     */
+    private static $config;
 
     /**
      * Get Provider list
@@ -39,7 +43,7 @@ class App
      */
     public static function Providers()
     {
-        self::$providers = include dirname(__DIR__) . '/bootstrap/Provider.php';
+        self::$providers = include dirname(__DIR__) . '/app/Providers/Provider.php';
         return self::$providers;
     }
 
@@ -50,7 +54,7 @@ class App
      */
     public static function EventServiceProviders()
     {
-        self::$events = include dirname(__DIR__) . '/bootstrap/EventServiceProvider.php';
+        self::$events = include dirname(__DIR__) . '/app/Providers/EventServiceProvider.php';
         return self::$events;
     }
 
@@ -61,7 +65,7 @@ class App
      */
     public static function MiddlewareServiceProviders()
     {
-        self::$middlewareServiceProviders = include dirname(__DIR__) . '/bootstrap/MiddlewareServiceProvider.php';
+        self::$middlewareServiceProviders = include dirname(__DIR__) . '/app/Providers/MiddlewareServiceProvider.php';
         return self::$middlewareServiceProviders;
     }
 
@@ -70,9 +74,17 @@ class App
      */
     public static function VotersInit()
     {
+        if(self::$config['structure'] === 'HMVC'){
+            foreach (self::$modules as $module){
+                $moduleRoot = (new $module())->getRoot();
+                $moduleVoters = include $moduleRoot . '/Providers/MiddlewareServiceProvider.php';
+                self::$middlewareServiceProviders['voters'] = array_merge(self::$middlewareServiceProviders['voters'], $moduleVoters['voters']);
+            }
+        }
         foreach (self::$middlewareServiceProviders['voters'] as $voter) {
             Permission::addVoter(new $voter());
         }
+
     }
 
     /**
@@ -99,17 +111,6 @@ class App
     }
 
     /**
-     * Set middleware
-     *
-     * @param string $middleware
-     * @return void
-     */
-    public static function setMiddleware(string $middleware)
-    {
-        self::$middlewareServiceProviders['middlewares'][] = $middleware;
-    }
-
-    /**
      * Set routeMiddleware
      *
      * @param string $alias
@@ -127,13 +128,13 @@ class App
     public static function RoutesInit()
     {
         foreach (glob(dirname(__DIR__) . '/routes/*.yaml') as $filename) {
-            Route::parseRoutes(Yaml::parseFile($filename));
+            Route::parseRoutes(Yaml::parseFile($filename) ?? [], null, strpos($filename, 'admin.yaml') !== false);
         }
         if(config('structure') === 'HMVC'){
             foreach (self::$modules as $module) {
                 $currentModule = new $module();
                 foreach (glob($currentModule->getRoot() . '/routes/*.yaml') as $filename) {
-                    Route::parseRoutes(Yaml::parseFile($filename), $currentModule);
+                    Route::parseRoutes(Yaml::parseFile($filename) ?? [], $currentModule, strpos($filename, 'admin.yaml') !== false);
                 }
             }
         }
@@ -149,6 +150,7 @@ class App
      */
     public static function run(ServerRequestInterface $request)
     {
+        self::ConfigInit();
         self::Providers();
         self::MiddlewareServiceProviders();
         self::EventServiceProviders();
@@ -303,5 +305,35 @@ class App
     public static function setCurrentModule(Module $currentModule): void
     {
         self::$currentModule = $currentModule;
+    }
+
+    /**
+     *  Merge current module application to base application
+     */
+    public static function setApplication()
+    {
+        $moduleRoot = (new self::$currentModule())->getRoot();
+        self::$config['module'] = self::includeMerge(self::$config['module'], self::$currentModule::CONFIG);
+        self::$events = self::includeMerge(self::$events, $moduleRoot . '/Providers/EventServiceProvider.php');
+    }
+
+
+    private static function includeMerge($baseArray, $file)
+    {
+        $arrayFile = include $file;
+        return array_merge($baseArray, array_filter($arrayFile));
+    }
+
+    private static function ConfigInit()
+    {
+        self::$config = include dirname(__DIR__) . '/config/config.php';
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getConfig()
+    {
+        return self::$config;
     }
 }

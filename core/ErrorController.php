@@ -25,7 +25,7 @@ class ErrorController extends Controller
         $status = self::getStatus($code);
         $status['text'] = $text ?? $status['text'];
         if(file_exists(dirname(__DIR__).'/views/general/errors.mky')){
-            return View::render('general.errors', $status);
+            return View::render('general.errors', $status, false);
         }
         throw new Exception($status['text'], $status['code']);
     }

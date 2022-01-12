@@ -25,28 +25,31 @@ class Permission
      */
     public function can(string $permission, $subject = null)
     {
+        if($this->authorizeAuth($permission, $subject) === false){
+            return ErrorController::forbidden();
+        }
+        return true;
+    }
+
+    /**
+     * Authorize permission for Auth
+     *
+     * @param string $permission
+     * @param null $subject
+     * @return bool
+     * @throws Exception
+     */
+    public function authorizeAuth(string $permission, $subject = null): bool
+    {
         $auth = new AuthManager();
         if($auth->isLogin()){
-            if($this->test($auth->getAuth(), $permission, $subject) === false){
-                return ErrorController::forbidden();
-            }
-            return true;
+            return $this->authorize($auth->getAuth(), $permission, $subject);
         }
-        return ErrorController::forbidden();
+        return false;
     }
 
     /**
-     * Add voter
-     *
-     * @param VoterInterface $voter
-     */
-    public function addVoter(VoterInterface $voter): void
-    {
-        $this->voters[] = $voter;
-    }
-
-    /**
-     * Test permission
+     * Authorize permission
      *
      * @param mixed $user
      * @param string $permission
@@ -54,7 +57,7 @@ class Permission
      * @return bool
      * @throws Exception
      */
-    public function test($user, string $permission, $subject = null): bool
+    public function authorize($user, string $permission, $subject = null): bool
     {
         foreach ($this->voters as $voter) {
             if($voter->canVote($permission, $subject)){
@@ -68,6 +71,16 @@ class Permission
             }
         }
         return false;
+    }
+
+    /**
+     * Add voter
+     *
+     * @param VoterInterface $voter
+     */
+    public function addVoter(VoterInterface $voter): void
+    {
+        $this->voters[] = $voter;
     }
 
     /**

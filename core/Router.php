@@ -410,16 +410,17 @@ class Router
     /**
      * @param array $routesYaml
      * @param Module $module
+     * @param bool $isAdminRoute
      */
-    public function parseRoutes(array $routesYaml, Module $module = null)
+    public function parseRoutes(array $routesYaml, Module $module = null, bool $isAdminRoute = false)
     {
         $configModule = $module ? include $module::CONFIG : null;
         foreach ($routesYaml as $namespace => $routesName) {
-            foreach ($this->arrayNamespaces($routesName, [$namespace]) as $name => $route) {
+            foreach ($this->arrayNamespaces($routesName, [($isAdminRoute ? 'admin.' : '') . $namespace]) as $name => $route) {
                 $middleware = $route['middleware'] ?? null;
                 $moduleRoot = !is_null($module) ? $module->getRoot() : null;
                 $action = $this->getAction($route['action'], $moduleRoot);
-                $path = ($configModule['prefix'] ?? '') . '/' . trim($route['path'], '/');
+                $path = ($isAdminRoute ? '/admin' : '') . '/' . trim(($configModule['url_prefix'] ?? ''), '/') . '/' . trim($route['path'], '/');
                 $moduleName = !is_null($module) ? get_class($module) : null;
                 $this->{$route['method']}($path, $action, $name, $middleware, $moduleName);
             }

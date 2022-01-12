@@ -3,5 +3,5 @@
 
 return [
     'views' => __DIR__ . '/views',
-    'prefix' => '/products'
+    'url_prefix' => '/products'
 ];

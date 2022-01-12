@@ -11,7 +11,7 @@ use Core\Router as CoreRouter;
  * @method static \Core\Route post(string $path, $action)
  * @method static bool namespaceRoute(string $route = '')
  * @method static array routesByName()
- * @method static void parseRoutes(array $routesYaml, Module $module = null)
+ * @method static void parseRoutes(array $routesYaml, Module $module = null, bool $isAdminRoute = false)
  * @method static \Core\Route[] getRoutes()
  * @method static void crud(string $namespace, $controller, array $only = [])
  * @method static string routeNeedParams(string $path)

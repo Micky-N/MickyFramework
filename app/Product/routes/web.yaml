@@ -1,34 +1,34 @@
 products:
     index:
         path: /
-        action: App\Http\Controllers\ProductController::index
+        action: App\Product\Http\Controllers\ProductController::index
         method: GET
 
     show:
         path: /:product
-        action: App\Http\Controllers\ProductController::show
+        action: App\Product\Http\Controllers\ProductController::show
         method: GET
         middleware: can:edit,product
 
     create:
         path: /
-        action: App\Http\Controllers\ProductController::show
+        action: App\Product\Http\Controllers\ProductController::show
         method: POST
 
     suppliers:
         update:
             path: /:product/suppliers/update/:supplier
-            action: App\Http\Controllers\ProductController::updateSuppliers
+            action: App\Product\Http\Controllers\ProductController::updateSuppliers
             method: POST
 
         create:
             path: /:product/suppliers
-            action: App\Http\Controllers\ProductController::createSuppliers
+            action: App\Product\Http\Controllers\ProductController::createSuppliers
             method: POST
 
         delete:
             path: /:product/suppliers/delete/:supplier
-            action: App\Http\Controllers\ProductController::deleteSuppliers
+            action: App\Product\Http\Controllers\ProductController::deleteSuppliers
             method: GET
 
 test:

@@ -4,10 +4,9 @@
 namespace App\Product;
 
 
-use Core\Facades\Route;
-use Symfony\Component\Yaml\Yaml;
+use Core\Module;
 
-class ProductModule extends \Core\Module
+class ProductModule extends Module
 {
     const CONFIG = __DIR__ . '/config.php';
 }

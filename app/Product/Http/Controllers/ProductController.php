@@ -4,10 +4,10 @@ namespace App\Product\Http\Controllers;
 
 use Core\Controller;
 use Core\Facades\View;
-use App\Models\Product;
+use App\Product\Models\Product;
 use Core\Facades\Route;
 use App\Models\Category;
-use App\Models\ProductSupplier;
+use App\Product\Models\ProductSupplier;
 use App\Models\Supplier;
 use App\Models\User;
 use HTML\Paginate;
@@ -21,7 +21,7 @@ class ProductController extends Controller
         $users = User::select('username, id')->where('role_id', '!=', 3)->get();
         $categories = Category::all();
         $products = new Paginate($products, 10);
-        return View::render('products.index', compact('products', 'categories', 'users'));
+        return View::render('index', compact('products', 'categories', 'users'));
     }
 
     public function show($product)
@@ -31,7 +31,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $suppliers = Supplier::all();
         
-        return View::render('products.show', compact('product', 'categories', 'suppliers'));
+        return View::render('show', compact('product', 'categories', 'suppliers'));
     }
 
     public function new()
@@ -65,7 +65,7 @@ class ProductController extends Controller
         }
 
         Product::update($product, $data);
-        return Route::redirectName('products.index');
+        return Route::redirectName('index');
     }
 
     public function updateSupplier($product, $supplier, array $data)
@@ -80,7 +80,7 @@ class ProductController extends Controller
     public function delete($product)
     {
         Product::delete($product);
-        return Route::redirectName('products.index');
+        return Route::redirectName('index');
     }
 
     public function deleteSupplier($product, $supplier)

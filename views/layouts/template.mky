@@ -30,7 +30,7 @@
                         <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
                     </li>
                     <li class="nav-item {{ namespaceRoute('products') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('products.index') }}">Produits</a>
+                        <a class="nav-link" href="/products">Produits</a>
                     </li>
                     <li class="nav-item {{ namespaceRoute('suppliers') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('suppliers.index') }}">Fournisseurs</a>
@@ -50,7 +50,7 @@
                             <a class="btn btn-outline-dark">{{ auth()->username }}</a>
                         </li>
                         <li class="mr-3">
-                            <a class="btn btn-success" href="{{ route('admin.products.index') }}">Admin</a>
+                            <a class="btn btn-success" href="/admin/products">Admin</a>
                         </li>
                         <li class="">
                             <a class="btn btn-info" href="{{ route('auth.logout') }}">Déconnexion</a>

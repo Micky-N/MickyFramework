@@ -30,7 +30,7 @@ class PermissionTest extends TestCase
     {
         $user = new \stdClass();
         $user->id = 7;
-        $this->assertFalse($this->permission->test($user, 'demo'));
+        $this->assertFalse($this->permission->authorize($user, 'demo'));
     }
 
     public function testWithTrueVoter()
@@ -38,7 +38,7 @@ class PermissionTest extends TestCase
         $this->permission->addVoter(new AlwaysYesVoter());
         $user = new \stdClass();
         $user->id = 7;
-        $this->assertTrue($this->permission->test($user, 'demo'));
+        $this->assertTrue($this->permission->authorize($user, 'demo'));
     }
 
     public function testWithFalseVoter()
@@ -46,7 +46,7 @@ class PermissionTest extends TestCase
         $this->permission->addVoter(new AlwaysNoVoter());
         $user = new \stdClass();
         $user->id = 7;
-        $this->assertFalse($this->permission->test($user, 'demo'));
+        $this->assertFalse($this->permission->authorize($user, 'demo'));
     }
 
     public function testWithOneVoterTrue()
@@ -55,7 +55,7 @@ class PermissionTest extends TestCase
         $user->id = 7;
         $this->permission->addVoter(new AlwaysYesVoter());
         $this->permission->addVoter(new AlwaysNoVoter());
-        $this->assertTrue($this->permission->test($user, 'demo'));
+        $this->assertTrue($this->permission->authorize($user, 'demo'));
     }
 
     public function testWithSpecificVoter()
@@ -63,8 +63,8 @@ class PermissionTest extends TestCase
         $user = new \stdClass();
         $user->id = 7;
         $this->permission->addVoter(new SpecificVoter());
-        $this->assertFalse($this->permission->test($user, 'demo'));
-        $this->assertTrue($this->permission->test($user, 'specific'));
+        $this->assertFalse($this->permission->authorize($user, 'demo'));
+        $this->assertTrue($this->permission->authorize($user, 'specific'));
     }
 
     public function testWithConditionVoter()
@@ -75,12 +75,12 @@ class PermissionTest extends TestCase
         $user2->id = 1;
         $product = new TestProduct($user);
         $this->permission->addVoter(new SellerVoter());
-        $this->assertTrue($this->permission->test($user, SellerVoter::EDIT, $product));
-        $this->assertFalse($this->permission->test($user2, SellerVoter::EDIT, $product));
+        $this->assertTrue($this->permission->authorize($user, SellerVoter::EDIT, $product));
+        $this->assertFalse($this->permission->authorize($user2, SellerVoter::EDIT, $product));
         try {
             $this->permission->addVoter(new FakeVoter());
-            $this->assertTrue($this->permission->test($user, true, $product));
-            $this->permission->test($user, true, $user2);
+            $this->assertTrue($this->permission->authorize($user, true, $product));
+            $this->permission->authorize($user, true, $user2);
         }catch (VoterException $ex){
             $this->assertInstanceOf(VoterException::class, $ex);
         }

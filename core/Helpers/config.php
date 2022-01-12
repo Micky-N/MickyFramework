@@ -3,16 +3,11 @@
 use Symfony\Component\Dotenv\Dotenv;
 
 
-function configEnv()
-{
-    $dotenv = new Dotenv();
-    $dotenv->load(dirname(__DIR__) . '/../.env');
-}
-
 if(!function_exists('_env')){
     function _env(string $key, string $default = null)
     {
-        configEnv();
+        $dotenv = new Dotenv();
+        $dotenv->load(dirname(__DIR__) . '/../.env');
         return $_ENV[$key] ?: $default;
     }
 }
@@ -21,11 +16,7 @@ if(!function_exists('config')){
     function config($configName)
     {
         try {
-            $config = include dirname(__DIR__) . '/../bootstrap/config.php';
-            if($config['structure'] === 'HMVC'){
-                $configModule = \Core\App::getCurrentModule() ? include \Core\App::getCurrentModule()::CONFIG : null;
-                $config['module'] = array_merge($config['module'], $configModule ?? []);
-            }
+            $config = \Core\App::getConfig();
             $configName = array_filter(explode('.', $configName));
             foreach ($configName as $c) {
                 if(isset($config[$c])){

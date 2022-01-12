@@ -12,13 +12,14 @@ class View
      *
      * @param string $view
      * @param array $params
+     * @param bool $isModuleView
      * @return string|bool
-     * @throws Exception
      */
-    public function render(string $view, array $params = [])
+    public function render(string $view, array $params = [], bool $isModuleView = true)
     {
         try {
-            $config = array_merge(config('mkyEngine'), config('module'));
+            $baseConfig = include ROOT . 'config/config.php';
+            $config = array_merge(config('mkyEngine'), ($isModuleView ? config('module') : $baseConfig['module']));
             $mkyEngine = new MkyEngine($config);
             return $mkyEngine->view($view, $params);
         } catch (Exception $ex) {

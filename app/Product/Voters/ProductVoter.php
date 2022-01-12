@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Voters;
+namespace App\Product\Voters;
 
+use App\Product\Models\Product;
 use Core\Exceptions\Voter\VoterException;
 use Core\Interfaces\VoterInterface;
-use App\Models\Product;
 
 class ProductVoter implements VoterInterface
 {

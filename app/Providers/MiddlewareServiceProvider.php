@@ -7,7 +7,6 @@ return [
     ],
 
     'voters' => [
-        \App\Voters\ProductVoter::class,
         \App\Voters\RoleVoter::class,
     ],
 ];
