@@ -1,8 +1,7 @@
-namespace App\Http\Controllers!path;
+namespace !path;
 
 use Core\Controller;
 use Core\Facades\View;
-!model
 
 
 class !name extends Controller

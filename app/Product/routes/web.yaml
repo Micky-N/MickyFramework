@@ -8,7 +8,7 @@ products:
         path: /:product
         action: App\Product\Http\Controllers\ProductController::show
         method: GET
-        middleware: can:edit,product
+        middleware: can:edit,Product/product
 
     create:
         path: /
@@ -30,8 +30,3 @@ products:
             path: /:product/suppliers/delete/:supplier
             action: App\Product\Http\Controllers\ProductController::deleteSuppliers
             method: GET
-
-test:
-    path: /test/:id
-    action: func::test
-    method: GET

@@ -1,4 +1,4 @@
-namespace App\Http\Middlewares;
+namespace !path;
 
 use Core\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;

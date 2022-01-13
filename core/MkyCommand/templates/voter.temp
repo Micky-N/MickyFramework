@@ -1,23 +1,20 @@
-namespace App\Voters;
+namespace !path;
 
 use Core\Exceptions\Voter\VoterException;
 use Core\Interfaces\VoterInterface;
-!modelName
 
 class !name implements VoterInterface
 {
     !action
 
-    public function canVote(string $permission, !modellower = null): bool
+    public function canVote(string $permission, !modelLower = null): bool
     {
         $constants = (new \ReflectionClass($this))->getConstants();
-        return !empty($constants) && in_array($permission, $constants) && (!modellower instanceof !model);
+        return !empty($constants) && in_array($permission, $constants) && (!modelLower instanceof !model);
     }
 
-    public function vote($user, string $permission, !modellower = null): bool
+    public function vote($user, string $permission, !modelLower = null): bool
     {
-        if(!!modellower instanceof !model){
-            throw new VoterException('Subject must be an instance of !model.');
-        }
+        return true;
     }
 }

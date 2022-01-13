@@ -1,32 +1,36 @@
 <?php
 
 require_once 'vendor/autoload.php';
+
 use Core\MKYCommand\MickyCLI;
 use Core\MkyCommand\MkyCommandException;
 
-if (php_sapi_name() === "cli") {
+if(php_sapi_name() === "cli"){
     $cli = getopt('', MickyCLI::cliLongOptions());
     $option = $cli['create'];
-    $path = isset($cli['path']) ? ucfirst($cli['path']) : null;
     $controllerName = ucfirst($cli['name']);
-    $crud = isset($cli['crud']) ? file_get_contents(MickyCLI::BASE_MKY."/templates/controller/crud.".MickyCLI::EXTENSION) : null;
+    $crud = isset($cli['crud']) ? file_get_contents(MickyCLI::BASE_MKY . "/templates/controller/crud." . MickyCLI::EXTENSION) : null;
     $model = isset($cli['model']) ? $cli['model'] : null;
-    if (!strpos($controllerName, 'Controllers')) {
-        throw new MkyCommandException("$controllerName controller must have be suffixed by Controllers");
+    $module = isset($cli['module']) ? ucfirst($cli['module']) : null;
+    $path = isset($cli['path']) ? ucfirst($cli['path']) : null;
+    $namespace = sprintf("App%s\\Http\\Controllers%s", ($module ? "\\" . $module : ''), $path ? "\\" . $path : '');
+    if(!strpos($controllerName, 'Controller')){
+        throw new MkyCommandException("$controllerName controller must have be suffixed by Controller");
     }
-    $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
+    $template = file_get_contents(MickyCLI::BASE_MKY . "/templates/$option." . MickyCLI::EXTENSION);
     $template = str_replace('!name', $controllerName, $template);
-    $template = str_replace('!path', $path ? "\\".ucfirst($path) : '', $template);
-    $template = str_replace('!model', $model ? "use ProductModule\\Models\\".ucfirst($model).";" : '', $template);
-    $template = str_replace('!crud', $crud ? "\n".$crud : '', $template);
-    if (file_exists("app/Http/Controllers/$path$controllerName.php")) {
+    $template = str_replace('!path', $namespace, $template);
+    $template = str_replace('!model', $model ? $model . ";" : '', $template);
+    $template = str_replace('!crud', $crud ? "\n" . $crud : '', $template);
+    $dir = sprintf("app%s/Http/Controllers%s", ($module ? '/' . $module : ''), ($path ? "/" . $path : ''));
+    if(file_exists("$dir/$controllerName.php")){
         throw new MkyCommandException("$controllerName controller already exist");
     }
-    if (!is_dir("app/Http/Controllers".($path ? "/".$path : ''))) {
-        mkdir("app/Http/Controllers".($path ? "/".$path : ''), 0777, true); // true for recursive create
+    if(!is_dir($dir)){
+        mkdir($dir, 0777, true);
     }
-    $controller = fopen("app/Http/Controllers/".($path ? "$path/" : '')."$controllerName.php", "w") or die("Unable to open file $controllerName");
-    $start = "<"."?"."php\n\n";
-    fwrite($controller, $start.$template);
+    $controller = fopen("$dir/$controllerName.php", "w") or die("Unable to open file $controllerName");
+    $start = "<" . "?" . "php\n\n";
+    fwrite($controller, $start . $template);
     print("$controllerName controller created");
 }

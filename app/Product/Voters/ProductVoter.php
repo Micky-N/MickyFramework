@@ -19,9 +19,6 @@ class ProductVoter implements VoterInterface
 
     public function vote($user, string $permission, $product = null): bool
     {
-        if(!$product instanceof Product){
-            throw new VoterException('Subject must be an instance of Product');
-        }
         switch ($permission) {
             case self::EDIT:
                 return $this->canEdit($user, $product);

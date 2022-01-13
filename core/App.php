@@ -330,10 +330,10 @@ class App
     }
 
     /**
-     * @return mixed
+     * @return array|null
      */
     public static function getConfig()
     {
-        return self::$config;
+        return self::$config ?? null;
     }
 }

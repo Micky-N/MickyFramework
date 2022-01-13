@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\MKYCommand;
+namespace Core\MkyCommand;
 
 use Core\MkyCommand\MkyCommandException;
 use Exception;
@@ -35,7 +35,6 @@ class MickyCLI
         'controller' => 'required',
         'method' => 'required',
         'model' => 'required',
-        'route' => 'required',
         'api' => 'novalue',
         'url' => 'required',
         'routename' => 'optional',
@@ -53,6 +52,8 @@ class MickyCLI
         'via' => 'required',
         'event' => 'required',
         'listener' => 'required',
+        'module' => 'required',
+        'route' => 'novalue',
     ];
 
     /**
@@ -64,45 +65,51 @@ class MickyCLI
      */
     private static array $required = [
         'create' => [
+            'module' => [
+                'name' => 'required',
+                'routename' => 'optional'
+            ],
             'controller' => [
                 'name' => 'required',
                 'crud' => 'optional',
-                'model' => 'optional',
-                'path' => 'optional'
+                'path' => 'optional',
+                'module' => 'optional'
             ],
             'model' => [
                 'name' => 'required',
                 'pk' => 'optional',
-                'table' => 'optional'
-            ],
-            'route' => [
-                'request' => 'required',
-                'url' => 'required',
-                'controller' => 'required',
-                'method' => 'required',
-                'routename' => 'optional',
-                'api' => 'optional',
-                'middleware' => 'optional',
-                'namespace' => 'required',
-                'permission' => 'optional'
+                'table' => 'optional',
+                'path' => 'optional',
+                'module' => 'optional'
             ],
             'middleware' => [
                 'name' => 'required',
+                'path' => 'optional',
+                'route' => 'optional',
+                'module' => 'optional'
             ],
             'voter' => [
                 'name' => 'required',
                 'model' => 'required',
-                'action' => 'optional'
+                'path' => 'optional',
+                'action' => 'optional',
+                'module' => 'optional'
             ],
             'notification' => [
                 'name' => 'required',
-                'via' => 'required'
+                'via' => 'required',
+                'path' => 'optional',
+                'module' => 'optional'
             ],
             'event' => [
-                'name' => 'required'
+                'name' => 'required',
+                'path' => 'optional',
+                'module' => 'optional'
             ],
             'listener' => [
-                'name' => 'required'
+                'name' => 'required',
+                'path' => 'optional',
+                'module' => 'optional'
             ]
         ],
         'show' => [
@@ -241,6 +248,11 @@ class MickyCLI
             if (!empty($this->cli)) {
                 foreach ($this->cli as $cli => $option) {
                     $req = $this->getCommandBy($cliKey, $cliOption);
+                    foreach ($req as $r => $c){
+                        if($c == 'required' && !isset($this->cli[$r])){
+                            throw new MkyCommandException("$r command is required.");
+                        }
+                    }
                     if (!isset($req[$cli])) {
                         unset($this->cli[$cli]);
                     } elseif ($req[$cli] == 'required' && empty($this->cli[$cli])) {

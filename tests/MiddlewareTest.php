@@ -49,10 +49,10 @@ class MiddlewareTest extends TestCase
     {
         $this->router->get('/passed', function () {
             return 'boo';
-        })->middleware('passed');
+        }, '', 'passed');
         $this->assertEquals('boo', $this->router->run(new ServerRequest('get', '/passed')));
 
-        $this->router->get('block', function () {})->middleware('blocked');
+        $this->router->get('block', function () {}, '', 'blocked');
         $this->assertFalse($this->router->run(new ServerRequest('get', 'block')));
     }
 
@@ -60,23 +60,23 @@ class MiddlewareTest extends TestCase
     {
         $this->router->post('/route', function (array $data) {
             return 'boo';
-        })->middleware('condition');
+        }, '', 'condition');
         $this->assertFalse($this->router->run((new ServerRequest('post', '/route'))->withParsedBody(['go' => false])));
         $this->assertEquals('boo', $this->router->run((new ServerRequest('post', '/route'))->withParsedBody(['go' => true])));
     }
 
     public function testPriorityRouteMiddleware()
     {
-        $this->router->get('/route', function () {})->middleware(['passed', 'blocked', 'condition']);
+        $this->router->get('/route', function () {}, '', ['passed', 'blocked', 'condition']);
         $this->assertFalse($this->router->run(new ServerRequest('get', '/route')));
     }
 
     public function testNotFoundAliasRouteMiddleware()
     {
-        $this->router->get('/route', function () {})->middleware('pass');
+        $this->router->get('/route', function () {}, '', 'pass');
         try {
             $this->router->run(new ServerRequest('get', '/route'));
-        }catch (RouteMiddlewareException $ex){
+        }catch (\Exception $ex){
             $this->assertInstanceOf(RouteMiddlewareException::class, $ex);
         }
     }

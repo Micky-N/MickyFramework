@@ -13,7 +13,7 @@ use Core\Router as CoreRouter;
  * @method static array routesByName()
  * @method static void parseRoutes(array $routesYaml, Module $module = null, bool $isAdminRoute = false)
  * @method static \Core\Route[] getRoutes()
- * @method static void crud(string $namespace, $controller, array $only = [])
+ * @method static void crud(string $namespace, string $controller, array $only = [], string $moduleName = null, bool $isAdminRoute = false)
  * @method static string routeNeedParams(string $path)
  * @method static string generateUrlByName(string $routeName, array $params = [])
  * @method static bool|string currentRoute(string $route = '')

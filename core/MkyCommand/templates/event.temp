@@ -1,4 +1,4 @@
-namespace App\Events;
+namespace !path;
 
 use Core\Event;
 

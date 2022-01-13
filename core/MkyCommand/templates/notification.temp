@@ -1,4 +1,4 @@
-namespace App\Notifications;
+namespace !path;
 
 use Core\Interfaces\NotificationInterface;
 

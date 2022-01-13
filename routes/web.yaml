@@ -40,7 +40,6 @@ suppliers:
         path: /suppliers/:supplier
         action: App\Http\Controllers\SupplierController::show
         method: GET
-        middleware: can:edit,product
 
     create:
         path: /suppliers

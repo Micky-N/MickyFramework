@@ -16,7 +16,7 @@ if(!function_exists('config')){
     function config($configName)
     {
         try {
-            $config = \Core\App::getConfig();
+            $config = \Core\App::getConfig() ?? include dirname(__DIR__).'/../config/config.php';
             $configName = array_filter(explode('.', $configName));
             foreach ($configName as $c) {
                 if(isset($config[$c])){

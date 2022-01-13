@@ -21,7 +21,7 @@ class RouterTest extends TestCase
 
     public function testNameRoute()
     {
-        $route = $this->router->get('boo', function () {})->name('booName');
+        $route = $this->router->get('boo', function () {}, 'booName');
         $this->assertTrue($route->getName() == 'booName');
         $this->assertTrue($this->router->generateUrlByName('booName') == '/boo');
     }
@@ -99,7 +99,7 @@ class RouterTest extends TestCase
     {
         try {
             $this->router->get('boo/:id', function ($id) {
-            })->name('boo');
+            }, 'boo');
             $this->router->generateUrlByName('boo');
         } catch (\Exception $ex) {
             $this->assertInstanceOf(RouteNeedParamsException::class, $ex);

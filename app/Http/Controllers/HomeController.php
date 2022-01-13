@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Core\Controller;
+use Core\Facades\Route;
 use Core\Facades\View;
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\ProductSupplier;
+use App\Product\Models\Product;
+use App\Product\Models\ProductSupplier;
 use App\Models\Supplier;
 
 class HomeController extends Controller

@@ -33,7 +33,7 @@ class Router
      * @return Route
      * @throws RouteAlreadyExistException
      */
-    public function get(string $path, $action, string $name = null, $middleware = null, string $module = null): Route
+    public function get(string $path, $action, string $name = '', $middleware = null, string $module = null): Route
     {
         if($this->checkIfAlreadyRouteExist('GET', $path)){
             throw new RouteAlreadyExistException("Route $path already exist in GET routes");
@@ -54,7 +54,7 @@ class Router
      * @return Route
      * @throws RouteAlreadyExistException
      */
-    public function post(string $path, $action, string $name = null, $middleware = null, string $module = null): Route
+    public function post(string $path, $action, string $name = '', $middleware = null, string $module = null): Route
     {
         if($this->checkIfAlreadyRouteExist('POST', $path)){
             throw new RouteAlreadyExistException("Route $path already exist in POST routes");
@@ -105,9 +105,11 @@ class Router
      * @param string $namespace
      * @param string $controller
      * @param array $only
+     * @param string|null $moduleName
+     * @param bool $isAdminRoute
      * @return Router
      */
-    public function crud(string $namespace, string $controller, array $only = []): Router
+    public function crud(string $namespace, string $controller, array $only = [], string $moduleName = null, bool $isAdminRoute = false): Router
     {
         $path = '';
         $action = '';
@@ -172,17 +174,15 @@ class Router
         ];
         foreach ($crudActions as $key => $crudAction) {
             if(!empty($only) && in_array($key, $only)){
-                $route = call_user_func_array(
+                call_user_func_array(
                     [$this, $crudAction['request']],
-                    [$crudAction['path'], $crudAction['action']]
+                    [($isAdminRoute ? 'admin/' : '').$crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '').$crudAction['name'], null, $moduleName]
                 );
-                call_user_func_array([$route, 'name'], [$crudAction['name']]);
             } elseif(empty($only)) {
-                $route = call_user_func_array(
+                call_user_func_array(
                     [$this, $crudAction['request']],
-                    [$crudAction['path'], $crudAction['action']]
+                    [($isAdminRoute ? 'admin/' : '').$crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '').$crudAction['name'], null, $moduleName]
                 );
-                call_user_func_array([$route, 'name'], [$crudAction['name']]);
             }
         }
         return $this;
@@ -376,7 +376,7 @@ class Router
      */
     public function toArray(): array
     {
-        includeAll('routes');
+        App::RoutesInit();
         $routesArray = [];
         $namespace = '/';
         $currentPath = "\t";
@@ -417,12 +417,18 @@ class Router
         $configModule = $module ? include $module::CONFIG : null;
         foreach ($routesYaml as $namespace => $routesName) {
             foreach ($this->arrayNamespaces($routesName, [($isAdminRoute ? 'admin.' : '') . $namespace]) as $name => $route) {
-                $middleware = $route['middleware'] ?? null;
-                $moduleRoot = !is_null($module) ? $module->getRoot() : null;
-                $action = $this->getAction($route['action'], $moduleRoot);
-                $path = ($isAdminRoute ? '/admin' : '') . '/' . trim(($configModule['url_prefix'] ?? ''), '/') . '/' . trim($route['path'], '/');
-                $moduleName = !is_null($module) ? get_class($module) : null;
-                $this->{$route['method']}($path, $action, $name, $middleware, $moduleName);
+                if($route['path'] === 'crud'){
+                    $name = str_replace('admin.', '', $name);
+                    $moduleName = !is_null($module) ? get_class($module) : null;
+                    $this->crud($name, $route['controller'], [], $moduleName, $isAdminRoute);
+                }else{
+                    $middleware = $route['middleware'] ?? null;
+                    $moduleRoot = !is_null($module) ? $module->getRoot() : null;
+                    $action = $this->getAction($route['action'], $moduleRoot);
+                    $path = ($isAdminRoute ? '/admin' : '') . '/' . trim(($configModule['url_prefix'] ?? ''), '/') . '/' . trim($route['path'], '/');
+                    $moduleName = !is_null($module) ? get_class($module) : null;
+                    $this->{$route['method']}($path, $action, $name, $middleware, $moduleName);
+                }
             }
         }
     }
@@ -457,7 +463,7 @@ class Router
             $functions = include ($moduleRoot ?? dirname(__DIR__)) . '/routes/functions.php';
             return $functions[$action[1]];
         }
-        return [$action[0], $action[1]];
+        return array_filter([$action[0], $action[1] ?? null]);
     }
 
     /**
