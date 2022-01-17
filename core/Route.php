@@ -96,8 +96,8 @@ class Route
         if(preg_match($pathToMatch, $url, $matches)){
             $key = array_map(function ($pa) {
                 if(strpos($pa, ':') !== false){
-                    $pa = preg_match('/:(.*)?/', $pa, $matches);
-                    return $matches[1];
+                    $pa = preg_match('/(.*)?:(.*)?/', $pa, $matches);
+                    return $matches[2];
                 }
                 return null;
             }, explode('/', trim($this->path, '/')));

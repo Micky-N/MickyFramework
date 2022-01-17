@@ -198,14 +198,14 @@ class Router
      */
     public function routeNeedParams(string $path, array $params = []): string
     {
-        $path = explode('/', $path);
+        $path = explode('/', trim($path, '/'));
         foreach ($path as $key => $value) {
-            if(strpos($value, ':') === 0){
-                $value = str_replace(':', '', $value);
-                if(!empty($params) && isset($params[$value])){
-                    $path[$key] = $params[$value];
+            if(strpos($value, ':') !== false){
+                preg_match('/(.*)?:(.*)?/', $value, $matches);
+                if(!empty($params) && isset($params[$matches[2]])){
+                    $path[$key] = ($matches[1] ?? '') . $params[$matches[2]];
                 } else {
-                    throw new RouteNeedParamsException("No value for the parameter $value");
+                    throw new RouteNeedParamsException("No value for the parameter $matches[2]");
                 }
             }
         }
