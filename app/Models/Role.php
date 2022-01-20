@@ -7,5 +7,5 @@ use Core\Model;
 
 class Role extends Model
 {
-    
+    protected array $settable = ['name'];
 }

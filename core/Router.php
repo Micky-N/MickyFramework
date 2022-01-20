@@ -209,7 +209,7 @@ class Router
                 }
             }
         }
-        $path = implode('/', $path);
+        $path = "/".implode('/', $path);
         return $path;
     }
 

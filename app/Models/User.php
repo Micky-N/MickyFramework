@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Core\Interfaces\NotificationInterface;
 use Core\Model;
 use Core\Traits\Notify;
 
@@ -11,7 +10,8 @@ class User extends Model
 {
     use Notify;
 
-    protected array $datetimes = ['created' => 'created'];
+    protected array $datetimes = ['CREATED_AT' => 'created'];
+    protected array $settable = ['username', 'password', 'email', 'first_name', 'last_name', 'role_id', 'created'];
 
     public function fullName()
     {
@@ -20,7 +20,7 @@ class User extends Model
 
     public function webPushUser()
     {
-        return $this->hasOne(Notifiables::class, 'notifiable_id');
+        return $this->hasOne(Notifiable::class, 'notifiable_id');
     }
 
     public function routeNotificationFor(string $channel)

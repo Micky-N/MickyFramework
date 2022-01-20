@@ -33,10 +33,10 @@ class ErrorController extends Controller
     /**
      * Get statut code and message 
      *
-     * @param int $code
+     * @param mixed $code
      * @return array
      */
-    private static function getStatus(int $code)
+    private static function getStatus($code)
     {
         switch ($code) {
             case 100:

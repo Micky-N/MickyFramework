@@ -16,12 +16,18 @@ abstract class Model
     protected string $table;
     protected string $primaryKey = 'id';
     /**
+     * Table field that can be set
+     * @var array
+     */
+    protected array $settable = [];
+
+    /**
      * Store date fields for automatic registration
      * ['creation' => creation column, 'update' => update column]
      *
      * @var array
      */
-    protected array $datetimes = [];
+    protected array $dateTimes = [];
 
     /**
      * Get the model table name
@@ -125,16 +131,46 @@ abstract class Model
         $inter = [];
         foreach ($data as $k => $v) {
             $keys[] = $k;
-            $values[] = $v;
-            $inter[] = '?';
+            $values[$k] = $v;
+            $inter[] = ":$k";
         }
         $statement =
             'INSERT INTO ' .
             $table .
             ' (' .
-            implode(',', $keys) .
+            implode(', ', $keys) .
             ')';
-        $statement .= ' VALUES (' . implode(',', $inter) . ')';
+        $statement .= ' VALUES (' . implode(', ', $inter) . ')';
+        MysqlDatabase::prepare($statement, $values);
+        return self::last();
+    }
+
+    /**
+     * Records a new data in table
+     *
+     * @return $this|bool
+     * @throws ReflectionException
+     */
+    public function save()
+    {
+        $modelArray = (array)$this;
+        $modelArray = self::setDatetime($modelArray);
+        $modelArray = self::filterColumns($modelArray);
+        $keys = [];
+        $values = [];
+        $inter = [];
+        foreach ($modelArray as $k => $v) {
+            $keys[] = $k;
+            $values[$k] = $v;
+            $inter[] = ":$k";
+        }
+        $statement =
+            'INSERT INTO ' .
+            self::getCurrentModel()->getTable() .
+            ' (' .
+            implode(', ', $keys) .
+            ')';
+        $statement .= ' VALUES (' . implode(', ', $inter) . ')';
         MysqlDatabase::prepare($statement, $values);
         return self::last();
     }
@@ -154,10 +190,10 @@ abstract class Model
         $data = self::setUpdate($data);
         $data = self::filterColumns($data);
         foreach ($data as $k => $v) {
-            $keys[] = sprintf('%s = ?', $k);
-            $values[] = $v;
+            $keys[] = "$k = :$k";
+            $values[$k] = $v;
         }
-        $values[] = $id;
+        $values[self::getCurrentModel()->getPrimaryKey()] = $id;
         $statement =
             'UPDATE ' .
             self::getCurrentModel()->getTable() .
@@ -165,7 +201,7 @@ abstract class Model
             implode(', ', $keys) .
             ' WHERE ' .
             self::getCurrentModel()->getPrimaryKey() .
-            ' = ?';
+            ' = :' . self::getCurrentModel()->getPrimaryKey();
         MysqlDatabase::prepare($statement, $values);
         return self::find($id);
     }
@@ -184,8 +220,8 @@ abstract class Model
             self::getCurrentModel()->getTable() .
             ' WHERE ' .
             self::getCurrentModel()->getPrimaryKey() .
-            ' = ?';
-        MysqlDatabase::prepare($statement, [$id]);
+            ' = :' . self::getCurrentModel()->getPrimaryKey();
+        MysqlDatabase::prepare($statement, [self::getCurrentModel()->getPrimaryKey() => $id]);
         return self::all();
     }
 
@@ -195,15 +231,15 @@ abstract class Model
      * @return array
      * @throws ReflectionException
      */
-    public function deleteSelf(): array
+    public function destroy(): array
     {
         $statement =
             'DELETE FROM ' .
             self::getCurrentModel()->getTable() .
             ' WHERE ' .
             self::getCurrentModel()->getPrimaryKey() .
-            ' = ?';
-        MysqlDatabase::prepare($statement, [$this->{$this->primaryKey}]);
+            ' = :' . self::getCurrentModel()->getPrimaryKey();
+        MysqlDatabase::prepare($statement, [self::getCurrentModel()->getPrimaryKey() => $this->{$this->primaryKey}]);
         return self::all();
     }
 
@@ -239,17 +275,10 @@ abstract class Model
 		SELECT {$table}.*
 		FROM {$table}
 		LEFT JOIN {$this->getTable()}
-		ON {$table}.{$foreignKey} = " .
-            $this->getTable() .
-            '.' .
-            $this->primaryKey .
-            ' WHERE ' .
-            $this->getTable() .
-            '.' .
-            $this->primaryKey .
-            " = ?
-		",
-            [$this->{$this->primaryKey}],
+		ON {$table}.{$foreignKey} = 
+            {$this->getTable()}.{$this->primaryKey} 
+            WHERE {$this->getTable()}.{$this->primaryKey} = :{$this->primaryKey}",
+            [$this->primaryKey => $this->{$this->primaryKey}],
             $model
         );
     }
@@ -290,9 +319,8 @@ abstract class Model
             $this->getTable() .
             '.' .
             $this->primaryKey .
-            " = ?
-		",
-            [$this->{$this->primaryKey}],
+            " = :" . $this->primaryKey,
+            [$this->primaryKey => $this->{$this->primaryKey}],
             $model,
             true
         );
@@ -348,9 +376,8 @@ abstract class Model
 		FROM {$table}
 		LEFT JOIN {$pivot}
 		ON {$pivot}.{$foreignKeyTwo} = {$table}.{$secondInstance->getPrimaryKey()}
-		WHERE {$pivot}.{$foreignKeyOne} = ?
-		",
-            [$this->{$this->getPrimaryKey()}],
+		WHERE {$pivot}.{$foreignKeyOne} = :{$pivot}.{$foreignKeyOne}",
+            ["{$pivot}.{$foreignKeyOne}" => $this->{$this->getPrimaryKey()}],
             $model
         );
     }
@@ -384,9 +411,8 @@ abstract class Model
             $this->getTable() .
             '.' .
             $this->primaryKey .
-            " = ? LIMIT 1
-		",
-            [$this->{$this->primaryKey}],
+            " = :{$this->getTable()}.{$this->primaryKey} LIMIT 1",
+            ["{$this->getTable()}.{$this->primaryKey}" => $this->{$this->primaryKey}],
             $model,
             true
         );
@@ -442,28 +468,32 @@ abstract class Model
      * @param array $data
      * @return $this
      * @throws ReflectionException
-     * @example One to One ou self
+     * @throws MysqlException
      *
      */
-    public function modify(array $data)
+    public function modify(array $data = [])
     {
         $keys = [];
         $values = [];
+        if(empty($data)){
+            $data = (array)$this;
+            unset($data[$this->getPrimaryKey()]);
+        }
         $data = self::setUpdate($data);
         $data = self::filterColumns($data);
         foreach ($data as $k => $v) {
-            $keys[] = sprintf('%s = ?', $k);
-            $values[] = $v;
+            $keys[] = "$k = :$k";
+            $values[$k] = $v;
         }
-        $values[] = $this->{$this->getPrimaryKey()};
+        $values[$this->getPrimaryKey()] = $this->{$this->getPrimaryKey()};
         $statement =
             'UPDATE ' .
-            self::getCurrentModel()->getTable() .
+            $this->getTable() .
             ' SET ' .
             implode(', ', $keys) .
             ' WHERE ' .
-            self::getCurrentModel()->getPrimaryKey() .
-            ' = ?';
+            $this->getPrimaryKey() .
+            ' = :' . $this->getPrimaryKey();
         MysqlDatabase::prepare($statement, $values);
         return $this;
     }
@@ -472,17 +502,16 @@ abstract class Model
      * Update all relation table records
      *
      * @param string $relation
-     * @param $id
+     * @param string $id
      * @param array $data
      * @return $this
      * @throws ReflectionException
      * @throws MysqlException
      * @example One to Many
-     *
      */
-    public function modifyMany(string $relation, $id, array $data)
+    public function modifyManyRelation(string $relation, string $id, array $data)
     {
-        $instances = self::getCurrentModel()->{$relation};
+        $instances = $this->{$relation};
         $instances = !empty($instances) ? (is_array($instances) ? $instances : [$instances]) : false;
         if($instances !== false){
             foreach ($instances as $instance) {
@@ -491,8 +520,8 @@ abstract class Model
                 $data = self::setUpdate($data);
                 $data = self::filterColumns($data);
                 foreach ($data as $k => $v) {
-                    $keys[] = sprintf('%s = ?', $k);
-                    $values[] = $v;
+                    $keys[] = "$k = :$k";
+                    $values[$k] = $v;
                 }
                 $values[] = $instance->{$instance->getPrimaryKey()};
                 $statement =
@@ -502,7 +531,7 @@ abstract class Model
                     implode(', ', $keys) .
                     ' WHERE ' .
                     $instance->getPrimaryKey() .
-                    ' = ?';
+                    ' = :' . $instance->getPrimaryKey();
                 MysqlDatabase::prepare($statement, $values);
             }
             return $this;
@@ -552,11 +581,15 @@ abstract class Model
         $columns = self::getColumns();
         $filteredData = [];
         foreach ($columns as $key => $column) {
-            $filteredData[$column] = $data[$column] ?? null;
+            $lowerColumn = strtolower($column);
+            $filteredData[$column] = $data[$column] ?? $data[$lowerColumn] ?? null;
         }
-        return array_filter($filteredData, function ($data) {
-            return $data;
-        });
+        return array_filter($filteredData, function ($data) use ($filteredData) {
+            if(!empty($filteredData[$data]) && !in_array($data, self::getCurrentModel()->settable)){
+                throw new MysqlException(sprintf("Field %s is not settable", $data));
+            }
+            return $filteredData[$data];
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     /**
@@ -568,9 +601,9 @@ abstract class Model
      */
     public static function setDatetime(array $data): array
     {
-        if(!empty(self::getCurrentModel()->datetimes)){
-            foreach (self::getCurrentModel()->datetimes as $key => $datetime) {
-                if(in_array($key, ['creation', 'update'])){
+        if(!empty(self::getCurrentModel()->dateTimes)){
+            foreach (self::getCurrentModel()->dateTimes as $key => $datetime) {
+                if(in_array($key, ['CREATED_AT', 'UPDATED_AT'])){
                     $data[$datetime] = date('Y-m-d H:i:s');
                 }
             }
@@ -587,8 +620,8 @@ abstract class Model
      */
     public static function setUpdate(array $data): array
     {
-        if(!empty(self::getCurrentModel()->datetimes) && isset(self::getCurrentModel()->datetimes['update'])){
-            $data[self::getCurrentModel()->datetimes['update']] = date('Y-m-d H:i:s');
+        if(!empty(self::getCurrentModel()->dateTimes) && isset(self::getCurrentModel()->dateTimes['UPDATED_AT'])){
+            $data[self::getCurrentModel()->dateTimes['UPDATED_AT']] = date('Y-m-d H:i:s');
         }
         return $data;
     }

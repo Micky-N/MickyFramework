@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Product\Models\Product;
 use Core\Model;
 
 class Stock extends Model
 {
     protected string $primaryKey = 'code_stock';
+    protected array $settable = ['code_product', 'quantity'];
 
     public function product()
     {

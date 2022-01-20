@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Product\Models\Product;
 use Core\Model;
 
 class Supplier extends Model
 {
     protected string $primaryKey = 'code_supplier';
+    protected array $settable = ['name', 'informations', 'num_street', 'name_street', 'postcode', 'city'];
 
     public function getAddress()
     {
@@ -16,9 +18,5 @@ class Supplier extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, '', 'code_supplier', 'code_product');
-    }
-
-    public function getPurchase_price(){
-        return number_format($this->purchase_price, 2, ',', ''). '€';
     }
 }

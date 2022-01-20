@@ -46,7 +46,6 @@ class SupplierController extends Controller
     public function update($supplier, array $data)
     {
         $supplier = Supplier::update($supplier, $data);
-        Notification::send(User::all(), new SupplierNotification($supplier));
         return Route::redirectName('suppliers.index');
     }
 

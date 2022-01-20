@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Core\Controller;
-use Core\Facades\Route;
 use Core\Facades\View;
 use App\Models\Category;
 use App\Product\Models\Product;

@@ -72,7 +72,8 @@ class ProductController extends Controller
     {
         ProductSupplier::where('code_product', $product)
             ->where('code_supplier', $supplier)
-            ->first()->modify($data);
+            ->first()
+            ->modify($data);
 
         return Route::back();
     }
@@ -87,7 +88,7 @@ class ProductController extends Controller
     {
         $ps = ProductSupplier::where('code_product', $product)
             ->where('code_supplier', $supplier)
-            ->first()->deleteSelf();
+            ->first()->destroy();
 
         return Route::back();
     }
