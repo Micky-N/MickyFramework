@@ -24,9 +24,9 @@ class MkyCompile
         ];
 
         $this->directives = [
-            'style' => new MkyDirective(['style', 'endstyle'], [
+            'style' => new MkyDirective(['style'], [
                 function ($href = null) {
-                    if ($href) {
+                    if($href){
                         return '<link rel="stylesheet" type="text/css" href=' . $href . '>';
                     }
                     return '<style>';
@@ -35,9 +35,9 @@ class MkyCompile
                     return '</style>';
                 }
             ]),
-            'script' => new MkyDirective(['script', 'endscript'], [
+            'script' => new MkyDirective(['script'], [
                 function ($src = null) {
-                    if ($src) {
+                    if($src){
                         return '<script type="text/javascript" src=' . $src . '></script>';
                     }
                     return '<script>';
@@ -46,7 +46,7 @@ class MkyCompile
                     return '</script>';
                 }
             ]),
-            'php' => new MkyDirective(['php', 'endphp'], [
+            'php' => new MkyDirective(['php'], [
                 function () {
                     return '<?php';
                 },
@@ -54,8 +54,11 @@ class MkyCompile
                     return '?>';
                 }
             ]),
-            'foreach' => new MkyDirective(['foreach', 'endforeach'], [
+            'each' => new MkyDirective(['each'], [
                 function ($expression) {
+                    if(strpos($expression, 'as') === false){
+                        $expression .= ' as $self';
+                    }
                     return '<?php foreach(' . $expression . '): ?>';
                 },
                 function () {
@@ -67,81 +70,35 @@ class MkyCompile
                     return '<?= json_encode(' . $expression . ', JSON_UNESCAPED_UNICODE); ?>';
                 }
             ]),
-            'if' => new MkyDirective(['if', 'elseif', 'else', 'endif'], [
+            'if' => new MkyDirective(['if'], [
                 function ($expression) {
                     return '<?php if(' . $expression . '): ?>';
                 },
+                function () {
+                    return '<?php endif; ?>';
+                }
+            ]),
+            'elseif' => new MkyDirective(['elseif'], [
                 function ($expression) {
                     return '<?php else if(' . $expression . '): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
                 }
             ]),
-            'isset' => new MkyDirective(['isset', 'else', 'endisset'], [
-                function ($expression) {
-                    return '<?php if(isset(' . $expression . ')): ?>';
-                },
+            'else' => new MkyDirective(['else'], [
                 function () {
                     return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
                 }
             ]),
-            'notisset' => new MkyDirective(['notisset', 'else', 'endnotisset'], [
-                function ($expression) {
-                    return '<?php if(!isset(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'empty' => new MkyDirective(['empty', 'else', 'endempty'], [
-                function ($expression) {
-                    return '<?php if(empty(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'notempty' => new MkyDirective(['notempty', 'else', 'endnotempty'], [
-                function ($expression) {
-                    return '<?php if(!empty(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'auth' => new MkyDirective(['auth', 'else', 'endauth'], [
+            'auth' => new MkyDirective(['auth'], [
                 function () {
                     return '<?php if(isLogin()): ?>';
                 },
                 function () {
-                    return '<?php else: ?>';
-                },
-                function () {
                     return '<?php endif; ?>';
                 }
             ]),
-            'guest' => new MkyDirective(['guest', 'else', 'endguest'], [
+            'guest' => new MkyDirective(['guest'], [
                 function () {
                     return '<?php if(!isLogin()): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
                 },
                 function () {
                     return '<?php endif; ?>';
@@ -152,29 +109,7 @@ class MkyCompile
                     return '<?php dump(' . $expression . ') ?>';
                 }
             ]),
-            'route' => new MkyDirective(['route', 'else', 'endroute'], [
-                function ($expression) {
-                    return '<?php if(currentRoute(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'routenot' => new MkyDirective(['routenot', 'else', 'endroutenot'], [
-                function ($expression) {
-                    return '<?php if(!currentRoute(' . $expression . ')): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'repeat' => new MkyDirective(['repeat', 'endrepeat'], [
+            'repeat' => new MkyDirective(['repeat'], [
                 function ($expression) {
                     return '<?php foreach(range(0, ' . ($expression - 1) . ') as $index): ?>';
                 },
@@ -182,70 +117,48 @@ class MkyCompile
                     return '<?php endforeach; ?>';
                 }
             ]),
-            'haserrors' => new MkyDirective(['haserrors', 'else', 'endhaserrors'], [
-                function () {
-                    return '<?php if(isset($errors) && !empty($errors)): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'error' => new MkyDirective(['error', 'else', 'enderror'], [
-                function ($expression) {
-                    return '<?php if(isset($errors) && isset($errors[' . $expression . '])): ?>';
-                },
-                function () {
-                    return '<?php else: ?>';
-                },
-                function () {
-                    return '<?php endif; ?>';
-                }
-            ]),
-            'permission' => new MkyDirective(['permission', 'else', 'endpermission'], [
+            'permission' => new MkyDirective(['permission'], [
                 function ($expression) {
                     return '<?php if(permission(' . $expression . ')): ?>';
                 },
                 function () {
-                    return '<?php else: ?>';
-                },
-                function () {
                     return '<?php endif; ?>';
                 }
             ]),
-            'notpermission' => new MkyDirective(['notpermission', 'else', 'endnotpermission'], [
+            'notpermission' => new MkyDirective(['notpermission'], [
                 function ($expression) {
                     return '<?php if(!permission(' . $expression . ')): ?>';
                 },
                 function () {
-                    return '<?php else: ?>';
-                },
-                function () {
                     return '<?php endif; ?>';
                 }
             ]),
-            'switch' => new MkyDirective(['switch', 'case', 'break', 'default', 'endswitch'], [
+            'switch' => new MkyDirective(['switch'], [
                 function ($expression) {
                     $this->conditions['firstCaseSwitch'] = true;
                     return '<?php switch(' . $expression . '):';
                 },
+                function () {
+                    return '<?php endswitch; ?>';
+                }
+            ]),
+            'case' => new MkyDirective(['case'], [
                 function ($expression) {
-                    if ($this->conditions['firstCaseSwitch']) {
+                    if($this->conditions['firstCaseSwitch']){
                         $this->conditions['firstCaseSwitch'] = false;
                         return ' case ' . $expression . ': ?>';
                     }
                     return '<?php case(' . $expression . '): ?>';
-                },
+                }
+            ]),
+            'break' => new MkyDirective(['break'], [
                 function () {
                     return '<?php break; ?>';
-                },
+                }
+            ]),
+            'default' => new MkyDirective(['default'], [
                 function () {
                     return '<?php default; ?>';
-                },
-                function () {
-                    return '<?php endswitch; ?>';
                 }
             ])
         ];

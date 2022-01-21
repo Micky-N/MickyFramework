@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Route

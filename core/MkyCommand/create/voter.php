@@ -17,7 +17,7 @@ if (php_sapi_name() === "cli") {
     $action = isset($cli['action']) ? strtoupper($cli['action']): null;
     $actionLower = $action ? strtolower($action) : null;
     if (!strpos($name, 'Voter')) {
-        throw new MkyCommandException("$name msut be suffixed by Voter");
+        throw new MkyCommandException("$name must be suffixed by Voter");
     }
     $template = file_get_contents(MickyCLI::BASE_MKY."/templates/$option.".MickyCLI::EXTENSION);
     $template = str_replace('!name', $name, $template);

@@ -1,6 +1,12 @@
-@extends('template')
+{@ extends layout='template' }
 
-@section('content')
+{@ section name="content" }
+    {@ php }
+        $i = 10;
+        $a = [45,6,5,4];
+    {/ php }
+    <div class="alert alert-primary">{{ $i#euro }}</div>
+    <div class="alert alert-primary">{{ $a#join }}</div>
     <table id="table"></table>
     <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -11,12 +17,12 @@
             </div>
         </div>
     </div>
-@endsection
+{/ section }
 
-@section('js')
+{@ section name='js' }
     <script>
         var $table = $('#table')
-        var categories = JSON.parse('@json($categories)')
+        var categories = {@ json $categories }
 
         function categories_Table($el, categories) {
             var cells = Object.keys(categories[0]).filter(c => !['products'].includes(c))
@@ -65,7 +71,7 @@
         }
 
         function productsTable($el, category) {
-            var products = JSON.parse('@json($products)').filter(p => p.code_category == category.code_category)
+            var products = {@ json $products }.filter(p => p.code_category === category.code_category)
             products.forEach(p => {
                 p.categorie = category.name
                 delete p.code_category
@@ -119,9 +125,8 @@
 
 
         function suppliersTable($el, code_product) {
-            var productSuppliers = JSON.parse('@json($productSuppliers)')
-            productSuppliers = productSuppliers.filter(ps => ps.code_product == code_product)
-            var suppliers = JSON.parse('@json($suppliers)')
+            var productSuppliers = {@ json $productSuppliers }.filter(ps => ps.code_product === code_product)
+            var suppliers = {@ json $suppliers };
             var codes = []
             productSuppliers.forEach(ps => {
                 codes.push(ps.code_supplier)
@@ -177,4 +182,4 @@
             categories_Table($table, categories)
         })
     </script>
-@endsection
+{/ section }

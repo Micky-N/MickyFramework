@@ -54,6 +54,8 @@ class MickyCLI
         'listener' => 'required',
         'module' => 'required',
         'route' => 'novalue',
+        'formatter' => 'required',
+        'format' => 'optional'
     ];
 
     /**
@@ -110,6 +112,11 @@ class MickyCLI
                 'name' => 'required',
                 'path' => 'optional',
                 'module' => 'optional'
+            ],
+            'formatter' => [
+                'name' => 'required',
+                'format' => 'optional',
+                'path' => 'optional'
             ]
         ],
         'show' => [

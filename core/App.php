@@ -8,6 +8,7 @@ use Core\Interfaces\EventInterface;
 use Core\Interfaces\ListenerInterface;
 use Core\Interfaces\MiddlewareInterface;
 use Core\Interfaces\VoterInterface;
+use Core\MkyCompiler\MkyFormatter;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -142,6 +143,17 @@ class App
     }
 
     /**
+     * Add voters list to Permission
+     */
+    public static function MkyFormatterInit()
+    {
+        $mkyFormatters = include dirname(__DIR__) . '/app/Providers/MkyFormatterServiceProvider.php';
+        foreach ($mkyFormatters as $mkyFormatter){
+            MkyFormatter::addFormatter($mkyFormatter);
+        }
+    }
+
+    /**
      * Run the application
      *
      * @param ServerRequestInterface $request
@@ -156,6 +168,7 @@ class App
         self::EventServiceProviders();
         self::VotersInit();
         self::RoutesInit();
+        self::MkyFormatterInit();
         try {
             Route::run($request);
         } catch (Exception $ex) {
