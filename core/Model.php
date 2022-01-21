@@ -376,8 +376,8 @@ abstract class Model
 		FROM {$table}
 		LEFT JOIN {$pivot}
 		ON {$pivot}.{$foreignKeyTwo} = {$table}.{$secondInstance->getPrimaryKey()}
-		WHERE {$pivot}.{$foreignKeyOne} = :{$pivot}.{$foreignKeyOne}",
-            ["{$pivot}.{$foreignKeyOne}" => $this->{$this->getPrimaryKey()}],
+		WHERE {$pivot}.{$foreignKeyOne} = :$foreignKeyOne",
+            ["$foreignKeyOne" => $this->{$this->getPrimaryKey()}],
             $model
         );
     }
@@ -411,8 +411,8 @@ abstract class Model
             $this->getTable() .
             '.' .
             $this->primaryKey .
-            " = :{$this->getTable()}.{$this->primaryKey} LIMIT 1",
-            ["{$this->getTable()}.{$this->primaryKey}" => $this->{$this->primaryKey}],
+            " = :{$this->primaryKey} LIMIT 1",
+            ["{$this->primaryKey}" => $this->{$this->primaryKey}],
             $model,
             true
         );

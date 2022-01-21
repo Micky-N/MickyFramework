@@ -1,6 +1,6 @@
-@extends('template')
+{@ extends name='template' }
 
-@section('content')
+{@ section name='content' }
     <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter une
         catégorie</button>
     <table id="table"></table>
@@ -33,12 +33,12 @@
             </div>
         </div>
     </div>
-@endsection
+{/ section }
 
-@section('js')
+{@ section name='js' }
     <script>
         var $table = $('#table')
-        var categories = @json($categories)
+        var categories = {@ json $categories }
 
         function categoriesTable($el, categories) {
             var categoriesCells = Object.keys(categories[0])
@@ -107,4 +107,4 @@
             categoriesTable($table, categories)
         })
     </script>
-@endsection
+{/ section }

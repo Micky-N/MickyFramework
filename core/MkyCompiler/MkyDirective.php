@@ -2,53 +2,38 @@
 
 namespace Core\MkyCompiler;
 
-use Closure;
+use Core\Interfaces\MkyDirectiveInterface;
+use Core\MkyCompiler\MkyDirectives\BaseDirective;
+use Core\MkyCompiler\MkyDirectives\ScriptDirective;
+use Core\MkyCompiler\MkyDirectives\StyleDirective;
 
 class MkyDirective
 {
     /**
-     * @var string[]
+     * @var MkyDirectiveInterface[]
      */
-    private array $encodes;
-    /**
-     * @var Closure[]
-     */
-    private array $callbacks;
+    private static array $directives = [];
 
-    /**
-     * @param string[] $encodes
-     * @param Closure[] $callbacks
-     */
-    public function __construct(array $encodes, array $callbacks)
+    public function __construct()
     {
-        $this->encodes = $encodes;
-        $this->callbacks = $callbacks;
+        self::$directives[] = new BaseDirective();
+        self::$directives[] = new StyleDirective();
+        self::$directives[] = new ScriptDirective();
     }
 
-    /**
-     * Get all encodes
-     *
-     * @return string[]
-     */
-    public function getEncodes(): array
+    public static function addDirective(MkyDirectiveInterface $directive)
     {
-        return $this->encodes;
+        self::$directives[] = $directive;
     }
 
-    /**
-     * Get all callbacks
-     *
-     * @return Closure[]
-     */
-    public function getCallbacks(): array
+    public function callFunction(string $function, $expression = null, bool $open = true)
     {
-        return $this->callbacks;
-    }
-
-    public function __get($name)
-    {
-        if(property_exists($this, $name)){
-            return $this->{'get'.ucfirst($name)}();
+        foreach (self::$directives as $directive) {
+            if(array_key_exists($function, $directive->getFunctions())){
+                $methodDirective = $directive->getFunctions()[$function][(int) !$open];
+                return call_user_func([$methodDirective[0], $methodDirective[1]], $expression);
+            }
         }
+        return $expression;
     }
 }

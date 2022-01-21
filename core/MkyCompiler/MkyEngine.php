@@ -23,15 +23,11 @@ class MkyEngine
     private array $data = [];
     private string $viewName = '';
     private string $viewPath = '';
-    private MkyCompile $directives;
 
     public array $errors;
-    private array $viewFilters;
-    private bool $renew = false;
 
     public function __construct(array $config)
     {
-        $this->directives = new MkyCompile();
         $this->config = $config;
         $this->errors = $_GET['errors'] ?? [];
     }
@@ -117,14 +113,14 @@ class MkyEngine
      */
     public function parseVariables(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s(.*?)(#(.*?)(\((.*?)\)?)?)?%s/s", self::ECHO[0], self::ECHO[1]), function ($variable) {
+        $this->view = preg_replace_callback(sprintf("/%s(.*?)(#(.*?)(\((.*?)\)?)?)?%s/", self::ECHO[0], self::ECHO[1]), function ($variable) {
             $var = trim($variable[1]);
             if(isset($variable[2])){
                 $args = isset($variable[4]) ? trim(trim($variable[4]), '\(\)') : null;
                 $params = ["'" . trim($variable[3]) . "'", $var, "[" . $args . "]"];
                 $var = sprintf("call_user_func_array([new %s(), '%s'], [%s])", MkyFormatter::class, 'callFormat', join(', ', array_filter($params)));
             }
-            return "<?=" . $var . "?>";
+            return "<?= $var ?>";
         }, $this->view);
     }
 
@@ -156,9 +152,9 @@ class MkyEngine
      */
     public function parseExtends(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s extends layout=(.*?) ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($viewName) {
-            $layout = trim($viewName[1], '"\'');
-            return $this->view($layout, $this->data, true);
+        $this->view = preg_replace_callback(sprintf("/%s extends name=(.*?) ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($viewName) {
+            $name = trim($viewName[1], '"\'');
+            return $this->view($name, $this->data, true);
         }, str_replace(' (', '(', $this->view));
     }
 
@@ -179,7 +175,7 @@ class MkyEngine
      */
     public function parseSections(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s section name=(.*?) value=(.*?) ?}/s", self::OPEN_FUNCTION[0]), function ($sectionDetail) {
+        $this->view = preg_replace_callback(sprintf("/%s section name=(.*?) value=(.*)? ?%s/", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($sectionDetail) {
             $value = trim($sectionDetail[2], '"\'');
             $name = trim($sectionDetail[1], '"\'');
             $this->sections[$name] = $value;
@@ -200,21 +196,17 @@ class MkyEngine
      */
     private function parseDirectives(): void
     {
-        foreach ($this->directives->getDirectives() as $key => $mkyDirective) {
-            foreach ($mkyDirective->getEncodes() as $index => $directive) {
-                $callbacks = $mkyDirective->getCallbacks();
-                $this->view = preg_replace_callback(sprintf("/%s %s (.*) ?%s/", self::OPEN_FUNCTION[0], $directive, self::OPEN_FUNCTION[1]), function ($expression) use ($callbacks, $directive) {
-                    $str = !empty($expression[1]) ? trim($expression[1], ' ') : null;
-                    return call_user_func($callbacks[0], $str);
-                }, str_replace(' (', '(', $this->view));
+        $this->view = preg_replace_callback(sprintf("/%s ([\w]+)? (.*?) ?%s/", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($expression) {
+            $function = trim($expression[1]);
+            $expression = isset($expression[2]) ? trim($expression[2]) : null;
+            $params = [$function, $expression];
+            return call_user_func_array([new MkyDirective(), 'callFunction'], $params);
+        }, str_replace(' (', '(', $this->view));
 
-                $this->view = preg_replace_callback(sprintf("/%s %s ?%s/", self::CLOSE_FUNCTION[0], $directive, self::CLOSE_FUNCTION[1]), function () use ($callbacks) {
-                    if(isset($callbacks[1])){
-                        return call_user_func($callbacks[1], null);
-                    }
-                    return null;
-                }, str_replace(' (', '(', $this->view));
-            }
-        }
+        $this->view = preg_replace_callback(sprintf("/%s ([\w]+)? ?%s/", self::CLOSE_FUNCTION[0], self::CLOSE_FUNCTION[1]), function ($expression) {
+            $function = trim($expression[1]);
+            $params = [$function, null, false];
+            return call_user_func_array([new MkyDirective(), 'callFunction'], $params);
+        }, str_replace(' (', '(', $this->view));
     }
 }

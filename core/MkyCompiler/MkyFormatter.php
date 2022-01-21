@@ -5,6 +5,7 @@ namespace Core\MkyCompiler;
 
 
 use Core\Interfaces\MkyFormatterInterface;
+use Core\MkyCompiler\MkyFormatters\ArrayFormatter;
 use Core\MkyCompiler\MkyFormatters\BaseFormatter;
 
 class MkyFormatter
@@ -17,6 +18,7 @@ class MkyFormatter
     public function __construct()
     {
         self::$formatters[] = new BaseFormatter();
+        self::$formatters[] = new ArrayFormatter();
     }
 
     public static function addFormatter(MkyFormatterInterface $formatter)

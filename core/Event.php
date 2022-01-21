@@ -56,15 +56,20 @@ class Event implements Interfaces\EventInterface
     }
 
     /**
-     * @param string|null $key
-     * @return array|mixed
+     * @return array
      */
-    public function getParams(string $key = null): array
+    public function getParams(): array
     {
-        if($key){
-            return $this->params[$key] ?? $this->params;
-        }
         return $this->params;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getParam(string $key)
+    {
+        return $this->params[$key] ?? $this->params;
     }
 
     /**

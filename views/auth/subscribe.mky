@@ -1,95 +1,95 @@
-@extends('template')
+{@ extends name='template' }
 
-@section('content')
+{@ section name='content' }
     <div>
         {{ HTML\Form::open('', 'POST') }}
         <div class="row">
             <div class="col form-group">
                 {{ HTML\Form::label('Prénom', 'first_name') }}
                 {{ HTML\Form::text('first_name', '', ['class' => 'form-control']) }}
-                @error('first_name')
+                {@ if isset($errors['first_name']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['first_name'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
             <div class="col form-group">
                 {{ HTML\Form::label('Nom', 'last_name') }}
                 {{ HTML\Form::text('last_name', '', ['class' => 'form-control']) }}
-                @error('last_name')
+                {@ if isset($errors['last_name']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['last_name'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
             <div class="col form-group">
                 {{ HTML\Form::label("Nom d'utilisateur", 'username') }}
                 {{ HTML\Form::text('username', '', ['class' => 'form-control']) }}
-                @error('username')
+                {@ if isset($errors['username']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['username'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
         </div>
         <div class="row">
             <div class="col form-group">
                 {{ HTML\Form::label('Email', 'email') }}
                 {{ HTML\Form::email('email', '', ['class' => 'form-control']) }}
-                @error('email')
+                {@ if isset($errors['email']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['email'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
             <div class="col form-group">
                 {{ HTML\Form::label('Role', 'role_id') }}
                 {{ HTML\Form::select('role_id', $roles, null, '-- Selectionner le rôle --', ['class' => 'form-control']) }}
-                @error('role_id')
+                {@ if isset($errors['role_id']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['role_id'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
         </div>
         <div class="row">
             <div class="col form-group">
                 {{ HTML\Form::label('Mot de passe', 'password') }}
                 {{ HTML\Form::password('password', ['class' => 'form-control']) }}
-                @error('password')
+                {@ if isset($errors['password']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['password'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
             <div class="col form-group">
                 {{ HTML\Form::label('Confirmer mot de passe', 'confirm_password') }}
                 {{ HTML\Form::password('confirm_password', ['class' => 'form-control']) }}
-                @error('confirm_password')
+                {@ if isset($errors['confirm_password']) }
                 <small id="passwordHelp" class="text-danger">
                     {{ $errors['confirm_password'] }}
                 </small>
-                @enderror
+                {/ if }
             </div>
         </div>
         <div class="form-group">
             {{ HTML\Form::date('date_naissance', '', ['class' => 'form-control']) }}
-            @error('date_naissance')
+            {@ if isset($errors['date_naissance']) }
             <small id="passwordHelp" class="text-danger">
                 {{ $errors['date_naissance'] }}
             </small>
-            @enderror
+            {/ if }
         </div>
         <div class="form-group">
             {{ HTML\Form::number('age', '', ['class' => 'form-control', 'step' => '0.01']) }}
-            @error('age')
+            {@ if isset($errors['age']) }
             <small id="passwordHelp" class="text-danger">
                 {{ $errors['age'] }}
             </small>
-            @enderror
+            {/ if }
         </div>
         {{ HTML\Form::submit("S'inscrire", ['class' => 'btn btn-primary']) }}
 
         {{ HTML\Form::close() }}
     </div>
-@endsection
+{/ section }

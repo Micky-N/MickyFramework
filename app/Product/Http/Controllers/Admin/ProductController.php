@@ -41,12 +41,12 @@ class ProductController extends Controller
         }
 
         Product::update($product, $data);
-        return Route::redirectName('admin.index');
+        return Route::redirectName('admin.products.index');
     }
 
     public function delete($product)
     {
         Product::delete($product);
-        return Route::redirectName('admin.index');
+        return Route::redirectName('admin.products.index');
     }
 }

@@ -1,12 +1,17 @@
-{@ extends layout='template' }
+{@ extends name='template' }
 
 {@ section name="content" }
+{@ style 456 }
+{@ style }
+.mlk
+{/ style }
     {@ php }
         $i = 10;
         $a = [45,6,5,4];
     {/ php }
-    <div class="alert alert-primary">{{ $i#euro }}</div>
+    <div class="alert alert-primary">{{ $i#currency }}</div>
     <div class="alert alert-primary">{{ $a#join }}</div>
+    <div class="alert alert-primary">{{ "manger"#uppercase }} {{ "BOIRE"#lowercase }}</div>
     <table id="table"></table>
     <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

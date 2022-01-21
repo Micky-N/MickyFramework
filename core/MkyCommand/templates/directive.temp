@@ -1,0 +1,25 @@
+namespace !path;
+
+
+use Core\Interfaces\MkyDirectiveInterface;
+
+class !name implements MkyDirectiveInterface
+{
+
+    public function getFunctions()
+    {
+        return [
+            '!function' => [[$this, '!function'], [$this, 'end!function']],
+        ];
+    }
+
+    public function !function()
+    {
+        return;
+    }
+
+    public function end!function()
+    {
+        return;
+    }
+}

@@ -55,7 +55,7 @@
                         <li class="">
                             <a class="btn btn-info" href="{{ route('auth.logout') }}">Déconnexion</a>
                         </li>
-                    {/ auth}
+                    {/ auth }
                 </ul>
             </div>
         </nav>
@@ -63,9 +63,9 @@
     <main role="main" class="flex-shrink-0">
         <div class="container">
             {@ if !empty($flashMessages) }
-                {@ foreach $flashMessages as $flashMessage }
+                {@ each $flashMessages as $flashMessage }
                     <div class="alert alert-primary">{{ $flashMessage }}</div>
-                {/ foreach }
+                {/ each }
             {/ if }
             <div class="container my-5">
                 <!-- Toutes les vues seront dans cette variable -->

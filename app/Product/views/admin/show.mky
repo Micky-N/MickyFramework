@@ -1,6 +1,6 @@
-@extends('template')
+{@ extends name='template' }
 
-@section('content')
+{@ section name='content' }
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 ml-md-2 order-md-2 mb-4">
@@ -11,23 +11,23 @@
                     Liste des fournisseurs
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach($product->suppliers as $supplier)
+                    {@ each $product->suppliers }
                         <button onclick="showProModal(this)" class="dropdown-item"
-                            data-pro="{{ $supplier->code_supplier }}" data-toggle="modal" data-target="#prodModal">
-                            {{ $supplier->name }}
+                            data-pro="{{ $self->code_supplier }}" data-toggle="modal" data-target="#prodModal">
+                            {{ $self->name }}
                         </button>
-                    @endforeach
+                    {/ each }
                 </div>
             </h4>
             <ul class="list-group mb-3">
-                @if($product->photo)
+                {@ if $product->photo }
                     <li class="list-group-item p-0 overflow-hidden">
                         <div>
                             <img id="photo" class="w-100 mx-auto p-0" alt="{{ $product->photo }}"
                                 src="../../../../public/index.php">
                         </div>
                     </li>
-                @endif
+                {/ if }
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
                         <h6 class="my-0">Nom</h6>
@@ -68,7 +68,7 @@
                         class="fa fa-plus"></i> Ajouter un fournisseur</button>
             </h4>
             <form id="update" method="post"
-                action="../../../../public/index.php">
+                action="{{ route('admin.products.update', ['product' => $product->code_product]) }}">
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label for="name">Nom</label>
@@ -96,10 +96,10 @@
                         <div class="col form-group">
                             <label for="code_category">Catégorie</label>
                             <select class="form-control" name="code_category" id="code_category">
-                                @foreach($categories as $category)
-                                    <option @if($category->code_category == $product->code_category) selected @endif value="{{ $category->code_category }}">
-                                        {{ $category->name }}</option>
-                                @endforeach
+                                {@ each $categories }
+                                    <option {@ if $self->code_category == $product->code_category } selected {/ if } value="{{ $self->code_category }}">
+                                        {{ $self->name }}</option>
+                                {/ each }
                             </select>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                         </h4>
                     </div>
                     <form id="addpro"
-                        action="../../../../public/index.php"
+                        action=""
                         method="post" class="px-2 pt-4">
                         <div class="d-flex justify-content-center">
                             <div class="row">
@@ -155,10 +155,10 @@
                                     <label for="code_supplier">Fournisseur</label>
                                     <select class="form-control" name="code_supplier" id="code_supplier">
                                         <option value="" selected>Aucun fournisseur séléctionné</option>
-                                        @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->code_supplier }}">{{ $supplier->name }}
+                                        {@ each $suppliers }
+                                            <option value="{{ $supplier->code_supplier }}">{{ $self->name }}
                                             </option>
-                                        @endforeach
+                                        {/ each }
                                     </select>
                                 </div>
                                 <div class="col-md-5 form-group">
@@ -177,12 +177,12 @@
         </div>
     </div>
 </div>
-@endsection
+{/ section }
 
-@section('js')
+{@ section name='js' }
 <script>
     function showProModal(e) {
-        var product = JSON.parse('@json($product)')
+        var product = {@ json $product };
         var suppliers = product.suppliers
         var supplier = suppliers.find(s => s.code_supplier == e.getAttribute('data-pro'))
         var action = `/products/${product.code_product}/suppliers/update/${supplier.code_supplier}`
@@ -193,4 +193,4 @@
         $('input#prodPrixProduction').attr('value', supplier.purchase_price)
     }
 </script>
-@endsection
+{/ section }

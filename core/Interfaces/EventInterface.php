@@ -30,12 +30,19 @@ interface EventInterface
     public function getActions(): array;
 
     /**
-     * Get event params or specific param
+     * Get event params
+     *
+     * @return array
+     */
+    public function getParams(): array;
+
+    /**
+     * Get event specific param
      *
      * @param string $key
      * @return array
      */
-    public function getParams(string $key): array;
+    public function getParam(string $key);
 
     /**
      * Get event target

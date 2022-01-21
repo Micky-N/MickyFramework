@@ -1,0 +1,8 @@
+<?php
+
+return [
+    'formatters' => [
+    ],
+    'directives' => [
+    ]
+];

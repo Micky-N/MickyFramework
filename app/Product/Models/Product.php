@@ -11,6 +11,7 @@ use App\Models\Category;
 class Product extends Model
 {
     protected string $primaryKey = 'code_product';
+    protected array $settable = ['code_category', 'name', 'user_id', 'selling_price', 'photo'];
 
 
     public function category()
@@ -25,7 +26,7 @@ class Product extends Model
 
     public function suppliers()
     {
-        return $this->belongsToMany(Supplier::class, '', 'code_product', 'code_supplier');
+        return $this->belongsToMany(Supplier::class, 'product_supplier', 'code_product', 'code_supplier');
     }
 
     public function seller()

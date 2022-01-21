@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\MkyFormatters;
+namespace Core\MkyCompiler\MkyFormatters;
 
 
 use Core\Interfaces\MkyFormatterInterface;

@@ -1,13 +1,13 @@
-@extends('template')
+{@ extends name='template' }
 
-@section('content')
+{@ section name='content' }
 
-    @permission('seller')
+{@ permission 'seller' }
         <button class="btn btn-success" data-toggle="modal" data-target="#createModal">
             <i class="fas fa-plus"></i>
             Ajouter un fournisseur
         </button>
-    @endpermission
+{/ permission }
         <table id="table"></table>
         <div class="modal fade" id="createModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
             aria-hidden="true">
@@ -60,12 +60,12 @@
                 </div>
             </div>
         </div>
-    @endsection
+{/ section }
 
-@section('js')
+{@ section name='js' }
     <script>
         var $table = $('#table')
-        var suppliers = JSON.parse('@json($suppliers)')
+        var suppliers = {@ json $suppliers };
 
         function suppliersTable($el, suppliers) {
             var suppliersCells = Object.keys(suppliers[0])
@@ -134,4 +134,4 @@
             suppliersTable($table, suppliers)
         })
     </script>
-@endsection
+{/ section }

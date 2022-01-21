@@ -1,6 +1,6 @@
-@extends('template')
+{@ extends name='template' }
 
-@section('content')
+{@ section name='content' }
 <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un produit</button>
 <table id="table"></table>
 <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -23,7 +23,7 @@
               <span class="text-muted">Créer un produit</span>
             </h4>
           </div>
-          <form action="../../../../public/index.php" class="px-2 pt-4">
+          <form action="" class="px-2 pt-4">
             <div class="row">
               <div class="col-md-6 form-group">
                 <label for="name">Nom</label>
@@ -44,9 +44,9 @@
                   <label for="code_category">Catégorie</label>
                   <select class="form-control" name="code_category" id="code_category" required>
                     <option value="" selected>Aucune catégorie selectionner</option>
-                    @foreach($categories as $category)
-                      <option value="{{ $category->code_category }}">{{ $category->name }}</option>
-                    @endforeach
+                      {@ each $categories }
+                      <option value="{{ $category->code_category }}">{{ $self->name }}</option>
+                      {/ each }
                   </select>
                 </div>
               </div>
@@ -60,12 +60,12 @@
     </div>
   </div>
 </div>
-@endsection
+{/ section }
 
-@section('js')
+{@ section name='js' }
 <script>
   var $table = $('#table')
-  var products = JSON.parse('@json($products)');
+  var products = {@ json $products };
 
   function productsTable($el, products) {
     var productsCells = Object.keys(products[0]).filter(p => !['code_category', 'user_id'].includes(p))
@@ -139,4 +139,4 @@
     productsTable($table, products)
   })
 </script>
-@endsection
+{/ section }

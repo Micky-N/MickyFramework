@@ -1,6 +1,6 @@
-@extends('template')
+{@ extends name='template' }
 
-@section('content')
+{@ section name='content' }
     <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un
         produit</button>
         <ul class="d-flex flex-row">
@@ -12,9 +12,9 @@
         </ul>
     <table id="table"></table>
     <ul class="d-flex flex-row">
-        @foreach($products->pages as $page)
-            <a class="btn btn-primary mr-1 @if($products->currentPage == $page)active @endif " href="?page={{ $page }}@notempty($_GET['max'])&max={{$_GET['max']}} @endnotempty">{{ $page }}</a>
-        @endforeach
+        {@ each $products->pages}
+            <a class="btn btn-primary mr-1 {@ if $self->currentPage == $page }active {/ if} " href="?page={{ $page }}{@ if !empty($_GET['max']) }&max={{$_GET['max']}} {/ if }">{{ $page }}</a>
+        {/ each }
     </ul>
     <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
@@ -60,10 +60,10 @@
                                         <label for="code_category">Catégorie</label>
                                         <select class="form-control" name="code_category" id="code_category" required>
                                             <option value="" selected>Aucune catégorie selectionner</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->code_category }}">{{ $category->name }}
+                                            {@ each $categories }
+                                                <option value="{{ $category->code_category }}">{{ $self->name }}
                                                 </option>
-                                            @endforeach
+                                            {/ each }
                                         </select>
                                     </div>
                                 </div>
@@ -77,20 +77,20 @@
             </div>
         </div>
     </div>
-@endsection
+{/ section }
 
 
-@section('js')
+{@ section name='js' }
     <script>
         var $table = $('#table')
-        var products = JSON.parse('@json($products->slice)');
-        var users = JSON.parse('@json($users)');
-        var categories = JSON.parse('@json($categories)');
+        var products = {@ json $products->slice };
+        var users = {@ json $users };
+        var categories = {@ json $categories };
 
         function productsTable($el, products) {
             products.forEach(p => {
-                p.category = categories.find(c => c.code_category == p.code_category).name
-                p.seller = users.find(u => u.id == p.user_id).username
+                p.category = categories.find(c => c.code_category === p.code_category).name
+                p.seller = users.find(u => u.id === p.user_id).username
                 p.selling_price = new Intl.NumberFormat('fr-FR', {
                     style: 'currency',
                     currency: 'EUR'
@@ -164,4 +164,4 @@
             productsTable($table, products)
         })
     </script>
-@endsection
+{/ section }

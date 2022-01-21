@@ -47,7 +47,7 @@ trait Dispatcher
                         break;
                     }
                     $actionName = $action;
-                    $action = class_exists($action) ? $action : App::getListenerActions($class->getName(), $action);
+                    $action = App::getListenerActions($class->getName(), $action);
                     if(is_null($action)){
                         throw new ListenerNotFoundException(sprintf("%s doesn't have a listener for '%s' action in the EventServiceProvider", $class->getName(), $actionName));
                     }

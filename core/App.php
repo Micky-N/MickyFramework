@@ -8,6 +8,7 @@ use Core\Interfaces\EventInterface;
 use Core\Interfaces\ListenerInterface;
 use Core\Interfaces\MiddlewareInterface;
 use Core\Interfaces\VoterInterface;
+use Core\MkyCompiler\MkyDirective;
 use Core\MkyCompiler\MkyFormatter;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,6 +37,10 @@ class App
      * @var mixed
      */
     private static $config;
+    /**
+     * @var mixed
+     */
+    private static $mkyServiceProvider;
 
     /**
      * Get Provider list
@@ -68,6 +73,15 @@ class App
     {
         self::$middlewareServiceProviders = include dirname(__DIR__) . '/app/Providers/MiddlewareServiceProvider.php';
         return self::$middlewareServiceProviders;
+    }
+
+    /**
+     * Get mkyFormatter and mkyDirective list
+     */
+    public static function MkyServiceProvider()
+    {
+        self::$mkyServiceProvider = include dirname(__DIR__) . '/app/Providers/MkyServiceProvider.php';
+        return self::$mkyServiceProvider;
     }
 
     /**
@@ -142,14 +156,27 @@ class App
         self::$routes = Route::getRoutes();
     }
 
+
+
     /**
      * Add voters list to Permission
      */
     public static function MkyFormatterInit()
     {
-        $mkyFormatters = include dirname(__DIR__) . '/app/Providers/MkyFormatterServiceProvider.php';
+        $mkyFormatters = self::$mkyServiceProvider['formatters'];
         foreach ($mkyFormatters as $mkyFormatter){
             MkyFormatter::addFormatter($mkyFormatter);
+        }
+    }
+
+    /**
+     * Add voters list to Permission
+     */
+    public static function MkyDirectiveInit()
+    {
+        $mkyDirectives = self::$mkyServiceProvider['directives'];
+        foreach ($mkyDirectives as $mkyDirective){
+            MkyDirective::addDirective($mkyDirective);
         }
     }
 
@@ -166,9 +193,11 @@ class App
         self::Providers();
         self::MiddlewareServiceProviders();
         self::EventServiceProviders();
+        self::MkyServiceProvider();
         self::VotersInit();
         self::RoutesInit();
         self::MkyFormatterInit();
+        self::MkyDirectiveInit();
         try {
             Route::run($request);
         } catch (Exception $ex) {

@@ -7,6 +7,7 @@ namespace Core;
 use Core\Exceptions\Router\RouteMiddlewareException;
 use Core\Facades\Permission;
 use Core\Interfaces\MiddlewareInterface;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RouteMiddleware
@@ -58,6 +59,7 @@ class RouteMiddleware
      * @param string $middleware
      * @param array $matches
      * @return bool
+     * @throws Exception
      */
     private function permissionCan(string $middleware, array $matches): bool
     {
@@ -68,7 +70,7 @@ class RouteMiddleware
         $params = ["", ucfirst($subject)];
         if(config('structure') === 'HMVC'){
             if(strpos($subject, '/') !== false){
-                $subjectArray = explode('/', $subject);
+                $subjectArray = explode('/', trim($subject));
                 $params = [ucfirst($subjectArray[0])."\\", ucfirst($subjectArray[1])];
                 $subject = end($subjectArray);
             }

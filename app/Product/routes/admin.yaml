@@ -11,7 +11,7 @@ products:
         method: GET
         middleware:
             - auth
-            - can:edit,Product/product
+            - can:edit, Product/product
 
     update:
         path: /update/:product
@@ -19,7 +19,7 @@ products:
         method: POST
         middleware:
             - auth
-            - can:edit,product
+            - can:edit,Product/product
 
     delete:
         path: /delete/:product
