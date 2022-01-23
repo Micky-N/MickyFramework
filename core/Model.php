@@ -344,23 +344,23 @@ abstract class Model
         $secondInstance = new $model();
         $table = $secondInstance->getTable();
         $all = MysqlDatabase::query(
-            'SHOW TABLES FROM ' . config('connection.mysql.name')
+            'SHOW TABLES FROM ' . config('connections.mysql.name', 'database')
         );
         if(empty($pivot)){
             foreach ($all as $a) {
                 if(
                 strpos(
-                    $a['Tables_in_' . config('connection.mysql.name')],
+                    $a['Tables_in_' . config('connections.mysql.name', 'database')],
                     '_'
                 )
                 ){
                     $atest = explode(
                         '_',
-                        $a['Tables_in_' . config('connection.mysql.name')]
+                        $a['Tables_in_' . config('connections.mysql.name', 'database')]
                     );
                     if(in_array($first, $atest) && in_array($second, $atest)){
                         $pivot =
-                            $a['Tables_in_' . config('connection.mysql.name')];
+                            $a['Tables_in_' . config('connections.mysql.name', 'database')];
                     }
                 }
             }

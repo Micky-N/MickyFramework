@@ -18,8 +18,8 @@ class View
     public function render(string $view, array $params = [], bool $isModuleView = true)
     {
         try {
-            $baseConfig = include ROOT . 'config/config.php';
-            $config = array_merge(config('mkyEngine'), ($isModuleView ? config('module') : $baseConfig['module']));
+            $moduleBaseConfig = include ROOT . 'config/module.php';
+            $config = array_merge(config('*', 'mkyEngine'), ($isModuleView ? config('*', 'module') : $moduleBaseConfig));
             $mkyEngine = new MkyEngine($config);
             return $mkyEngine->view($view, $params);
         } catch (Exception $ex) {

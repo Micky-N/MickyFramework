@@ -13,10 +13,13 @@ if(!function_exists('_env')){
 }
 
 if(!function_exists('config')){
-    function config($configName)
+    function config(string $configName = '*', string $configFile = 'app')
     {
         try {
-            $config = \Core\App::getConfig() ?? include dirname(__DIR__).'/../config/config.php';
+            $config = \Core\App::getConfig()[$configFile];
+            if($configName === '*'){
+                return $config;
+            }
             $configName = array_filter(explode('.', $configName));
             foreach ($configName as $c) {
                 if(isset($config[$c])){

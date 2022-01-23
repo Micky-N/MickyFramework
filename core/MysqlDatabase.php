@@ -19,7 +19,7 @@ class MysqlDatabase
     public static function getConnection()
     {
         if(is_null(self::$connection) || !method_exists(self::$connection, 'getAttribute') || self::$connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql'){
-            $config = config('connection.mysql');
+            $config = config('connections.mysql', 'database');
             $dsn = 'mysql:dbname=' . $config['name'] . ';host=' . $config['host'];
             $pdo = new PDO($dsn, $config['user'], $config['password']);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

@@ -6,6 +6,8 @@ use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
+use Exception;
+use PDO;
 
 /**
  * Collects data about SQL statements executed with PDO
@@ -23,15 +25,16 @@ class PDOCollector extends DataCollector implements Renderable, AssetProvider
     protected $name;
 
     /**
-     * @param \PDO $pdo
+     * @param PDO $pdo
      * @param TimeDataCollector $timeCollector
+     * @throws Exception
      */
-    public function __construct(\PDO $pdo = null, TimeDataCollector $timeCollector = null)
+    public function __construct(PDO $pdo = null, TimeDataCollector $timeCollector = null)
     {
         $this->timeCollector = $timeCollector;
         $this->name = "Mysql";
         if ($pdo !== null) {
-            $this->addConnection($pdo, config('connection.mysql.name') ?? 'default');
+            $this->addConnection($pdo, config('connections.mysql.name', 'database') ?? 'default');
         }
     }
 
@@ -65,10 +68,10 @@ class PDOCollector extends DataCollector implements Renderable, AssetProvider
     /**
      * Adds a new PDO instance to be collector
      *
-     * @param TraceablePDO $pdo
+     * @param PDO $pdo
      * @param string $name Optional connection name
      */
-    public function addConnection(\PDO $pdo, $name = null)
+    public function addConnection(PDO $pdo, $name = null)
     {
         if ($name === null) {
             $name = spl_object_hash($pdo);

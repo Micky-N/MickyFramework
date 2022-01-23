@@ -89,7 +89,7 @@ class App
      */
     public static function VotersInit()
     {
-        if(self::$config['structure'] === 'HMVC'){
+        if(self::$config['app']['structure'] === 'HMVC'){
             foreach (self::$modules as $module){
                 $moduleRoot = (new $module())->getRoot();
                 $moduleVoters = include $moduleRoot . '/Providers/MiddlewareServiceProvider.php';
@@ -99,7 +99,6 @@ class App
         foreach (self::$middlewareServiceProviders['voters'] as $voter) {
             Permission::addVoter(new $voter());
         }
-
     }
 
     /**
@@ -368,7 +367,11 @@ class App
 
     private static function ConfigInit()
     {
-        self::$config = include dirname(__DIR__) . '/config/config.php';
+        foreach (glob(ROOT . 'config/*.php') as $filename) {
+            $configFile = trim(str_replace(ROOT.'config','',$filename), '/');
+            $configFile = str_replace('.php', '', $configFile);
+            self::$config[$configFile] = include $filename;
+        }
     }
 
     /**

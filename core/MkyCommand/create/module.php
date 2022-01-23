@@ -27,7 +27,7 @@ if (php_sapi_name() === "cli") {
     }
 
     $files = [
-        'config' => ['config.php', $dir],
+        'config' => ['app.php', $dir],
         'eventServiceProvider' => ['EventServiceProvider.php', "$dir/Providers"],
         'middlewareServiceProvider' => ['MiddlewareServiceProvider.php', "$dir/Providers"],
         'functions' => ['functions.php', "$dir/routes"],
