@@ -460,7 +460,7 @@ class Router
     {
         $action = explode('::', $action);
         if($action[0] === 'func'){
-            $functions = include ($moduleRoot ?? dirname(__DIR__)) . '/routes/functions.php';
+            $functions = include ($moduleRoot ?? ROOT) . '/routes/functions.php';
             return $functions[$action[1]];
         }
         return array_filter([$action[0], $action[1] ?? null]);

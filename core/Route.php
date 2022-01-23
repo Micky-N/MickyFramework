@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Closure;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Route
@@ -66,9 +67,10 @@ class Route
         if(is_array($this->action)){
             $controller = new $this->action[0]();
             $method = $this->action[1];
-            $this->routesDebugBar($request, $params, $controller, $method);
+            $this->routesDebugBar($request, $params, $controller, $method, $this->module);
             return call_user_func_array([$controller, $method], $params);
         } else if(is_callable($this->action)){
+            $this->routesDebugBar($request, $params, $this->action, null, $this->module);
             return call_user_func_array($this->action, $params);
         }
     }
@@ -155,17 +157,24 @@ class Route
      *
      * @param ServerRequestInterface $request
      * @param array $params
-     * @param Controller $controller
-     * @param string $method
+     * @param Controller|Closure $controller
+     * @param string|null $method
+     * @param string|null $module
      */
-    public function routesDebugBar(ServerRequestInterface $request, array $params, Controller $controller, string $method)
+    public function routesDebugBar(ServerRequestInterface $request, array $params, $controller, string $method = null, string $module = null)
     {
-        \Core\Facades\StandardDebugBar::addMessage('Routes', [
+        if($module){
+            $module = explode('\\', $module);
+            $module = $module[1];
+        }
+        $array = array_filter([
             'url' => $request->getUri()->getPath(),
             'params' => $params,
             'controller' => get_class($controller),
-            'method' => $method
+            'method' => $method,
+            'module' => $module
         ]);
+        \Core\Facades\StandardDebugBar::addMessage('Routes', $array);
     }
 
     public function __get($name)
