@@ -51,9 +51,6 @@ class MkyEngine
         } else {
             $viewPath = $this->getConfig('layouts') . '/' . $this->parseViewName($viewName);
         }
-        if(!file_exists($viewPath)){
-            throw new Exception(sprintf('View %s does not exist', $viewPath));
-        }
 
         $this->view = file_get_contents($viewPath);
         $this->parse();
@@ -61,6 +58,9 @@ class MkyEngine
 
         $cachePath = $this->getConfig('cache') . '/' . md5($this->viewName) . self::CACHE_SUFFIX;
         if(!file_exists($cachePath)){
+            Cache::addCache($cachePath, $this->view);
+        }else if((_readLine($cachePath) !== explode("\n", $this->view)) && trim($this->view)){
+            echo '<!-- cache file updated -->';
             Cache::addCache($cachePath, $this->view);
         }
 
@@ -144,7 +144,7 @@ class MkyEngine
         $this->view = preg_replace_callback(sprintf("/%s include name=(.*?) ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($viewName) {
             $name = trim($viewName[1], '"\'');
             return file_get_contents($this->getConfig('views') . '/' . $this->parseViewName($name));
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
     }
 
     /**
@@ -155,7 +155,7 @@ class MkyEngine
         $this->view = preg_replace_callback(sprintf("/%s extends name=(.*?) ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($viewName) {
             $name = trim($viewName[1], '"\'');
             return $this->view($name, $this->data, true);
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
     }
 
     /**
@@ -167,7 +167,7 @@ class MkyEngine
             $name = trim($yieldName[1], '"\'');
             $default = isset($yieldName[2]) ? trim($yieldName[3], '"\'') : '';
             return $this->sections[$name] ?? $default;
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
     }
 
     /**
@@ -180,13 +180,13 @@ class MkyEngine
             $name = trim($sectionDetail[1], '"\'');
             $this->sections[$name] = $value;
             return '';
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
 
         $this->view = preg_replace_callback(sprintf("/%s section name=(.*?) ?%s(.*?)%s section ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1], self::CLOSE_FUNCTION[0], self::CLOSE_FUNCTION[1]), function ($sectionName) {
             $name = trim($sectionName[1], '"\'');
             $this->sections[$name] = $sectionName[2];
             return '';
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
     }
 
     /**
@@ -201,12 +201,12 @@ class MkyEngine
             $expression = isset($expression[2]) ? trim($expression[2]) : null;
             $params = [$function, $expression];
             return call_user_func_array([new MkyDirective(), 'callFunction'], $params);
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
 
         $this->view = preg_replace_callback(sprintf("/%s ([\w]+)? ?%s/", self::CLOSE_FUNCTION[0], self::CLOSE_FUNCTION[1]), function ($expression) {
             $function = trim($expression[1]);
             $params = [$function, null, false];
             return call_user_func_array([new MkyDirective(), 'callFunction'], $params);
-        }, str_replace(' (', '(', $this->view));
+        }, $this->view);
     }
 }

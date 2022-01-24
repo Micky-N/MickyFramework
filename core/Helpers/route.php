@@ -9,8 +9,8 @@ if(!function_exists('route')){
 }
 
 if(!function_exists('currentRoute')){
-    function currentRoute($route = ''){
-        return Route::currentRoute($route);
+    function currentRoute($route = '', bool $path = false){
+        return Route::currentRoute($route, $path);
     }
 }
 

@@ -176,12 +176,12 @@ class Router
             if(!empty($only) && in_array($key, $only)){
                 call_user_func_array(
                     [$this, $crudAction['request']],
-                    [($isAdminRoute ? 'admin/' : '').$crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '').$crudAction['name'], null, $moduleName]
+                    [($isAdminRoute ? 'admin/' : '') . $crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '') . $crudAction['name'], null, $moduleName]
                 );
             } elseif(empty($only)) {
                 call_user_func_array(
                     [$this, $crudAction['request']],
-                    [($isAdminRoute ? 'admin/' : '').$crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '').$crudAction['name'], null, $moduleName]
+                    [($isAdminRoute ? 'admin/' : '') . $crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '') . $crudAction['name'], null, $moduleName]
                 );
             }
         }
@@ -209,7 +209,7 @@ class Router
                 }
             }
         }
-        $path = "/".implode('/', $path);
+        $path = "/" . implode('/', $path);
         return $path;
     }
 
@@ -240,17 +240,17 @@ class Router
      * or if route is the currently used
      *
      * @param string $route
+     * @param bool $path
      * @return bool|string
      */
-    public function currentRoute(string $route = '')
+    public function currentRoute(string $route = '', bool $path = false)
     {
-        $currentRoute = ServerRequest::fromGlobals()
-            ->getUri()
-            ->getPath();
+        $currentPath = ServerRequest::fromGlobals()->getUri()->getPath();
+        $currentRoute = array_filter($this->routesByName(), fn($route) => trim($route->getPath(), '/') === trim($currentPath, '/'));
         if($route){
-            return $currentRoute === $route;
+            return key($currentRoute) === $route;
         }
-        return $currentRoute;
+        return $path ? $currentPath : key($currentRoute);
     }
 
     /**
@@ -421,7 +421,7 @@ class Router
                     $name = str_replace('admin.', '', $name);
                     $moduleName = !is_null($module) ? get_class($module) : null;
                     $this->crud($name, $route['controller'], [], $moduleName, $isAdminRoute);
-                }else{
+                } else {
                     $middleware = $route['middleware'] ?? null;
                     $moduleRoot = !is_null($module) ? $module->getRoot() : null;
                     $action = $this->getAction($route['action'], $moduleRoot);

@@ -76,6 +76,15 @@ class App
     }
 
     /**
+     * Get Module list
+     */
+    public static function ModuleServiceProvider()
+    {
+        $moduleServiceProvider = include ROOT.'/app/Providers/ModuleServiceProvider.php';
+        self::$modules = $moduleServiceProvider;
+    }
+
+    /**
      * Get mkyFormatter and mkyDirective list
      */
     public static function MkyServiceProvider()
@@ -90,7 +99,7 @@ class App
     public static function VotersInit()
     {
         if(self::$config['app']['structure'] === 'HMVC'){
-            foreach (self::$modules as $module){
+            foreach (self::$modules as $module) {
                 $moduleRoot = (new $module())->getRoot();
                 $moduleVoters = include $moduleRoot . '/Providers/MiddlewareServiceProvider.php';
                 self::$middlewareServiceProviders['voters'] = array_merge(self::$middlewareServiceProviders['voters'], $moduleVoters['voters']);
@@ -156,14 +165,13 @@ class App
     }
 
 
-
     /**
      * Add voters list to Permission
      */
     public static function MkyFormatterInit()
     {
         $mkyFormatters = self::$mkyServiceProvider['formatters'];
-        foreach ($mkyFormatters as $mkyFormatter){
+        foreach ($mkyFormatters as $mkyFormatter) {
             MkyFormatter::addFormatter($mkyFormatter);
         }
     }
@@ -174,7 +182,7 @@ class App
     public static function MkyDirectiveInit()
     {
         $mkyDirectives = self::$mkyServiceProvider['directives'];
-        foreach ($mkyDirectives as $mkyDirective){
+        foreach ($mkyDirectives as $mkyDirective) {
             MkyDirective::addDirective($mkyDirective);
         }
     }
@@ -190,6 +198,7 @@ class App
     {
         self::ConfigInit();
         self::Providers();
+        self::ModuleServiceProvider();
         self::MiddlewareServiceProviders();
         self::EventServiceProviders();
         self::MkyServiceProvider();
@@ -325,14 +334,6 @@ class App
     }
 
     /**
-     * @param string[] $modules
-     */
-    public static function setModule(array $modules)
-    {
-        self::$modules = $modules;
-    }
-
-    /**
      * @return Module|null
      */
     public static function getCurrentModule()
@@ -365,10 +366,10 @@ class App
         return array_merge($baseArray, array_filter($arrayFile));
     }
 
-    private static function ConfigInit()
+    public static function ConfigInit()
     {
         foreach (glob(ROOT . 'config/*.php') as $filename) {
-            $configFile = trim(str_replace(ROOT.'config','',$filename), '/');
+            $configFile = trim(str_replace(ROOT . 'config', '', $filename), '/');
             $configFile = str_replace('.php', '', $configFile);
             self::$config[$configFile] = include $filename;
         }

@@ -2,6 +2,6 @@
 
 return [
     'getUser' => function ($id) {
-        dump("user $id");
+        echo("user $id");
     }
 ];

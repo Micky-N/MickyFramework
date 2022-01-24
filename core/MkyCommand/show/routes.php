@@ -2,8 +2,9 @@
 
 require_once 'vendor/autoload.php';
 use Core\MKYCommand\MickyCLI;
-
+defined('ROOT') or define('ROOT', dirname(dirname(__DIR__))."/");
 if (php_sapi_name() === "cli") {
+    \Core\App::ConfigInit();
     $cli = getopt('', MickyCLI::cliLongOptions());
     $request = isset($cli['request']) ? $cli['request'] : null;
     $controller = isset($cli['controller']) ? $cli['controller'] : null;

@@ -16,7 +16,7 @@ use Core\Router as CoreRouter;
  * @method static void crud(string $namespace, string $controller, array $only = [], string $moduleName = null, bool $isAdminRoute = false)
  * @method static string routeNeedParams(string $path)
  * @method static string generateUrlByName(string $routeName, array $params = [])
- * @method static bool|string currentRoute(string $route = '')
+ * @method static bool|string currentRoute(string $route = '', bool $path = false)
  * @method static void run(\Psr\Http\Message\ServerRequestInterface $request)
  * @method static \Core\Router redirectName(string $name)
  * @method static \Core\Router redirect(string $url)

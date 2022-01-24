@@ -11,6 +11,7 @@ class BaseDirective implements MkyDirectiveInterface
     private array $conditions = [
         'firstCaseSwitch' => false
     ];
+    private array $sections = [];
 
     public function getFunctions()
     {
@@ -31,6 +32,7 @@ class BaseDirective implements MkyDirectiveInterface
             'auth' => [[$this, 'auth'], [$this, 'endauth']],
             'guest' => [[$this, 'guest'], [$this, 'endguest']],
             'json' => [[$this, 'json']],
+            'currentRoute' => [[$this, 'currentRoute'], [$this, 'endcurrentRoute']],
         ];
     }
 
@@ -165,5 +167,16 @@ class BaseDirective implements MkyDirectiveInterface
     public function json($expression)
     {
         return '<?= json_encode(' . $expression . ', JSON_UNESCAPED_UNICODE); ?>';
+    }
+
+    public function currentRoute(string $route)
+    {
+        $route = trim($route, '\'\"');
+        return '<?php if(\Core\Facades\Route::currentRoute("' . $route . '")): ?>';
+    }
+
+    public function endcurrentRoute()
+    {
+        return '<?php endif; ?>';
     }
 }
