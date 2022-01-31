@@ -47,7 +47,7 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
 ### 3. Routes
 
 L'application récupère toutes les routes dans le dossier /routes/*.yaml, les routes sont écrites en format .yaml ainsi que les fonctions de route personnalisées dans le fichier functions.php
-```yaml
+```yml
 # Fichier web.yaml
 categories:  
     index:  
@@ -55,8 +55,8 @@ categories:
         action: App\Http\Controllers\CategoryController::index  
         method: GET
         middleware: # Optionnel
-	        - auth
-	        - can: edit, product
+	    - auth
+	    - can: edit, product
 ```
 
 | Paramètre | Valeur |
@@ -75,10 +75,10 @@ Pour utiliser les fonctions de route dans le fichier functions.php l'action doit
 // path: test/Micky, action: func::getUser
 [  
   'getUser' => function ($username) {  
-	  echo("user ".$username); // user Micky
+  	echo("user ".$username); // user Micky
   },
   'otherFunction' => function () {  
-	  echo("otherFunctionReturn");  
+  	echo("otherFunctionReturn");  
   }, 
 ];
 ```
@@ -90,9 +90,11 @@ Les providers sont des enregistrements de classes dans un but définie.
 
 Ce provider sert à stocker les events et leurs listeners selon leur actions sont forme de tableau, exemple :
 ```php
-\App\Events\CategoryEvent::class => [  
-  'update' => \App\Listeners\UpdateCategoryListener::class,
-  'otherAction' => \App\Listeners\OtherListener::class,  
+[
+    \App\Events\CategoryEvent::class => [  
+	'update' => \App\Listeners\UpdateCategoryListener::class,
+	'otherAction' => \App\Listeners\OtherListener::class,  
+    ]
 ];
 ```
 
@@ -101,13 +103,13 @@ Ce provider sert à stocker les events et leurs listeners selon leur actions son
 Ce provider sert à stocker les middleware de route avec un alias sous forme de tableau, et les voters, exemple :
 ```php
 [  
-  'routeMiddlewares' => [  
-	  'auth' => \App\Http\Middlewares\AuthMiddleware::class  
-  ],  
+    'routeMiddlewares' => [  
+  	'auth' => \App\Http\Middlewares\AuthMiddleware::class  
+    ],  
   
-  'voters' => [  
-	 \App\Voters\RoleVoter::class,  
-  ],  
+    'voters' => [  
+ 	\App\Voters\RoleVoter::class,  
+    ],  
 ];
 ```
 
@@ -116,12 +118,12 @@ Ce provider sert à stocker les middleware de route avec un alias sous forme de 
 Ce provider sert à stocker les fonctions et formats personnalisés du moteur de template Mky, exemple : 
 ```php
 [  
-  'formatters' => [ 
-	  App\MkyFormatters\ArrayFormatters::class
-  ],  
-  'directives' => [
-	  App\MkyDirectives\CountDirective::class  
-  ]
+    'formatters' => [ 
+  	App\MkyFormatters\ArrayFormatters::class
+    ],  
+    'directives' => [
+  	App\MkyDirectives\CountDirective::class  
+    ]
 ];
 ```
 
@@ -130,10 +132,10 @@ Ce provider sert à stocker les fonctions et formats personnalisés du moteur de
 Ce provider sert à stocker des classes pour des utilisations spéciaux; exemple, pour le système de notification les classes sont stockées avec des alias :
 ```php
 [  
-  'alias' => [  
-	  'webPush' => \App\Utils\WebPushNotification::class  
-  ],
-  OtherClass::class 
+    'alias' => [  
+  	'webPush' => \App\Utils\WebPushNotification::class  
+    ],
+    OtherClass::class 
 ];
 ```
 
