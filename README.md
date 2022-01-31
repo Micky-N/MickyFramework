@@ -1,13 +1,41 @@
 
+
 # MickyFramework    
   
 > *Framework MVC et HMVC par Micky_N version 0.1*  
   
-Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise un moteur de Template Mky.  
+Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise un moteur de Template Mky.
+
+
+## Sommaire
+
+- [Structure](#structure)
+    - [Dossiers](#dossiers)
+    - [Point de configuration](#point-de-configuration)
+    - [Routes](#routes)
+    - [Providers](#providers)
+ - [Application](#application)
+   - [Model](#model)
+   - [Controller](#controller)
+   - [Middleware](#middleware)
+   - [Voter](#voter)
+   - [Event](#event)
+   - [Listener](#listener)
+   - [Notification](#notification)
+   - [Router](#router)
+ - [Vue](#vue)
+   - [MkyDirective](#mkydirective)
+   - [Liste des directives](#liste-des-directives)
+   - [MkyFormatter](#mkyformatter)
+   - [Liste des formats](#liste-des-formats)
+ - [MkyCommand CLI](#mkycommand-cli)
+
+
+
   
 ## Structure  
   
- ### 1. Dossiers  
+ ### Dossiers  
 - app  
    - Events : contient  les évènements à déclencher  
    - Listeners : contient  les écouteurs d'évènement  
@@ -30,7 +58,7 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
   
 - views : contient toutes les vues .mky
 
-### 2. Point de configuration
+### Point de configuration
 
 | Dossier | Point de Config| description |
 |--|--|--|
@@ -44,7 +72,7 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
 | module | views | dossier de base pour les vues .mky |
 || layouts| dossier de base pour les templates .mky |
 
-### 3. Routes
+### Routes
 
 L'application récupère toutes les routes dans le dossier /routes/*.yaml, les routes sont écrites en format .yaml ainsi que les fonctions de route personnalisées dans le fichier functions.php
 ```yml
@@ -74,16 +102,16 @@ Pour utiliser les fonctions de route dans le fichier functions.php l'action doit
 // routes/functions.php
 // path: test/Micky, action: func::getUser
 [  
-  'getUser' => function ($username) {  
+    'getUser' => function ($username) {  
   	echo("user ".$username); // user Micky
-  },
-  'otherFunction' => function () {  
-  	echo("otherFunctionReturn");  
-  }, 
+    },
+    'otherFunction' => function () {  
+        echo("otherFunctionReturn");  
+    }, 
 ];
 ```
 
-### 4. Providers
+### Providers
 
 Les providers sont des enregistrements de classes dans un but définie.
 - EventServiceProvider
@@ -141,30 +169,30 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux; exemple
 
 ## Application
 
-### 1. Model
+### Model
 
-### 2. Controller
+### Controller
 
-### 3. Middleware
+### Middleware
 
-### 4. Voter
+### Voter
 
-### 5. Event
+### Event
 
-### 6. Listener
+### Listener
 
-### 7. Notification
+### Notification
 
-### 8. Router
+### Router
 
 ## Vue
 
-### 1. MkyDirective
+### MkyDirective
 
-### 2. Liste des directives 
+### Liste des directives 
 
-### 3. MkyFormatter
+### MkyFormatter
 
-### 4. Liste des formats
+### Liste des formats
 
 ## MkyCommand CLI
