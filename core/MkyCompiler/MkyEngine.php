@@ -2,6 +2,7 @@
 
 namespace Core\MkyCompiler;
 
+use Core\MkyCompiler\MkyDirectives\Directive;
 use Exception;
 use Core\Facades\Cache;
 use Core\Facades\Session;
@@ -12,8 +13,9 @@ class MkyEngine
     private const VIEW_SUFFIX = '.mky';
     private const CACHE_SUFFIX = '.cache.php';
     private const ECHO = ['{{', '}}'];
-    private const OPEN_FUNCTION = ['{@', '}'];
-    private const CLOSE_FUNCTION = ['{\/', '}'];
+    private const SINGLE_FUNCTION = ['<mky:', '\/>'];
+    private const OPEN_FUNCTION = ['<mky:', '>'];
+    private const CLOSE_FUNCTION = ['<\/mky:', '>'];
     private array $config;
     /**
      * @var null|string|false
@@ -23,7 +25,7 @@ class MkyEngine
     private array $data = [];
     private string $viewName = '';
     private string $viewPath = '';
-
+    private array $includeData = [];
     public array $errors;
 
     public function __construct(array $config)
@@ -43,23 +45,27 @@ class MkyEngine
      */
     public function view(string $viewName, array $data = [], $extends = false)
     {
-        $viewPath = $this->getConfig('views') . '/' . $this->parseViewName($viewName);
+        $viewPath = '';
         if(!$extends){
+            $viewPath = $this->getConfig('views') . '/' . $this->parseViewName($viewName);
             $this->viewName = $viewName;
             $this->data = $data;
             $this->viewPath = $viewPath;
         } else {
             $viewPath = $this->getConfig('layouts') . '/' . $this->parseViewName($viewName);
         }
-
         $this->view = file_get_contents($viewPath);
+        $this->data = array_merge($this->data, $this->includeData);
+        $this->data['_ENV'] = $_ENV;
+        $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
+        $success = Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS'));
+        $flashMessages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));
         $this->parse();
-
 
         $cachePath = $this->getConfig('cache') . '/' . md5($this->viewName) . self::CACHE_SUFFIX;
         if(!file_exists($cachePath)){
             Cache::addCache($cachePath, $this->view);
-        }else if((_readLine($cachePath) !== explode("\n", $this->view)) && trim($this->view)){
+        } else if(explode("\n", file_get_contents($cachePath)) !== explode("\n", $this->view) && trim($this->view)){
             echo '<!-- cache file updated -->';
             Cache::addCache($cachePath, $this->view);
         }
@@ -71,13 +77,12 @@ class MkyEngine
             echo '<!-- cache file updated -->';
             Cache::addCache($cachePath, $this->view);
         }
-
         if(!$extends){
             ob_start();
-            extract($data);
-            $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
-            $success = Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS'));
-            $flashMessages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));
+            $this->data['errors'] = $errors;
+            $this->data['success'] = $success;
+            $this->data['flashMessages'] = $flashMessages;
+            extract($this->data);
             require $cachePath;
             echo ob_get_clean();
         }
@@ -110,8 +115,9 @@ class MkyEngine
 
     /**
      * Compile echo variables
+     * @param string|null $view
      */
-    public function parseVariables(): void
+    public function parseVariables(string $view = null): void
     {
         $this->view = preg_replace_callback(sprintf("/%s(.*?)(#(.*?)(\((.*?)\)?)?)?%s/", self::ECHO[0], self::ECHO[1]), function ($variable) {
             $var = trim($variable[1]);
@@ -121,7 +127,7 @@ class MkyEngine
                 $var = sprintf("call_user_func_array([new %s(), '%s'], [%s])", MkyFormatter::class, 'callFormat', join(', ', array_filter($params)));
             }
             return "<?= $var ?>";
-        }, $this->view);
+        }, $view ?? $this->view);
     }
 
 
@@ -141,9 +147,35 @@ class MkyEngine
      */
     public function parseIncludes(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s include name=(.*?) ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($viewName) {
+        $this->view = preg_replace_callback(sprintf("/%sinclude name=[\"\'](.*?)[\"\']( data=[\"\'](.*?)[\"\'])? ?%s/s", self::SINGLE_FUNCTION[0], self::SINGLE_FUNCTION[1]), function ($viewName) {
             $name = trim($viewName[1], '"\'');
-            return file_get_contents($this->getConfig('views') . '/' . $this->parseViewName($name));
+            $view = file_get_contents($this->getConfig('views') . '/' . $this->parseViewName($name));
+            if(isset($viewName[3])){
+                extract($this->data);
+                preg_match_all('/\$[\w]+/', $viewName[3], $matchesVar);
+                $matchesVar = $matchesVar[0];
+                @eval("\$data = $viewName[3]; return true;");
+                foreach ($data as $key => $value) {
+                    $index = array_search($key, array_keys(array_filter($data, fn($d) => $d === null)), true);
+                    if(is_null($value)){
+                        $view = preg_replace('/\\$' . $key . '/', $matchesVar[$index], $view);
+                    } else {
+                        $this->includeData[str_replace('.', '_', $name . '_' . $key)] = $value;
+                    }
+                }
+                preg_match_all('/\$[\w]+/', $view, $matchesAll);
+                if($matchesAll){
+                    foreach ($matchesAll as $matches) {
+                        foreach ($matches as $k => $match) {
+                            $ma = str_replace('$', '', $match);
+                            if(!array_key_exists($ma, $this->data) && array_key_exists(str_replace('.', '_', $name . '_' . $ma), $this->includeData)){
+                                $view = preg_replace('/\\' . $match . '/', str_replace('.', '_', '$' . $name . '_' . $ma), $view);
+                            }
+                        }
+                    }
+                }
+            }
+            return $view;
         }, $this->view);
     }
 
@@ -152,7 +184,7 @@ class MkyEngine
      */
     public function parseExtends(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s extends name=(.*?) ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($viewName) {
+        $this->view = preg_replace_callback(sprintf("/%sextends name=[\"\'](.*?)[\"\'] ?%s/s", self::SINGLE_FUNCTION[0], self::SINGLE_FUNCTION[1]), function ($viewName) {
             $name = trim($viewName[1], '"\'');
             return $this->view($name, $this->data, true);
         }, $this->view);
@@ -163,7 +195,7 @@ class MkyEngine
      */
     public function parseYields(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s yield name=(.*?) (default=(.*?))? ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($yieldName) {
+        $this->view = preg_replace_callback(sprintf("/%syield name=[\"\'](.*?)[\"\']( default=[\"\'](.*?)[\"\'])? ?%s/", self::SINGLE_FUNCTION[0], self::SINGLE_FUNCTION[1]), function ($yieldName) {
             $name = trim($yieldName[1], '"\'');
             $default = isset($yieldName[2]) ? trim($yieldName[3], '"\'') : '';
             return $this->sections[$name] ?? $default;
@@ -175,14 +207,13 @@ class MkyEngine
      */
     public function parseSections(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s section name=(.*?) value=(.*)? ?%s/", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($sectionDetail) {
+        $this->view = preg_replace_callback(sprintf('/%ssection name=[\"\'](.*?)[\"\'] value=[\"\'](.*?)[\"\'] ?%s/', self::SINGLE_FUNCTION[0], self::SINGLE_FUNCTION[1]), function ($sectionDetail) {
             $value = trim($sectionDetail[2], '"\'');
             $name = trim($sectionDetail[1], '"\'');
             $this->sections[$name] = $value;
             return '';
         }, $this->view);
-
-        $this->view = preg_replace_callback(sprintf("/%s section name=(.*?) ?%s(.*?)%s section ?%s/s", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1], self::CLOSE_FUNCTION[0], self::CLOSE_FUNCTION[1]), function ($sectionName) {
+        $this->view = preg_replace_callback(sprintf('/%ssection name=[\"\'](.*?)[\"\'] ?%s(.*?)%ssection%s/s', self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1], self::CLOSE_FUNCTION[0], self::CLOSE_FUNCTION[1]), function ($sectionName) {
             $name = trim($sectionName[1], '"\'');
             $this->sections[$name] = $sectionName[2];
             return '';
@@ -196,17 +227,87 @@ class MkyEngine
      */
     private function parseDirectives(): void
     {
-        $this->view = preg_replace_callback(sprintf("/%s ([\w]+)? (.*?) ?%s/", self::OPEN_FUNCTION[0], self::OPEN_FUNCTION[1]), function ($expression) {
-            $function = trim($expression[1]);
-            $expression = isset($expression[2]) ? trim($expression[2]) : null;
-            $params = [$function, $expression];
-            return call_user_func_array([new MkyDirective(), 'callFunction'], $params);
-        }, $this->view);
+        $mkyDirective = new MkyDirective();
+        foreach ($mkyDirective->getDirectives() as $directives) {
+            foreach ($directives->getFunctions() as $key => $function) {
+                $this->singleDirective($mkyDirective, $key, $this->view);
+                $this->blockDirective($mkyDirective, $key, $this->view);
+            }
+        }
+    }
 
-        $this->view = preg_replace_callback(sprintf("/%s ([\w]+)? ?%s/", self::CLOSE_FUNCTION[0], self::CLOSE_FUNCTION[1]), function ($expression) {
-            $function = trim($expression[1]);
-            $params = [$function, null, false];
-            return call_user_func_array([new MkyDirective(), 'callFunction'], $params);
-        }, $this->view);
+    private function blockDirective(MkyDirective $mkyDirective, $key, string $view)
+    {
+        $str = sprintf('/%s%s ([\w]+=[\"\'](.*?)[\"\'])+? ?%s(.*?)%s%s%s/s', self::OPEN_FUNCTION[0], $key, self::OPEN_FUNCTION[1], self::CLOSE_FUNCTION[0], $key, self::CLOSE_FUNCTION[1]);
+        $this->view = preg_replace_callback($str, function ($expression) use ($mkyDirective, $key) {
+            if(isset($expression[3])){
+                $xmlempty = str_replace($expression[3], '-- CODE --', $expression[0]);
+            }
+
+            preg_match(sprintf('/%s%s ([\w]+=[\"\'](.*?)[\"\'])+? ?%s/', self::OPEN_FUNCTION[0], $key, self::OPEN_FUNCTION[1]), $expression[0], $xmlExprUp);
+            $xmlExprUp = $xmlExprUp[0];
+
+            preg_match(sprintf('/%s%s%s/', self::CLOSE_FUNCTION[0], $key, self::CLOSE_FUNCTION[1]), $expression[0], $xmlExprDown);
+            $xmlExprDown = $xmlExprDown[0];
+            $xmlExpr = str_replace('mky:', '', $xmlempty);
+            $xml = new \SimpleXMLElement($xmlExpr);
+            $exprArray = [];
+            foreach ($xml->attributes() as $k => $attribute) {
+                if(strpos($attribute, '$') !== false){
+                    extract($this->data);
+                    @eval("\$var = $attribute; return true;");
+                    $exprArray[$k] = $var;
+                    Directive::setRealVariable((string)$attribute, $var);
+                } else {
+                    $attribute = (string)$attribute;
+                    if(str_starts_with($attribute, '/') || strpos($attribute, '.')){
+                        $attribute = (string)"'$attribute'";
+                    }
+                    @eval("\$var = $attribute; return true;");
+                    $exprArray[$k] = $var;
+                }
+            }
+            $params = [$key, $exprArray];
+            $ref = new \ReflectionClass($mkyDirective);
+            $getUp = $ref->getMethod('callFunction')->invokeArgs($ref->newInstance(), $params);
+            $getDown = $ref->getMethod('callFunction')->invokeArgs($ref->newInstance(), array_merge($params, [false]));
+            return str_replace([$xmlExprUp, $xmlExprDown], [$getUp, $getDown], $expression[0]);
+        }, $view);
+    }
+
+    private function singleDirective(MkyDirective $mkyDirective, $key, string $view)
+    {
+        $str = sprintf('/(%s%s ([\w]+=[\"\'](.*?)[\"\'])+? ?%s)+/', self::SINGLE_FUNCTION[0], $key, self::SINGLE_FUNCTION[1]);
+        $this->view = preg_replace_callback($str, function ($expression) use ($mkyDirective, $key) {
+            $xmlExpr = str_replace('mky:', '', $expression[0]);
+            $xml = new \SimpleXMLElement($xmlExpr);
+            $exprArray = [];
+            foreach ($xml->attributes() as $k => $attribute) {
+                if(strpos($attribute, '$') !== false){
+                    extract($this->data);
+                    $getvar = str_replace('$', '', $attribute);
+                    if(array_key_exists($getvar, $this->data)){
+                        @eval("\$var = $attribute; return true;");
+                        $var = is_string($var) ? "'$var'" : $var;
+                        $exprArray[$k] = $var;
+                        Directive::setRealVariable((string)$attribute, $var);
+                    }else{
+                        throw new MkyEngineException(sprintf('Undefined variable: %s', $attribute));
+                    }
+                } else {
+                    $attribute = (string)$attribute;
+                    if(str_starts_with($attribute, '/') || strpos($attribute, '.')){
+                        $attribute = (string)"'$attribute'";
+                    }
+                    @eval("\$var = $attribute; return true;");
+                    $exprArray[$k] = $var;
+                }
+            }
+            $params = [$key, $exprArray];
+            $ref = new \ReflectionClass($mkyDirective);
+            $newExpr = $ref->getMethod('callFunction')->invokeArgs($ref->newInstance(), $params);
+            return str_replace($expression[1], $newExpr, $expression[0]);
+
+        }, $view);
     }
 }

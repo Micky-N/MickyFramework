@@ -31,7 +31,7 @@ if(php_sapi_name() === "cli"){
     $start = "<" . "?" . "php\n\n";
     fwrite($formatter, $start . $template);
     $mkyServiceProviderFile = "app/Providers/MkyServiceProvider.php";
-    $arr = _readLine(dirname(__DIR__) . "/../$mkyServiceProviderFile");
+    $arr = explode("\n", file_get_contents(dirname(__DIR__) . "/../$mkyServiceProviderFile"));
     $formatterLine = array_keys(preg_grep("/'formatters' => \[/i", $arr))[0];
     array_splice($arr, $formatterLine + 1, 0, "\t    new \\$namespace\\$name(),");
     $arr = array_values($arr);

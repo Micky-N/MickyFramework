@@ -1,17 +1,10 @@
-{@ extends name='template' }
+<mky:extends name="template"/>
 
-{@ section name="content" }
-{@ style 456 }
-{@ style }
-.mlk
-{/ style }
-    {@ php }
-        $i = 10;
-        $a = [45,6,5,4];
-    {/ php }
-    <div class="alert alert-primary">{{ $i#currency }}</div>
-    <div class="alert alert-primary">{{ $a#join }}</div>
-    <div class="alert alert-primary">{{ "manger"#uppercase }} {{ "BOIRE"#lowercase }}</div>
+<mky:section name="content">
+    <mky:test int="$arr" />
+    <mky:each loop="['mky' => 'do','re','mi','fa']" key="l">
+        <mky:include name="includes.form" data="['var' => $l]"/>
+    </mky:each>
     <table id="table"></table>
     <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -22,12 +15,12 @@
             </div>
         </div>
     </div>
-{/ section }
+</mky:section>
 
-{@ section name='js' }
+<mky:section name="js">
     <script>
         var $table = $('#table')
-        var categories = {@ json $categories }
+        var categories = <mky:json data="$categories"/>;
 
         function categories_Table($el, categories) {
             var cells = Object.keys(categories[0]).filter(c => !['products'].includes(c))
@@ -67,7 +60,7 @@
                 classes: 'table table-bordered table-sm',
                 theadClasses: 'table-primary',
                 detailView: cells.length > 1,
-                onExpandRow: function(index, row, $detail) {
+                onExpandRow: function (index, row, $detail) {
                     let {code_category, name} = row
                     let category = {code_category, name}
                     productsTable($detail.html('<table></table>').find('table'), category)
@@ -76,7 +69,7 @@
         }
 
         function productsTable($el, category) {
-            var products = {@ json $products }.filter(p => p.code_category === category.code_category)
+            var products = <mky:json data="$products"/>.filter(p => p.code_category === category.code_category)
             products.forEach(p => {
                 p.categorie = category.name
                 delete p.code_category
@@ -122,7 +115,7 @@
                 pageSize: 5,
                 paginationParts: ['pageList', 'pageSize'],
                 detailView: cells.length > 1,
-                onExpandRow: function(index, row, $detail) {
+                onExpandRow: function (index, row, $detail) {
                     suppliersTable($detail.html('<table></table>').find('table'), row.code_product)
                 }
             })
@@ -130,8 +123,8 @@
 
 
         function suppliersTable($el, code_product) {
-            var productSuppliers = {@ json $productSuppliers }.filter(ps => ps.code_product === code_product)
-            var suppliers = {@ json $suppliers };
+            var productSuppliers = <mky:json data="$productSuppliers"/>.filter(ps => ps.code_product === code_product)
+            var suppliers = <mky:json data="$suppliers"/>;
             var codes = []
             productSuppliers.forEach(ps => {
                 codes.push(ps.code_supplier)
@@ -183,8 +176,8 @@
             $('#imageModal').modal('toggle')
         }
 
-        $(function() {
+        $(function () {
             categories_Table($table, categories)
         })
     </script>
-{/ section }
+</mky:section>

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace HTML;
+namespace App\Utils;
 
 class Paginate
 {

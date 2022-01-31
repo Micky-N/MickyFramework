@@ -53,7 +53,7 @@ class AuthController extends Controller
             'role_id' => 'required',
             'password' => 'required|minL:8|confirmed:field.confirm_password',
             'confirm_password' => 'required',
-            'date_naissance' => 'required|beforeDate:now'
+            'date_naissance' => 'required|beforeDate:now',
         ]));
         $auth = new AuthManager();
         $primaryKey = $newUser->getPrimaryKey();

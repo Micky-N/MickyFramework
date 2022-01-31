@@ -15,22 +15,21 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "phpunit/php-code-coverage": "^9.2",
-    "symfony/yaml": "^5.4"
+    "symfony/yaml": "^5.4",
+    "ext-simplexml": "*"
   },
   "autoload": {
     "psr-4": {
       "Core\\": "core/",
       "Tests\\": "tests/",
       "App\\": "app/",
-      "DebugBar\\": "core/DebugBar/",
-      "HTML\\": "core/HTML"
+      "DebugBar\\": "core/DebugBar/"
     },
     "files": [
       "core/Helpers/config.php",
       "core/Helpers/route.php",
       "core/Helpers/view.php",
-      "core/Helpers/lang.php",
-      "core/Helpers/generate.php"
+      "core/Helpers/lang.php"
     ]
   },
   "require-dev": {

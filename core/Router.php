@@ -246,11 +246,11 @@ class Router
     public function currentRoute(string $route = '', bool $path = false)
     {
         $currentPath = ServerRequest::fromGlobals()->getUri()->getPath();
-        $currentRoute = array_filter($this->routesByName(), fn($route) => trim($route->getPath(), '/') === trim($currentPath, '/'));
-        if($route){
-            return key($currentRoute) === $route;
+        if($route && $path === false){
+            $currentRoute = array_filter($this->routesByName(), fn($route) => trim($route->getPath(), '/') === trim($currentPath, '/'));
+            return $path ? $currentRoute[key($currentRoute)]->getPath() === $route : key($currentRoute) === $route;
         }
-        return $path ? $currentPath : key($currentRoute);
+        return trim($currentPath, '/') === trim($route, '/');
     }
 
     /**

@@ -309,7 +309,7 @@ class App
     public static function debugMode()
     {
         if(config('debugMode')){
-            echo _debugRender();
+            echo \Core\Facades\StandardDebugBar::render();
         }
     }
 

@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> {@ yield name='title' default='Error' }  </title>
+    <title><mky:yield name="title" default="Error" /></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="./public/assets/css/style.css">
+    <link rel="stylesheet" href="<mky:assets path='css/style.csss'/>">
     <style>
         #main {
             height: 100vh;
@@ -45,7 +45,7 @@
 <body class="bg-dark d-flex align-items-center justify-content-center overflow-hidden">
     <h1 id="mky_error" class="d-flex justify-content-center align-items-center">MKY</h1>
     <main id="main" class="d-flex align-items-center">
-        {@ yield name='content' }
+        <mky:yield name="content" />
     </main>
 </body>
 

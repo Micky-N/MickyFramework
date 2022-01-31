@@ -3,6 +3,7 @@
 namespace App\Http\Middlewares;
 
 
+use Core\AuthManager;
 use Core\Facades\Route;
 use Core\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +18,8 @@ class AuthMiddleware implements MiddlewareInterface
      */
     public function process(callable $next, ServerRequestInterface $request)
     {
-        if(!isLogin()){
+        $auth = new AuthManager();
+        if(!$auth->isLogin()){
             Route::redirectName('auth.signin');
         }
         return $next($request);

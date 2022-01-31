@@ -57,7 +57,7 @@ class MickyCLI
         'formatter' => 'required',
         'format' => 'required',
         'directive' => 'required',
-        'function' => 'required'
+        'fn' => 'required'
     ];
 
     /**
@@ -122,7 +122,7 @@ class MickyCLI
             ],
             'directive' => [
                 'name' => 'required',
-                'function' => 'required',
+                'fn' => 'required',
                 'path' => 'optional'
             ]
         ],

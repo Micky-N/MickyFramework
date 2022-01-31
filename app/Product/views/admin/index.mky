@@ -1,6 +1,6 @@
-{@ extends name='template' }
+<mky:extends name='template'/>
 
-{@ section name='content' }
+<mky:section name='content'>
 <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un produit</button>
 <table id="table"></table>
 <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -44,9 +44,9 @@
                   <label for="code_category">Catégorie</label>
                   <select class="form-control" name="code_category" id="code_category" required>
                     <option value="" selected>Aucune catégorie selectionner</option>
-                      {@ each $categories }
+                      <mky:each loop="$categories">
                       <option value="{{ $category->code_category }}">{{ $self->name }}</option>
-                      {/ each }
+                      </mky:each>
                   </select>
                 </div>
               </div>
@@ -60,12 +60,12 @@
     </div>
   </div>
 </div>
-{/ section }
+</mky:section>
 
-{@ section name='js' }
+<mky:section name='js'>
 <script>
   var $table = $('#table')
-  var products = {@ json $products };
+  var products = <mky:json data="$products" />;
 
   function productsTable($el, products) {
     var productsCells = Object.keys(products[0]).filter(p => !['code_category', 'user_id'].includes(p))
@@ -139,4 +139,4 @@
     productsTable($table, products)
   })
 </script>
-{/ section }
+</mky:section>

@@ -1,6 +1,6 @@
-{@ extends name='template' }
+<mky:extends name="template"/>
 
-{@ section name='content' }
+<mky:section name="content">
     <div>
         <form class="w-50 p-4 bg-light rounded mx-auto" method="post" action="">
             <div class="form-group">
@@ -19,4 +19,4 @@
             <button type="submit" class="btn btn-primary">Se connecter</button>
         </form>
     </div>
-{/ section }
+</mky:section>

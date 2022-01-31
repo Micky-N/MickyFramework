@@ -6,9 +6,9 @@ namespace Core\MkyCompiler\MkyDirectives;
 
 use Core\Interfaces\MkyDirectiveInterface;
 
-class BaseDirective implements MkyDirectiveInterface
+class BaseDirective extends Directive implements MkyDirectiveInterface
 {
-    private array $conditions = [
+    private static array $conditions = [
         'firstCaseSwitch' => false
     ];
     private array $sections = [];
@@ -16,12 +16,12 @@ class BaseDirective implements MkyDirectiveInterface
     public function getFunctions()
     {
         return [
+            'assets' => [[$this, 'assets']],
             'if' => [[$this, 'if'], [$this, 'endif']],
             'elseif' => [[$this, 'elseif']],
             'else' => [[$this, 'else']],
             'each' => [[$this, 'each'], [$this, 'endeach']],
             'repeat' => [[$this, 'repeat'], [$this, 'endrepeat']],
-            'php' => [[$this, 'php'], [$this, 'endphp']],
             'switch' => [[$this, 'switch'], [$this, 'endswitch']],
             'case' => [[$this, 'case']],
             'break' => [[$this, 'break']],
@@ -33,16 +33,23 @@ class BaseDirective implements MkyDirectiveInterface
             'guest' => [[$this, 'guest'], [$this, 'endguest']],
             'json' => [[$this, 'json']],
             'currentRoute' => [[$this, 'currentRoute'], [$this, 'endcurrentRoute']],
+            'route' => [[$this, 'route']]
         ];
     }
 
-    public function if($expression)
+    public function if($cond)
     {
+        $variable = self::getRealVariable($cond);
+        $cond = $variable ?? json_encode($cond);
+        $expression = $cond;
         return "<?php if($expression): ?>";
     }
 
-    public function elseif($expression)
+    public function elseif($cond)
     {
+        $variable = self::getRealVariable($cond);
+        $cond = $variable ?? json_encode($cond);
+        $expression = $cond;
         return "<?php else if($expression): ?>";
     }
 
@@ -56,12 +63,13 @@ class BaseDirective implements MkyDirectiveInterface
         return "<?php endif; ?>";
     }
 
-    public function each($expression)
+    public function each($loop, string $as = null, string $key = null)
     {
-        if(strpos($expression, 'as') === false){
-            $expression .= ' as $self';
-        }
-        return '<?php foreach(' . $expression . '): ?>';
+
+        $variable = $this->getRealVariable($loop);
+        $loop = $variable !== false ? $variable : var_export($loop, true);
+        $loop .= ' as ' . ($key ? "\$$key => " : '') . ($as ? "\$$as" : '$self');
+        return "<?php foreach($loop): ?>";
     }
 
     public function endeach()
@@ -69,9 +77,10 @@ class BaseDirective implements MkyDirectiveInterface
         return '<?php endforeach; ?>';
     }
 
-    public function repeat($expression)
+    public function repeat($loop, string $as = null, string $key = null)
     {
-        return '<?php foreach(range(0, ' . ($expression - 1) . ') as $index): ?>';
+        $loop = 'range(0, ' . ($loop - 1) . ') as ' . ($key ? "\$$key => " : '') . ($as ? "\$$as" : '$index');
+        return "<?php foreach($loop): ?>";
     }
 
     public function endrepeat()
@@ -79,29 +88,22 @@ class BaseDirective implements MkyDirectiveInterface
         return '<?php endforeach; ?>';
     }
 
-    public function php()
+    public function switch($cond)
     {
-        return '<?php';
+        self::$conditions['firstCaseSwitch'] = true;
+        $variable = $this->getRealVariable($cond);
+        $cond = $variable !== false ? $variable : (is_string($cond) ? "'$cond'" : $cond);
+        return '<?php switch(' . $cond . '):';
     }
 
-    public function endphp()
+    public function case($case)
     {
-        return '?>';
-    }
-
-    public function switch($expression)
-    {
-        $this->conditions['firstCaseSwitch'] = true;
-        return '<?php switch(' . $expression . '):';
-    }
-
-    public function case($expression)
-    {
-        if($this->conditions['firstCaseSwitch']){
-            $this->conditions['firstCaseSwitch'] = false;
-            return ' case ' . $expression . ': ?>';
+        $case = is_string($case) ? "'$case'" : $case;
+        if(self::$conditions['firstCaseSwitch']){
+            self::$conditions['firstCaseSwitch'] = false;
+            return ' case ' . $case . ': ?>';
         }
-        return '<?php case(' . $expression . '): ?>';
+        return '<?php case(' . $case . '): ?>';
     }
 
     public function break()
@@ -119,34 +121,37 @@ class BaseDirective implements MkyDirectiveInterface
         return '<?php endswitch; ?>';
     }
 
-    public function dump($expression)
+    public function dump($var)
     {
-        return '<?php dump(' . $expression . ') ?>';
+        dump($var);
     }
 
-    public function permission($expression)
+    public function can($permission, $subject)
     {
-        return '<?php if(permission(' . $expression . ')): ?>';
+        $condition = json_encode(\Core\Facades\Permission::authorizeAuth($permission, $subject));
+        return "<?php if($condition): ?>";
     }
 
-    public function endpermission()
+    public function endcan()
     {
         return '<?php endif; ?>';
     }
 
-    public function notpermission($expression)
+    public function notcan($permission, $subject)
     {
-        return '<?php if(!permission(' . $expression . ')): ?>';
+        $condition = json_encode(\Core\Facades\Permission::authorizeAuth($permission, $subject));
+        return "<?php if(!$condition): ?>";
     }
 
-    public function endnotpermission()
+    public function endnotcan()
     {
         return '<?php endif; ?>';
     }
 
-    public function auth()
+    public function auth(bool $is)
     {
-        return '<?php if(isLogin()): ?>';
+        $cond = json_encode($is === (new \Core\AuthManager())->isLogin());
+        return "<?php if($cond): ?>";
     }
 
     public function endauth()
@@ -154,29 +159,35 @@ class BaseDirective implements MkyDirectiveInterface
         return '<?php endif; ?>';
     }
 
-    public function guest()
+    public function json($data)
     {
-        return '<?php if(!isLogin()): ?>';
+        $data = json_encode($data);
+        return $data;
     }
 
-    public function endguest()
+    public function currentRoute(string $name = '', bool $path = false)
     {
-        return '<?php endif; ?>';
-    }
-
-    public function json($expression)
-    {
-        return '<?= json_encode(' . $expression . ', JSON_UNESCAPED_UNICODE); ?>';
-    }
-
-    public function currentRoute(string $route)
-    {
-        $route = trim($route, '\'\"');
-        return '<?php if(\Core\Facades\Route::currentRoute("' . $route . '")): ?>';
+        $current = \Core\Facades\Route::currentRoute($name, $path);
+        if($name){
+            $current = json_encode($current);
+            return "<?php if($current): ?>";
+        }
+        return $current;
     }
 
     public function endcurrentRoute()
     {
         return '<?php endif; ?>';
+    }
+
+    public function assets(string $path)
+    {
+        $path = trim($path, '\'\"');
+        return BASE_ULR . 'public/' . 'assets/' . $path;
+    }
+
+    public function route(string $name, array $params = [])
+    {
+        return \Core\Facades\Route::generateUrlByName($name, $params);
     }
 }

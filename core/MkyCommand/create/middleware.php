@@ -29,7 +29,7 @@ if (php_sapi_name() === "cli") {
     fwrite($middleware, $start.$template);
     if(isset($cli['route']) && $cli['route'] === false){
         $middlewareProviderFile = sprintf("app%s/Providers/MiddlewareServiceProvider.php", ($module ? '/' . $module : ''));
-        $arr = _readLine(dirname(__DIR__)."/../$middlewareProviderFile");
+        $arr = explode("\n", file_get_contents(dirname(__DIR__)."/../$middlewareProviderFile"));
         $middlewaresLine = array_keys(preg_grep("/'routeMiddlewares' => \[/i", $arr))[0];
         $subname = str_replace('middleware', '', strtolower($middlewareName));
         array_splice($arr, $middlewaresLine + 1, 0, "\t    '$subname' => \\$namespace\\$middlewareName::class,");

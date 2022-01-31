@@ -10,7 +10,7 @@ use App\Models\Category;
 use App\Product\Models\ProductSupplier;
 use App\Models\Supplier;
 use App\Models\User;
-use HTML\Paginate;
+use App\Utils\Paginate;
 
 class ProductController extends Controller
 {

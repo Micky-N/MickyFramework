@@ -1,6 +1,6 @@
-{@ extends name='template' }
+<mky:extends name='template'/>
 
-{@ section name='content' }
+<mky:section name='content'>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 ml-md-2 order-md-2 mb-4">
@@ -11,23 +11,23 @@
                     Liste des fournisseurs
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {@ each $product->suppliers }
+                    <mky:each loop="$product->suppliers">
                         <button onclick="showProModal(this)" class="dropdown-item"
                             data-pro="{{ $self->code_supplier }}" data-toggle="modal" data-target="#prodModal">
                             {{ $self->name }}
                         </button>
-                    {/ each }
+                    </mky:each>
                 </div>
             </h4>
             <ul class="list-group mb-3">
-                {@ if $product->photo }
+                <mky:if cond="$product->photo">
                     <li class="list-group-item p-0 overflow-hidden">
                         <div>
                             <img id="photo" class="w-100 mx-auto p-0" alt="{{ $product->photo }}"
-                                src="../../../../public/index.php">
+                                src="{{ $product->photo }}">
                         </div>
                     </li>
-                {/ if }
+                </mky:if>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
                         <h6 class="my-0">Nom</h6>
@@ -68,7 +68,7 @@
                         class="fa fa-plus"></i> Ajouter un fournisseur</button>
             </h4>
             <form id="update" method="post"
-                action="{{ route('admin.products.update', ['product' => $product->code_product]) }}">
+                action=<mky:route name="admin.products.update" params="['product' => $product->code_product]" />>
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label for="name">Nom</label>
@@ -96,10 +96,10 @@
                         <div class="col form-group">
                             <label for="code_category">Catégorie</label>
                             <select class="form-control" name="code_category" id="code_category">
-                                {@ each $categories }
-                                    <option {@ if $self->code_category == $product->code_category } selected {/ if } value="{{ $self->code_category }}">
+                                <mky:each loop="$categories">
+                                    <option <mky:if cond="$self->code_category == $product->code_category">selected </mky:if> value="{{ $self->code_category }}">
                                         {{ $self->name }}</option>
-                                {/ each }
+                                </mky:each>
                             </select>
                         </div>
                     </div>
@@ -155,10 +155,10 @@
                                     <label for="code_supplier">Fournisseur</label>
                                     <select class="form-control" name="code_supplier" id="code_supplier">
                                         <option value="" selected>Aucun fournisseur séléctionné</option>
-                                        {@ each $suppliers }
+                                        <mky:each loop="$suppliers">
                                             <option value="{{ $supplier->code_supplier }}">{{ $self->name }}
                                             </option>
-                                        {/ each }
+                                        </mky:each>
                                     </select>
                                 </div>
                                 <div class="col-md-5 form-group">
@@ -177,9 +177,9 @@
         </div>
     </div>
 </div>
-{/ section }
+</mky:section>
 
-{@ section name='js' }
+<mky:section name='js'>
 <script>
     function showProModal(e) {
         var product = {@ json $product };
@@ -193,4 +193,4 @@
         $('input#prodPrixProduction').attr('value', supplier.purchase_price)
     }
 </script>
-{/ section }
+</mky:section>

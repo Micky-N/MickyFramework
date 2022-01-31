@@ -2,8 +2,9 @@ namespace !path;
 
 
 use Core\Interfaces\MkyDirectiveInterface;
+use Core\MkyCompiler\MkyDirectives\Directive;
 
-class !name implements MkyDirectiveInterface
+class !name extends Directive implements MkyDirectiveInterface
 {
 
     public function getFunctions()

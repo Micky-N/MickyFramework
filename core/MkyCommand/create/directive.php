@@ -9,7 +9,7 @@ if(php_sapi_name() === "cli"){
     $cli = getopt('', MickyCLI::cliLongOptions());
     $option = $cli['create'];
     $name = ucfirst($cli['name']);
-    $function = $cli['function'];
+    $function = $cli['fn'];
     $path = isset($cli['path']) ? ucfirst($cli['path']) : null;
     $namespace = sprintf("App\\MkyDirectives%s", $path ? "\\" . $path : '');
     if(!strpos($name, 'Directive')){
@@ -31,7 +31,7 @@ if(php_sapi_name() === "cli"){
     $start = "<" . "?" . "php\n\n";
     fwrite($directive, $start . $template);
     $mkyServiceProviderFile = "app/Providers/MkyServiceProvider.php";
-    $arr = _readLine(dirname(__DIR__) . "/../$mkyServiceProviderFile");
+    $arr = explode("\n", file_get_contents(dirname(__DIR__) . "/../$mkyServiceProviderFile"));
     $directiveLine = array_keys(preg_grep("/'directives' => \[/i", $arr))[0];
     array_splice($arr, $directiveLine + 1, 0, "\t    new \\$namespace\\$name(),");
     $arr = array_values($arr);

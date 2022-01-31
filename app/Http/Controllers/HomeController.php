@@ -17,6 +17,7 @@ class HomeController extends Controller
         $suppliers = Supplier::all();
         $products = Product::all();
         $productSuppliers = ProductSupplier::all();
-        return View::render('welcome', compact('categories', 'products', 'suppliers', 'productSuppliers'));
+        $arr = 5;
+        return View::render('welcome', compact('categories', 'products', 'suppliers', 'productSuppliers', 'arr'));
     }
 }

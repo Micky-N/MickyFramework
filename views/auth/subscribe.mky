@@ -1,95 +1,92 @@
-{@ extends name='template' }
+<mky:extends name="template"/>
 
-{@ section name='content' }
+<mky:section name="content">
     <div>
-        {{ HTML\Form::open('', 'POST') }}
-        <div class="row">
-            <div class="col form-group">
-                {{ HTML\Form::label('Prénom', 'first_name') }}
-                {{ HTML\Form::text('first_name', '', ['class' => 'form-control']) }}
-                {@ if isset($errors['first_name']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['first_name'] }}
-                </small>
-                {/ if }
+        <form action="" method="post">
+            <div class="row">
+                <div class="col form-group">
+                    <label for="first_name">Prénom</label>
+                    <input type="text" name="first_name" class="form-control" value="">
+                    <mky:if cond="isset($errors['first_name'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['first_name'] }}
+                        </small>
+                    </mky:if>
+                </div>
+                <div class="col form-group">
+                    <label for="last_name">Nom</label>
+                    <input type="text" name="last_name" class="form-control" value="">
+                    <mky:if cond="isset($errors['last_name'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['last_name'] }}
+                        </small>
+                    </mky:if>
+                </div>
+                <div class="col form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" name="username" class="form-control" value="">
+                    <mky:if cond="isset($errors['username'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['username'] }}
+                        </small>
+                    </mky:if>
+                </div>
             </div>
-            <div class="col form-group">
-                {{ HTML\Form::label('Nom', 'last_name') }}
-                {{ HTML\Form::text('last_name', '', ['class' => 'form-control']) }}
-                {@ if isset($errors['last_name']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['last_name'] }}
-                </small>
-                {/ if }
+            <div class="row">
+                <div class="col form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control" value="">
+                    <mky:if cond="isset($errors['email'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['email'] }}
+                        </small>
+                    </mky:if>
+                </div>
+                <div class="col form-group">
+                    <label for="role_id">Role</label>
+                    <select name="role_id" id="role_id" class="form-control">
+                        <option value="">-- Selectionner le rôle --</option>
+                        <mky:each loop="$roles" key="k">
+                            <option value="{{ $k }}">{{ $self }}</option>
+                        </mky:each>
+                    </select>
+                    <mky:if cond="isset($errors['role_id'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['role_id'] }}
+                        </small>
+                    </mky:if>
+                </div>
             </div>
-            <div class="col form-group">
-                {{ HTML\Form::label("Nom d'utilisateur", 'username') }}
-                {{ HTML\Form::text('username', '', ['class' => 'form-control']) }}
-                {@ if isset($errors['username']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['username'] }}
-                </small>
-                {/ if }
+            <div class="row">
+                <div class="col form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="password" class="form-control">
+                    <mky:if cond="isset($errors['password'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['password'] }}
+                        </small>
+                    </mky:if>
+                </div>
+                <div class="col form-group">
+                    <label for="confirm_password">Nom d'utilisateur</label>
+                    <input type="password" name="confirm_password" class="form-control">
+                    <mky:if cond="isset($errors['confirm_password'])">
+                        <small id="passwordHelp" class="text-danger">
+                            {{ $errors['confirm_password'] }}
+                        </small>
+                    </mky:if>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col form-group">
-                {{ HTML\Form::label('Email', 'email') }}
-                {{ HTML\Form::email('email', '', ['class' => 'form-control']) }}
-                {@ if isset($errors['email']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['email'] }}
-                </small>
-                {/ if }
+            <div class="form-group">
+                <label for="date_naissance">Date de naissance</label>
+                <input type="date" name="date_naissance" class="form-control">
+                <mky:if cond="isset($errors['date_naissance'])">
+                    <small id="passwordHelp" class="text-danger">
+                        {{ $errors['date_naissance'] }}
+                    </small>
+                </mky:if>
             </div>
-            <div class="col form-group">
-                {{ HTML\Form::label('Role', 'role_id') }}
-                {{ HTML\Form::select('role_id', $roles, null, '-- Selectionner le rôle --', ['class' => 'form-control']) }}
-                {@ if isset($errors['role_id']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['role_id'] }}
-                </small>
-                {/ if }
-            </div>
-        </div>
-        <div class="row">
-            <div class="col form-group">
-                {{ HTML\Form::label('Mot de passe', 'password') }}
-                {{ HTML\Form::password('password', ['class' => 'form-control']) }}
-                {@ if isset($errors['password']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['password'] }}
-                </small>
-                {/ if }
-            </div>
-            <div class="col form-group">
-                {{ HTML\Form::label('Confirmer mot de passe', 'confirm_password') }}
-                {{ HTML\Form::password('confirm_password', ['class' => 'form-control']) }}
-                {@ if isset($errors['confirm_password']) }
-                <small id="passwordHelp" class="text-danger">
-                    {{ $errors['confirm_password'] }}
-                </small>
-                {/ if }
-            </div>
-        </div>
-        <div class="form-group">
-            {{ HTML\Form::date('date_naissance', '', ['class' => 'form-control']) }}
-            {@ if isset($errors['date_naissance']) }
-            <small id="passwordHelp" class="text-danger">
-                {{ $errors['date_naissance'] }}
-            </small>
-            {/ if }
-        </div>
-        <div class="form-group">
-            {{ HTML\Form::number('age', '', ['class' => 'form-control', 'step' => '0.01']) }}
-            {@ if isset($errors['age']) }
-            <small id="passwordHelp" class="text-danger">
-                {{ $errors['age'] }}
-            </small>
-            {/ if }
-        </div>
-        {{ HTML\Form::submit("S'inscrire", ['class' => 'btn btn-primary']) }}
-
-        {{ HTML\Form::close() }}
+            <button class="btn btn-primary" type='submit'>S'inscrire</button>
+        </form>
     </div>
-{/ section }
+</mky:section>

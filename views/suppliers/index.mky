@@ -1,13 +1,13 @@
-{@ extends name='template' }
+<mky:extends name='template'/>
 
-{@ section name='content' }
+<mky:section name='content'>
 
-{@ permission 'seller' }
+<mky:can permission="seller">
         <button class="btn btn-success" data-toggle="modal" data-target="#createModal">
             <i class="fas fa-plus"></i>
             Ajouter un fournisseur
         </button>
-{/ permission }
+</mky:can>
         <table id="table"></table>
         <div class="modal fade" id="createModal" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
             aria-hidden="true">
@@ -20,7 +20,7 @@
                                     <span class="text-muted">Créer un fournisseur</span>
                                 </h4>
                             </div>
-                            <form action="{{ route('suppliers.create') }}" method="post" class="px-2 pt-4">
+                            <form action=<mky:route name="suppliers.create"/> method="post" class="px-2 pt-4">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label for="name">Nom</label>
@@ -60,12 +60,12 @@
                 </div>
             </div>
         </div>
-{/ section }
+</mky:section>
 
-{@ section name='js' }
+<mky:section name='js' >
     <script>
         var $table = $('#table')
-        var suppliers = {@ json $suppliers };
+        var suppliers = <mky:json data="$suppliers" />;
 
         function suppliersTable($el, suppliers) {
             var suppliersCells = Object.keys(suppliers[0])
@@ -134,4 +134,4 @@
             suppliersTable($table, suppliers)
         })
     </script>
-{/ section }
+</mky:section>

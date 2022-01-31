@@ -1,6 +1,6 @@
-{@ extends name='template' }
+<mky:extends name="template"/>
 
-{@ section name='content' }
+<mky:section name="content">
     <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter une
         catégorie</button>
     <table id="table"></table>
@@ -15,7 +15,7 @@
                                 <span class="text-muted">Créer une catégorie</span>
                             </h4>
                         </div>
-                        <form action="{{ route('categories.create') }}" method="post" class="px-2 pt-4">
+                        <form action="<mky:route name='categories.create' />" method="post" class="px-2 pt-4">
                             <div class="form-group">
                                 <label for="name">Nom</label>
                                 <input type="text" class="form-control" name="name" id="name" required>
@@ -33,12 +33,12 @@
             </div>
         </div>
     </div>
-{/ section }
+</mky:section>
 
-{@ section name='js' }
+<mky:section name="js" >
     <script>
         var $table = $('#table')
-        var categories = {@ json $categories }
+        var categories = <mky:json data="$categories" />
 
         function categoriesTable($el, categories) {
             var categoriesCells = Object.keys(categories[0])
@@ -107,4 +107,4 @@
             categoriesTable($table, categories)
         })
     </script>
-{/ section }
+</mky:section>

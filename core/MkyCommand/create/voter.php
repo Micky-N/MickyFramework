@@ -36,7 +36,7 @@ if (php_sapi_name() === "cli") {
     $start = "<"."?"."php\n\n";
     fwrite($voter, $start.$template);
     $middlewareProviderFile = sprintf("app%s/Providers/MiddlewareServiceProvider.php", ($module ? '/' . $module : ''));;
-    $arr = _readLine(dirname(__DIR__)."/../$middlewareProviderFile");
+    $arr = explode("\n", file_get_contents(dirname(__DIR__)."/../$middlewareProviderFile"));
     $votersLine = array_keys(preg_grep("/'voters' => \[/i", $arr))[0];
     array_splice($arr, $votersLine + 1, 0, "\t    \\$namespace\\$name::class,");
     $arr = array_values($arr);
