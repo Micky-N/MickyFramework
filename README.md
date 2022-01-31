@@ -75,7 +75,7 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
 ### Routes
 
 L'application récupère toutes les routes dans le dossier /routes/*.yaml, les routes sont écrites en format .yaml ainsi que les fonctions de route personnalisées dans le fichier functions.php
-```yml
+```YAML
 # Fichier web.yaml
 categories:  
     index:  
@@ -83,8 +83,8 @@ categories:
         action: App\Http\Controllers\CategoryController::index  
         method: GET
         middleware: # Optionnel
-	    - auth
-	    - can: edit, product
+            - auth
+            - can: edit, product
 ```
 
 | Paramètre | Valeur |
@@ -116,7 +116,7 @@ Pour utiliser les fonctions de route dans le fichier functions.php l'action doit
 Les providers sont des enregistrements de classes dans un but définie.
 - EventServiceProvider
 
-Ce provider sert à stocker les events et leurs listeners selon leur actions sont forme de tableau, exemple :
+Ce provider sert à stocker les events et leurs listeners selon leur actions sont forme de tableau :
 ```php
 [
     \App\Events\CategoryEvent::class => [  
@@ -128,42 +128,41 @@ Ce provider sert à stocker les events et leurs listeners selon leur actions son
 
 - MiddlewareServiceProvider
 
-Ce provider sert à stocker les middleware de route avec un alias sous forme de tableau, et les voters, exemple :
+Ce provider sert à stocker les middleware de route avec un alias, et les voters :
 ```php
 [  
     'routeMiddlewares' => [  
-  	'auth' => \App\Http\Middlewares\AuthMiddleware::class  
+  	'test' => \App\Http\Middlewares\TestMiddleware::class  
     ],  
   
     'voters' => [  
- 	\App\Voters\RoleVoter::class,  
+ 	\App\Voters\TestVoter::class,  
     ],  
 ];
 ```
 
 - MkyServiceProvider
 
-Ce provider sert à stocker les fonctions et formats personnalisés du moteur de template Mky, exemple : 
+Ce provider sert à stocker les fonctions et les formats personnalisés pour le moteur de template Mky : 
 ```php
 [  
     'formatters' => [ 
-  	App\MkyFormatters\ArrayFormatters::class
+  	App\MkyFormatters\TestFormatters::class
     ],  
     'directives' => [
-  	App\MkyDirectives\CountDirective::class  
+  	App\MkyDirectives\TestDirective::class  
     ]
 ];
 ```
 
 - Provider
 
-Ce provider sert à stocker des classes pour des utilisations spéciaux; exemple, pour le système de notification les classes sont stockées avec des alias :
+Ce provider sert à stocker des classes pour des utilisations spéciaux, comme des systèmes de notification, les classes sont stockées avec des alias :
 ```php
 [  
     'alias' => [  
   	'webPush' => \App\Utils\WebPushNotification::class  
-    ],
-    OtherClass::class 
+    ]
 ];
 ```
 
@@ -172,6 +171,8 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux; exemple
 ### Model
 
 ### Controller
+
+
 
 ### Middleware
 
@@ -187,6 +188,8 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux; exemple
 
 ## Vue
 
+Les vues sont prefixées par l'extension .mky (index.mky)
+
 ### MkyDirective
 
 ### Liste des directives 
@@ -196,3 +199,71 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux; exemple
 ### Liste des formats
 
 ## MkyCommand CLI
+
+```yaml
+create:
+    module: 
+        name: required  		# nom du module
+
+    controller: 
+        name: required			# nom du controller (suffixer par Controller)
+        crud: optional			# (pas de value : --crud) implémentation des 7 methodes CRUD
+        path: optional			# sous-dossier du controller (App/Http/Controllers/Sous_dossier/TestController.php)
+        module: optional		# (pour HMVC) nom du module du controller (App/Nom_du_Module/Http/Controllers/TestController.php)
+
+    model:
+        name: required			# nom du model
+        pk: optional			# clé primaire (pour base de données MYSQL)
+        table: optional			# nom de la table (pour base de données MYSQL)
+        path: optional			# sous-dossier du model (App/Models/Sous_dossier/Test.php)			
+        module: optional		# (pour HMVC) nom du module du model (App/Nom_du_Module/Models/Test.php)
+
+    middleware: 
+        name: required			# nom du middleware (suffixer par Middleware)
+        path: optional			# sous-dossier du middleware (App/Http/Middlewares/Sous_dossier/TestMiddleware.php)
+        route: optional			# (pas de value : --route) si saisie, le middleware devient une RouteMiddleware et est enregistré dans le MiddlewareServiceProdiver avec un alias (test => TestMiddleware)
+        module: optional		# (pour HMVC) nom du module du middleware (App/Nom_du_Module/Http/Middlewares/TestMiddleware.php)
+
+    voter: 
+        name: required			# nom du voter (suffixer par Voter)
+        model: required			# nom du model sujet (namespace\\model)
+        path: optional			# sous-dossier du middleware (App/Voters/Sous_dossier/TestVoter.php)
+        action: optional		# implémente une méthode avec le nom de l'action (private function nom_action(...){})
+        module: optional		# (pour HMVC) nom du module du middleware (App/Nom_du_Module/Http/Middlewares/TestMiddleware.php)
+
+    notification: 
+        name: required			# nom de la classe notification (suffixer par Notification)
+        via: required			# implémente, avec le nom du paramètre, une méthode de connexion entre la classe et le système de notification
+        path: optional			# sous-dossier de la notification (App/Notifications/Sous_dossier/TestVoter.php)
+
+    event: 
+        name: required			# nom de l'event (suffixer par Event)
+        path: optional			# sous-dossier de l'event (App/Voters/Sous_dossier/TestEvent.php)
+        module: optional		# (pour HMVC) nom du module de l'event (App/Nom_du_Module/Events/TestEvent.php)
+
+    listener: 
+        name: required			# nom du listener (suffixer par Listener)
+        path: optional			# sous-dossier du listener (App/Listeners/Sous_dossier/TestListener.php)
+        module: optional		# (pour HMVC) nom du module de l'event (App/Nom_du_Module/Listeners/TestListener.php)
+
+    formatter:
+        name: required			# nom du voter (suffixer par Formatter)
+        format: required		# implémente une méthode avec le nom du format pour les views .mky
+        path: optional			# sous-dossier du formatter (App/MkyFormatters/Sous_dossier/TestFormatter.php)
+
+    directive: 
+        name: required			# nom de la directive (suffixer par Directive)
+        fn: required			# implémente deux méthodes avec le nom du format pour les views .mky ([[$this, 'test'],[$this, 'endtest]])
+        path: optional			# sous-dossier de la directive (App/MkyDirectives/Sous_dossier/TestDirective.php)
+
+show: 
+    routes: 
+        request: optional		# affiche toutes le routes ou filtre selon lese controllers utilisée (GET, POST, ...)
+
+cache: 
+    clear: 
+        path: optional			# nettoie tout le cache ou le sous-dossier saisie
+
+    create: 
+        path: required			# crée un sous-dossier dans le cache
+```
