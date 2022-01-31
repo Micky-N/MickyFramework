@@ -54,6 +54,9 @@ categories:
         path: /categories  
         action: App\Http\Controllers\CategoryController::index  
         method: GET
+        middleware: # Optionnel
+	        - auth
+	        - can: edit, product
 ```
 
 | Paramètre | Valeur |
@@ -62,6 +65,7 @@ categories:
 | chemin de l'url | /categories |
 | action (contrôleur::méthode) | App\Http\Controllers\CategoryController::index |
 | méthode de requête HTTP | GET |
+| middleware (en option) | RouteMiddlewares et/ou Voters |
 
 Seul les routes situées dans le fichier admin.yaml sont prefix (nom et chemin de l'url) par admin exemple : nom = admin.categories.index et path = /admin/categories.
 
