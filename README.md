@@ -1,5 +1,3 @@
-
-
 # MickyFramework    
   
 > *Framework MVC et HMVC par Micky_N version 0.1*  
@@ -170,9 +168,207 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux, comme d
 
 ### Model
 
+- Mysql
+
+La classe abstraite Core\Model utilise la classe PDO pour effectuer des requêtes dans la base de données MYSQL, elle utilise aussi un trait QueryMysql qui sert de Query Builder pour simplifié l'écriture des requêtes SQL.
+
+Les classes héritant de Model doivent saisir : 
+- Le nom de la table : `protected string $table`
+(En anglais) Si le nom de la table est le pluriel du nom de la classe model alors définir le nom de la table est optionnel ex: model Todo => table todos sinon saisir le nom de la table `protected string $table = 'todolist';`
+
+ - La clé primaire `protected string $primaryKey (si clé primaire != 'id')` 
+ - En option, les champs de création et de modification d'enregistrement `protected array $dateTimes` ainsi que les champs saisissable `protected array $settable`
+ 
+#### Liste des méthodes:
+
+- Model: 
+
+```php
+ex: 
+// Déclaration de classe
+Todo extends Core\Model;
+protected string $table= 'todolist';
+protected string $primairKey = 'id';
+protected array $dateTimes = ['CREATED_AT' => 'created_todo_at', 'UPDATED_AT' => 'updated_todo_at'];
+protected array $settable = ['task', 'completed', 'created_todo_at', 'updated_todo_at'];
+// Instanciation de la classe Todo
+$todo = new Todo();
+
+/*
+ * Retourne le nom de la table en base de données
+ */
+ public function getTable();  
+  
+/*
+ * Retourn le nom de la clé primaire
+ */
+ public function getPrimaryKey();  
+  
+/* 
+ * Retourne le model actuellement instantié
+ */
+ public static function getCurrentModel();  
+  
+/*
+ * Retourne l'engistrement grâce à la valeur de sa clé primaire
+ */
+ public static function find($id);  
+  
+/*
+ * Retourne tous les enregistrements
+ */
+ public static function all();  
+  
+/* 
+ * Retourne le nombre d'enregistrement
+ */
+ public static function count();  
+  
+/* 
+ * crée un nouvel enregistrement 
+ */
+ public static function create(array $data, string $table = '');  
+  
+/*  
+ * Enregistre l'object créer à partir de l'instance du model
+ * 
+ * $todo = new Todo();
+ * $todo->task = 'Coder'; $todo->completed = 1;...
+ * $todo->save();
+ */
+ public function save();  
+  
+/*
+ * Modifie un enregistrement  
+ */
+ public static function update($id, array $data);
+
+/*
+ * Modifie un enregistrement à partir l'object
+ * 
+ * $todo = Todo::find(1);
+ * $todo->task = 'Coder_Modifié'; $todo->completed = 0;...
+ * $todo->modify();
+ */
+ public function modify(array $data = []);  
+  
+/*
+ * Supprime un enregistrement
+ */
+ public static function delete($id);
+  
+/*
+ * Supprime l'enregistrement à partir de son instance
+ * 
+ * $todo = Todo:find(1); // $todo = instance de Todo
+ * $todo->destroy()
+ * Todo::find(1) => null 
+ */
+ public function destroy();
+  
+/*
+ * Retourne au hasard une valeur de clé primaire de la table
+ */
+ public static function shuffleId();
+  
+/*
+ * Retourne tous les enregistrements de la table en relation OneToMany
+ */
+ public function hasMany(string $model, string $foreignKey = '');
+  
+/*
+ * Retourne l'enregistrement de la table par la clé primaire
+ */
+ * public function belongsTo(string $model, string $foreignKey = '');
+  
+/*
+ * Retourne tous les enregistrements de la table par la clé primaire
+ * relation ManyToMany
+ */
+ public function belongsToMany(string $model, string $pivot = '', string $foreignKeyOne = '', string $foreignKeyTwo = '');
+  
+/*
+ * Retourne l'enregistrement de la table par la clé primaire
+ * relation OneToOne
+ */
+ public function hasOne(string $model, string $foreignKey = '');
+  
+/*
+ * Retourne les enregistrements de la table en relation et
+ * les champs selectionnés
+ */
+ public function with(string $relation, array $properties = []);
+  
+/*
+ * Multiple modification des enregistrement 
+ * de la table en relation OneToMany
+ */
+ public function modifyManyRelation(string $relation, string $id, array $data);  
+  
+/* 
+ * Create new record in the relation table
+ * Crée un nouvel enregistrement dans la table en relation
+ */
+ public function attach($table, array $data);
+```
+
+- QueryMysqlBuilder:
+
+```php
+* @method static \Core\QueryBuilderMysql where($args) // 
+// si 3 arguments, Todo::where('task', '!=', 'Coder') => WHERE task != 'Coder', 
+// si 2 arguments, Todo::where('task', 'Coder') => WHERE task = 'Coder'
+
+* @method static \Core\QueryBuilderMysql select($args)
+// Todo::select('id', 'task') => SELECT id, task...
+
+* @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
+// Todo::from('todolist', 'tdl') => FROM todolist (si $alias non null: AS tdl), utile si la table désiré est différente de la table du model en cours, sinon ne pas utiliser from() car elle est sous-entendu
+
+* @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
+// Todo::join('users', 'user_id', '=', 'id', 'usr') => JOIN users (si $alias non null: AS usr) ON todo.user_id = users.id (ou avec alias usr.id) 
+
+* @method static \Core\QueryBuilderMysql first()
+//Todo::first() => ORDER BY id ASC LIMIT 1, recupère le premier enregistrement de la table du model
+
+* @method static \Core\QueryBuilderMysql query(string $statement)
+// Todo::query('SELECT ....') => execute un requête
+
+* @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
+// Todo::prepare('INSERT INTO ....', [...]) => execute un requête preparé avec le paramètre
+
+* @method static \Core\QueryBuilderMysql orderBy($args)
+// Todo::orderBy('id') => ORDER BY id, si orderBy('id', 'DESC') => ORDER BY id DESC
+
+* @method static \Core\QueryBuilderMysql limit($args)
+// Todo::limit(1) => LIMIT 1 ou Todo::limit(1,2) => LIMIT 1 OFFSET 2
+
+* @method static \Core\QueryBuilderMysql groupBy($args)
+// Todo::groupBy('completed') => GROUP BY completed
+
+* @method static array map(string $key, $value = null)
+// Todo('task', $value) => réorganise tous les enregistrements en tableau avec comme clé la valeur $key ('task')
+// si $value == null alors $value = tous les champs de l'enregistrement
+// si $value == type string ex: 'user_id' alors le tableau sera composé de task => user_id (Coder => USR001)
+// si $value == type array ex: [user_id, completed] alors 'Coder' => [USR001, true]
+
+* @method static array get() // récupère les enregistrement suivant la requête passé
+// Par défaut Todo::get() => SELECT * FROM todolist
+// Possible de chainer les methodes pour finir avec get()
+// ex: Todo::select('task', 'username')->join('users', 'user_id', 'id')->where('completed', true)->get()
+
+* @method static array toArray()
+// Transforme l'instance en tableau associatif
+
+* @method static \Core\Model|bool last()
+// Todo::last() => Récupère le dernier enregistrement de la table en cours
+
+* @method static string stringify()
+// Todo::select('task', 'created_todo_at')->where('completed', true)->stringify()
+// retourne la requête en string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
+```
+
 ### Controller
-
-
 
 ### Middleware
 
@@ -257,8 +453,9 @@ create:
         path: optional			# sous-dossier de la directive (App/MkyDirectives/Sous_dossier/TestDirective.php)
 
 show: 
-    routes: 
-        request: optional		# affiche toutes le routes ou filtre selon lese controllers utilisée (GET, POST, ...)
+    routes: # affiche toutes les routes
+        request: optional		# filtre les routes selon la request saisie (get, post,...)
+        controller: optional    # filtre les routes selon le controller saisie
 
 cache: 
     clear: 
