@@ -60,9 +60,11 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
 
 ### Point de configuration
 
-| Dossier | Point de Config| description |
+Dans le dossier /config
+
+| fichier | Point de Config| description |
 |--|--|--|
-| app.php | app_name | nom de l'application |
+| app | app_name | nom de l'application |
 || cache | dossier de cache |
 || env | environnement d'application |
 || structure | structure de l'application (MVC ou HMVC) |
