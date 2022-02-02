@@ -122,12 +122,12 @@ users:
 |request             |path                |controller          |method              |name                |middleware
 |--|--|--|--|--|--
 |GET                 |/users              |App\Http\Controllers\UserController|index               |users.index         |auth
-|GET                 |  /:user             |App\Http\Controllers\UserController|show                |users.show          |auth
-|GET                 |  /new               |App\Http\Controllers\UserController|new                 |users.new           |auth
-|GET                 |  /edit/:user        |App\Http\Controllers\UserController|edit                |users.edit          |auth
-|GET                 |  /delete/:user      |App\Http\Controllers\UserController|delete              |users.delete        |auth
+|GET                 |/users/:user             |App\Http\Controllers\UserController|show                |users.show          |auth
+|GET                 |/users/new               |App\Http\Controllers\UserController|new                 |users.new           |auth
+|GET                 |/users/edit/:user        |App\Http\Controllers\UserController|edit                |users.edit          |auth
+|GET                 |/users/delete/:user      |App\Http\Controllers\UserController|delete              |users.delete        |auth
 |POST                |/users              |App\Http\Controllers\UserController|create              |users.create        |auth
-|POST                |  /update/:user      |App\Http\Controllers\UserController|update              |users.update        |auth
+|POST                |/users/update/:user      |App\Http\Controllers\UserController|update              |users.update        |auth
 
 
 ### Providers
@@ -139,8 +139,8 @@ Ce provider sert à stocker les events et leurs listeners selon leur actions son
 ```php
 [
     \App\Events\TodoEvent::class => [  
-	    'update' => \App\Listeners\UpdateTodoListener::class,
-	    'otherAction' => \App\Listeners\OtherListener::class,  
+	'update' => \App\Listeners\UpdateTodoListener::class,
+        'otherAction' => \App\Listeners\OtherListener::class,  
     ]
 ];
 ```
@@ -155,7 +155,7 @@ Ce provider sert à stocker les middleware de route avec un alias, et les voters
     ],  
   
     'voters' => [  
-	 	\App\Voters\TodoVoter::class,  
+	 \App\Voters\TodoVoter::class,  
     ],  
 ];
 ```
@@ -166,10 +166,10 @@ Ce provider sert à stocker les fonctions et les formats personnalisés pour le 
 ```php
 [  
     'formatters' => [ 
-  	     App\MkyFormatters\TestFormatters::class
+  	 App\MkyFormatters\TestFormatters::class
     ],  
     'directives' => [
-  	     App\MkyDirectives\TestDirective::class  
+         App\MkyDirectives\TestDirective::class  
     ]
 ];
 ```
@@ -180,7 +180,7 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux, comme d
 ```php
 [  
     'alias' => [  
-  	    'webPush' => \App\Utils\WebPushNotification::class  
+        'webPush' => \App\Utils\WebPushNotification::class  
     ]
 ];
 ```
@@ -445,8 +445,8 @@ Les actions sont ce qui feront le lien entre l'event et ses listeners, pour que 
 ```php
 [
     \App\Events\TodoEvent::class => [  
-	    'update' => \App\Listeners\UpdateTodoListener::class,
-	    'otherAction' => \App\Listeners\OtherListener::class,  
+	 'update' => \App\Listeners\UpdateTodoListener::class,
+	 'otherAction' => \App\Listeners\OtherListener::class,  
     ]
 ];
 ```
