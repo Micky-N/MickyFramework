@@ -1,5 +1,6 @@
 
 
+
 # MickyFramework    
   
 > *Framework MVC et HMVC par Micky_N version 0.1*  
@@ -27,7 +28,6 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
    - [MkyDirective](#mkydirective)
    - [Liste des directives](#liste-des-directives)
    - [MkyFormatter](#mkyformatter)
-   - [Liste des formats](#liste-des-formats)
  - [MkyCommand CLI](#mkycommand-cli)
 
 
@@ -130,7 +130,7 @@ users:
 |POST                |  /update/:user      |App\Http\Controllers\UserController|update              |users.update        |auth
 
 
-### Les Providers
+### Providers
 
 Les providers sont des enregistrements de classes dans un but définie.
 - EventServiceProvider
@@ -565,7 +565,7 @@ les vues .mky utilisent le système d'**extends**, **yield** et **sections**, av
 ```
 
 
-### Liste des directives basiques
+### Liste des directives
 
 ```yaml
 assets: courte
@@ -621,7 +621,8 @@ class TestDirective extends Directive implements MkyDirectiveInterface
 
 ### MkyFormatter
 
-Les formatters permettent de modifier les variables php dans la vues et s'ecrivent avec un # devant la variable `{{ $var#euro }}`,
+Les formatters permettent de modifier les variables php dans la vues et s'ecrivent avec un # devant la variable 
+`{{ $var#euro }}`,
 si le formatter 'euro' permet de mettre un chiffre en format devise en euro alors si  $var = 5 alors `$var#euro => 5,00 €`.
 Pour créer des formatters, déclarer une classe qui implémente Core\Interfaces\MkyFormatterInterface.
 La classe doit être inscrit dans le MkyServiceProvider.php
@@ -735,9 +736,9 @@ cache:
 
 La structure HMVC permet d'organiser l'application en module de MVC ou chaque module (dossier) a sa propre architecture MVC. Pour créer un module en ligne de commande `php micky --create=module --name=User`, la commande créera les dossiers et les fichiers directement est inscrira le module dans le ModuleServiceProvider.php: 
 ```php
-    return [  
-        \App\Todo\TodoModule::class  
-    ];
+[  
+    \App\Todo\TodoModule::class  
+];
 ```
 Organisation du module: 
 ```yaml
@@ -766,3 +767,18 @@ Voters
 config.php
 TodoModule.php
 ```
+Pour active le mode HMVC, dans le point de config config/app.php mettre `'structure' => 'HMVC'`.
+- Config
+La configuration du module se trouve dans le fichier app/Module/config.php
+```php
+return [
+    'views' => __DIR__ . '/views',
+    'layouts' => __DIR__. '/views/layouts'
+    'url_prefix' => '/products'
+];
+```
+La config surchargera le config/module.php en remplaçant les paramètres si celle-ci sont définie, en retirant le paramètre 'layouts' du app/Module/config.php alors les layouts devrons se trouver dans le layouts par défaut saisie dans la config/module.php.
+
+- Application HMVC
+
+Les events et les listeners doivent être inscrit dans le app/Module/Providers/EventServiceProvider.php et les routeMiddlewares et les voters doivent être inscrit dans le app/Module/Providers/MiddlewareServiceProvider.php
