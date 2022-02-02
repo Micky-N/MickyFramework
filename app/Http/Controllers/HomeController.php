@@ -18,7 +18,6 @@ class HomeController extends Controller
         $suppliers = Supplier::all();
         $products = Product::map('name', ['code_category', 'name']);
         $productSuppliers = ProductSupplier::all();
-        $arr = 5;
-        return View::render('welcome', compact('categories', 'products', 'suppliers', 'productSuppliers', 'arr'));
+        return View::render('welcome', compact('categories', 'products', 'suppliers', 'productSuppliers', ));
     }
 }

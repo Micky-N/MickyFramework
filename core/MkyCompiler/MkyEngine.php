@@ -286,6 +286,12 @@ class MkyEngine
                 if(strpos($attribute, '$') !== false){
                     extract($this->data);
                     $getvar = str_replace('$', '', $attribute);
+                    if(strpos($getvar, '->') !== false){
+                        $getvar = explode('->', $getvar)[0];
+                    }
+                    if(strpos($getvar, '[') !== false){
+                        $getvar = explode('[', $getvar)[0];
+                    }
                     if(array_key_exists($getvar, $this->data)){
                         @eval("\$var = $attribute; return true;");
                         $var = is_string($var) ? "'$var'" : $var;
