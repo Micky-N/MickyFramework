@@ -19,7 +19,11 @@ if (php_sapi_name() === "cli") {
             return $route[2] == $controller;
         });
     }
-    $array = [['request', 'path', 'controller', 'method', 'name', 'middleware']];
+    $fields = ['request', 'path', 'controller', 'method', 'name', 'middleware'];
+    if(config('structure') === 'HMVC'){
+        $fields[] = 'module';
+    }
+    $array = [$fields];
     array_push($array, ...$routes);
     echo MickyCLI::table($array);
 }

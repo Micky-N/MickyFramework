@@ -4,6 +4,11 @@ home:
         action: App\Http\Controllers\HomeController::index
         method: GET
 
+users:
+    path: crud
+    controller: App\Http\Controllers\UserController
+    middleware: auth
+
 categories:
     index:
         path: /categories

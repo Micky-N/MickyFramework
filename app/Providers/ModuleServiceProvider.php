@@ -1,6 +1,5 @@
 <?php
 
-
 return [
-    \App\Product\ProductModule::class
+    \App\Product\ProductModule::class,
 ];

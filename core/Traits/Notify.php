@@ -11,6 +11,7 @@ use Core\Exceptions\Notification\NotificationNotMessageException;
 use Core\Exceptions\Notification\NotificationNotViaException;
 use Core\Exceptions\Notification\NotificationSystemException;
 use Core\Interfaces\NotificationInterface;
+use Core\Interfaces\NotificationSystemInterface;
 use ReflectionClass;
 use ReflectionException;
 
@@ -32,7 +33,7 @@ trait Notify
     public function notify(NotificationInterface $notification)
     {
         if(!is_array($notification->via($this)) || count($notification->via($this)) < 1){
-            throw new NotificationNotViaException(sprintf('Notification application is required in the method %s::via()', get_class($notification)));
+            throw new NotificationNotViaException(sprintf('Notification system is required in the method %s::via()', get_class($notification)));
         }
         foreach ($notification->via($this) as $via){
             $alias = App::getAlias($via);
@@ -47,8 +48,8 @@ trait Notify
             if(empty($message)){
                 throw new NotificationNotMessageException(sprintf('%s::%s() message is required', get_class($notification), 'to'.ucfirst($via)));
             }
-            if(!method_exists($class->newInstance(), 'send')){
-                throw new NotificationSystemException(sprintf("%s must implement the 'send' method", $class->getName()));
+            if(!($class->newInstance() instanceof NotificationSystemInterface)){
+                throw new NotificationSystemException(sprintf("%s must implement %s interface", $class->getName(), NotificationSystemInterface::class));
             }
             call_user_func_array([$class->newInstance(), 'send'], [$this, $message]);
         }

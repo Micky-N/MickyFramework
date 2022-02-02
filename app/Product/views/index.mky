@@ -1,5 +1,7 @@
 <mky:extends name='template'/>
 
+<mky:section name="title" value="Product" />
+
 <mky:section name='content'>
     <h1>MODE MODULE</h1>
     <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un

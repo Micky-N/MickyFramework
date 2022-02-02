@@ -57,7 +57,8 @@ class MickyCLI
         'formatter' => 'required',
         'format' => 'required',
         'directive' => 'required',
-        'fn' => 'required'
+        'fn' => 'required',
+        'help' => 'novalue'
     ];
 
     /**
@@ -71,7 +72,6 @@ class MickyCLI
         'create' => [
             'module' => [
                 'name' => 'required',
-                'routename' => 'optional'
             ],
             'controller' => [
                 'name' => 'required',
@@ -103,7 +103,6 @@ class MickyCLI
                 'name' => 'required',
                 'via' => 'required',
                 'path' => 'optional',
-                'module' => 'optional'
             ],
             'event' => [
                 'name' => 'required',
@@ -128,8 +127,8 @@ class MickyCLI
         ],
         'show' => [
             'routes' => [
-                'request' => 'required',
-                'controller' => 'required'
+                'request' => 'optional',
+                'controller' => 'optional'
             ]
         ],
         'cache' => [
@@ -139,7 +138,7 @@ class MickyCLI
             'create' => [
                 'path' => 'required',
             ]
-        ]
+        ],
     ];
 
     public function __construct(array $cli)
@@ -149,7 +148,7 @@ class MickyCLI
 
     /**
      * Get key value of option
-     * 
+     *
      * @param string $option
      * @return mixed|string
      */
@@ -183,7 +182,7 @@ class MickyCLI
 
     /**
      * Get command in the command architecture
-     * 
+     *
      * @param mixed ...$args
      * @return array|mixed|string[][]|string[][][]
      */
@@ -191,7 +190,7 @@ class MickyCLI
     {
         $res = self::$required;
         foreach ($args as $key) {
-            if ($this->isFieldExist($key)) {
+            if($this->isFieldExist($key)){
                 $res = isset($res[$key]) ? $res[$key] : $key;
             }
         }
@@ -200,13 +199,13 @@ class MickyCLI
 
     /**
      * Check if option exist in the option list
-     * 
+     *
      * @param string $option
      * @return bool
      */
     public function isFieldExist(string $option)
     {
-        if (!empty($this->getOption($option))) {
+        if(!empty($this->getOption($option))){
             return true;
         }
         return false;
@@ -220,14 +219,14 @@ class MickyCLI
      */
     public function isInputCli()
     {
-        if (!empty((array_keys($this->cli)))) {
+        if(!empty((array_keys($this->cli)))){
             return true;
         }
         throw new MkyCommandException("No option please use --option command.");
     }
 
     /**
-     * Concatenate the CLI command and the result 
+     * Concatenate the CLI command and the result
      *
      * @return string
      * @throws MkyCommandException
@@ -236,9 +235,9 @@ class MickyCLI
     {
         $send = [];
         foreach ($this->cli as $cli => $option) {
-            if ($option != false) {
+            if($option != false){
                 $send[] = "--$cli=$option";
-            } elseif ($option == false) {
+            } elseif($option == false) {
                 $send[] = "--$cli";
             } else {
                 throw new MkyCommandException("Error mky command.");
@@ -258,18 +257,18 @@ class MickyCLI
     {
         $cliOption = $this->cli[$cliKey];
         unset($this->cli[$cliKey]);
-        if (!empty(self::$required[$cliKey][$cliOption])) {
-            if (!empty($this->cli)) {
+        if(!empty(self::$required[$cliKey][$cliOption])){
+            if(!empty($this->cli)){
                 foreach ($this->cli as $cli => $option) {
                     $req = $this->getCommandBy($cliKey, $cliOption);
-                    foreach ($req as $r => $c){
+                    foreach ($req as $r => $c) {
                         if($c == 'required' && !isset($this->cli[$r])){
                             throw new MkyCommandException("$r command is required.");
                         }
                     }
-                    if (!isset($req[$cli])) {
+                    if(!isset($req[$cli])){
                         unset($this->cli[$cli]);
-                    } elseif ($req[$cli] == 'required' && empty($this->cli[$cli])) {
+                    } elseif($req[$cli] == 'required' && empty($this->cli[$cli])) {
                         throw new MkyCommandException("$cli command is required.");
                     }
                 }
@@ -293,6 +292,19 @@ class MickyCLI
     }
 
     /**
+     * helper for all methods
+     *
+     * @throws Exception
+     */
+    public function help()
+    {
+        $script = $this->sendOptions();
+        exec("php " . self::BASE_MKY . "/show/help.php $script", $this->output, $this->retval);
+        echo "\n-------------------------  Execution: $script  ------------------------\n\n";
+        echo join("\n", $this->output);
+    }
+
+    /**
      * Run the CLI command
      *
      * @throws MkyCommandException
@@ -300,15 +312,15 @@ class MickyCLI
     public function run()
     {
         $compile = '';
-        if ($this->isInputCli() && 
-        (array_key_exists('create', $this->cli) ||
-        array_key_exists('show', $this->cli) ||
-        array_key_exists('cache', $this->cli)
-        )
-        ) {
+        if($this->isInputCli() &&
+            (array_key_exists('create', $this->cli) ||
+                array_key_exists('show', $this->cli) ||
+                array_key_exists('cache', $this->cli)
+            )
+        ){
             foreach ($this->cli as $cli => $option) {
-                if (array_key_exists($cli, self::$longOptions)) {
-                    if (array_key_exists($cli, self::$required) && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null) {
+                if(array_key_exists($cli, self::$longOptions)){
+                    if(array_key_exists($cli, self::$required) && $this->checkCLI($cli) && $this->getCommandBy($cli, $option) != null){
                         $compile = file_get_contents(self::BASE_MKY . "/$cli/$option.php");
                         break;
                     }
@@ -352,7 +364,7 @@ class MickyCLI
                     $cell = 'Callable';
                 }
                 $length = strlen($cell);
-                if (empty($columns[$cell_key]) || $columns[$cell_key] || $length) {
+                if(empty($columns[$cell_key]) || $columns[$cell_key] || $length){
                     $columns[$cell_key] = 20;
                 }
             }

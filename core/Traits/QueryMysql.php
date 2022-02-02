@@ -12,7 +12,7 @@ use Core\QueryBuilderMysql;
  * @method static \Core\QueryBuilderMysql select()
  * @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
  * @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $aliasFirstTable = '')
- * @method static \Core\QueryBuilderMysql first(string $namespace, $controller, array $only = [])
+ * @method static \Core\QueryBuilderMysql first()
  * @method static \Core\QueryBuilderMysql query(string $statement)
  * @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
  * @method static \Core\QueryBuilderMysql orderBy()

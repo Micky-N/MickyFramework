@@ -3,12 +3,12 @@
 
 namespace App\Utils;
 
-use App\Models\Notifiables;
+use Core\Interfaces\NotificationSystemInterface;
 use ErrorException;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
 
-class WebPushNotification
+class WebPushNotification implements NotificationSystemInterface
 {
 
     private WebPush $webPush;

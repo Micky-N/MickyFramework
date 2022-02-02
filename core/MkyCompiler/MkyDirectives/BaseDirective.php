@@ -17,6 +17,8 @@ class BaseDirective extends Directive implements MkyDirectiveInterface
     {
         return [
             'assets' => [[$this, 'assets']],
+            'script' => [[$this, 'script'], [$this, 'endscript']],
+            'style' => [[$this, 'style'], [$this, 'endstyle']],
             'if' => [[$this, 'if'], [$this, 'endif']],
             'elseif' => [[$this, 'elseif']],
             'else' => [[$this, 'else']],
@@ -30,11 +32,36 @@ class BaseDirective extends Directive implements MkyDirectiveInterface
             'permission' => [[$this, 'permission'], [$this, 'endpermission']],
             'notpermission' => [[$this, 'notpermission'], [$this, 'endnotpermission']],
             'auth' => [[$this, 'auth'], [$this, 'endauth']],
-            'guest' => [[$this, 'guest'], [$this, 'endguest']],
             'json' => [[$this, 'json']],
             'currentRoute' => [[$this, 'currentRoute'], [$this, 'endcurrentRoute']],
             'route' => [[$this, 'route']]
         ];
+    }
+
+    public function script(string $src = null)
+    {
+        if($src){
+            return '<script type="text/javascript" src=' . $src . '></script>';
+        }
+        return '<script>';
+    }
+
+    public function endscript()
+    {
+        return '</script>';
+    }
+
+    public function style(string $href = null)
+    {
+        if($href){
+            return '<link rel="stylesheet" type="text/css" href=' . $href . '>';
+        }
+        return '<style>';
+    }
+
+    public function endstyle(string $href = null)
+    {
+        return '</style>';
     }
 
     public function if($cond)

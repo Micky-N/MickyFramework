@@ -1,7 +1,6 @@
 <mky:extends name="template"/>
 
 <mky:section name="content">
-    <mky:test int="$arr" />
     <mky:each loop="['mky' => 'do','re','mi','fa']" key="l">
         <mky:include name="includes.form" data="['var' => $l]"/>
     </mky:each>
