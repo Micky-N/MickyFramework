@@ -410,12 +410,10 @@ $todo = new Todo();
 // retourne la requête en string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
 ```
 
-### Controller
-
 ### Middleware
 
 Les middlewares implémentent l'interface Core\Interfaces\MiddlewareInterface avec la méthode 
-process(callable  $next, ServerRequestInterface  $request) qui contrôle la requête passée par l'utilisateur et exécute une action, généralement une redirection ou renvoi la requête à un autre middleware ou sinon au contrôleur. les RouteMiddlewares doit être inscrit dans le MiddlewareServiceProvider.php sont à utiliser dans les routes:
+process(callable  $next, ServerRequestInterface  $request) qui contrôle la requête passée par l'utilisateur et exécute une action, généralement une redirection ou renvoi la requête à un autre middleware ou sinon au contrôleur. les RouteMiddlewares doivent être inscrit dans le MiddlewareServiceProvider.php et sont à utiliser dans les routes:
 ```yaml
 # Fichier web.yaml
 categories:  
@@ -736,7 +734,7 @@ cache:
 
 ## HMVC
 
-La structure HMVC permet d'organiser l'application en module de MVC ou chaque module (dossier) a sa propre architecture MVC. Pour créer un module en ligne de commande `php micky --create=module --name=User`, la commande créera les dossiers et les fichiers directement est inscrira le module dans le ModuleServiceProvider.php: 
+La structure HMVC permet d'organiser l'application en module de MVC ou chaque module (dossier) a sa propre architecture MVC. Pour créer un module en ligne de commande `php micky --create=module --name=Todo`, la commande créera les dossiers et les fichiers directement est inscrira le module dans le ModuleServiceProvider.php: 
 ```php
 [  
     \App\Todo\TodoModule::class  
@@ -771,7 +769,7 @@ TodoModule.php
 ```
 Pour active le mode HMVC, dans le point de config config/app.php mettre `'structure' => 'HMVC'`.
 - Config
-La configuration du module se trouve dans le fichier app/Module/config.php
+La configuration du module se trouve dans le fichier app/Nom_du_Module/config.php
 ```php
 return [
     'views' => __DIR__ . '/views',
