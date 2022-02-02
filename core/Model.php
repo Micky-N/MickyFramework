@@ -265,7 +265,7 @@ abstract class Model
      * @throws ReflectionException
      * @throws MysqlException
      */
-    public function hasMany(string $model, string $foreignKey = '')
+    protected function hasMany(string $model, string $foreignKey = '')
     {
         $table = (new $model())->getTable();
         $second = strtolower((new ReflectionClass($this))->getShortName());
@@ -294,11 +294,11 @@ abstract class Model
      * @example One to Many
      *
      */
-    public function belongsTo(string $model, string $foreignKey = '')
+    protected function belongsTo(string $model, string $foreignKey = '')
     {
         $table = new $model();
         $second = strtolower((new ReflectionClass($table))->getShortName());
-        $foreignKey = $foreignKey ?: $second . '_' . $table->primaryKey;
+        $foreignKey = $foreignKey ?? $second . '_' . $table->primaryKey;
         return MysqlDatabase::prepare(
             "
 		SELECT {$table->getTable()}.*
@@ -337,7 +337,7 @@ abstract class Model
      * @throws ReflectionException
      * @example Many to Many
      */
-    public function belongsToMany(string $model, string $pivot = '', string $foreignKeyOne = '', string $foreignKeyTwo = '')
+    protected function belongsToMany(string $model, string $pivot = '', string $primaryKeyOne = '', string $primaryKeyTwo = '')
     {
         $first = strtolower((new ReflectionClass($this))->getShortName());
         $second = strtolower((new ReflectionClass($model))->getShortName());
@@ -348,36 +348,25 @@ abstract class Model
         );
         if(empty($pivot)){
             foreach ($all as $a) {
-                if(
-                strpos(
-                    $a['Tables_in_' . config('connections.mysql.name', 'database')],
-                    '_'
-                )
-                ){
-                    $atest = explode(
-                        '_',
-                        $a['Tables_in_' . config('connections.mysql.name', 'database')]
-                    );
+                if(strpos($a['Tables_in_' . config('connections.mysql.name', 'database')], '_') !== false){
+                    $atest = explode('_', $a['Tables_in_' . config('connections.mysql.name', 'database')]);
                     if(in_array($first, $atest) && in_array($second, $atest)){
-                        $pivot =
-                            $a['Tables_in_' . config('connections.mysql.name', 'database')];
+                        $pivot = $a['Tables_in_' . config('connections.mysql.name', 'database')];
                     }
                 }
             }
         }
 
-        $foreignKeyOne =
-            $foreignKeyOne ?: $first . '_' . $this->getPrimaryKey();
-        $foreignKeyTwo =
-            $foreignKeyTwo ?: $second . '_' . $secondInstance->getPrimaryKey();
+        $primaryKeyOne = $primaryKeyOne ?? $first . '_' . $this->getPrimaryKey();
+        $primaryKeyTwo = $primaryKeyTwo ?? $second . '_' . $secondInstance->getPrimaryKey();
         return MysqlDatabase::prepare(
             "
 		SELECT {$table}.*, {$pivot}.*
 		FROM {$table}
 		LEFT JOIN {$pivot}
-		ON {$pivot}.{$foreignKeyTwo} = {$table}.{$secondInstance->getPrimaryKey()}
-		WHERE {$pivot}.{$foreignKeyOne} = :$foreignKeyOne",
-            ["$foreignKeyOne" => $this->{$this->getPrimaryKey()}],
+		ON {$pivot}.{$primaryKeyTwo} = {$table}.{$secondInstance->getPrimaryKey()}
+		WHERE {$pivot}.{$primaryKeyOne} = :$primaryKeyOne",
+            ["$primaryKeyOne" => $this->{$this->getPrimaryKey()}],
             $model
         );
     }
@@ -393,7 +382,7 @@ abstract class Model
      * @example One to One
      *
      */
-    public function hasOne(string $model, string $foreignKey = '')
+    protected function hasOne(string $model, string $foreignKey = '')
     {
         $table = (new $model())->getTable();
         $second = strtolower((new ReflectionClass($this))->getShortName());
