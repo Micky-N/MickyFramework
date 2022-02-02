@@ -124,7 +124,7 @@ class QueryBuilderMysql
     {
         foreach (func_get_args() as $arg) {
             if (count(explode(' ', $arg)) == 1) {
-                $arg .= ' DESC';
+                $arg .= ' ASC';
             }
             $this->order[] = $arg;
         }

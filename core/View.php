@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Facades\Route;
 use Exception;
 use Core\MkyCompiler\MkyEngine;
 
@@ -18,6 +19,7 @@ class View
     public function render(string $view, array $params = [], bool $isModuleView = true)
     {
         try {
+            Route::isModuleRoute();
             $moduleBaseConfig = include ROOT . 'config/module.php';
             $config = array_merge(config('*', 'mkyEngine'), ($isModuleView ? config('*', 'module') : $moduleBaseConfig));
             $mkyEngine = new MkyEngine($config);

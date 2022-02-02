@@ -10,7 +10,6 @@ if(php_sapi_name() === "cli"){
     $option = $cli['create'];
     $controllerName = ucfirst($cli['name']);
     $crud = isset($cli['crud']) ? file_get_contents(MickyCLI::BASE_MKY . "/templates/controller/crud." . MickyCLI::EXTENSION) : null;
-    $model = isset($cli['model']) ? $cli['model'] : null;
     $module = isset($cli['module']) ? ucfirst($cli['module']) : null;
     $path = isset($cli['path']) ? ucfirst($cli['path']) : null;
     $namespace = sprintf("App%s\\Http\\Controllers%s", ($module ? "\\" . $module : ''), $path ? "\\" . $path : '');
@@ -20,7 +19,6 @@ if(php_sapi_name() === "cli"){
     $template = file_get_contents(MickyCLI::BASE_MKY . "/templates/$option." . MickyCLI::EXTENSION);
     $template = str_replace('!name', $controllerName, $template);
     $template = str_replace('!path', $namespace, $template);
-    $template = str_replace('!model', $model ? $model . ";" : '', $template);
     $template = str_replace('!crud', $crud ? "\n" . $crud : '', $template);
     $dir = sprintf("app%s/Http/Controllers%s", ($module ? '/' . $module : ''), ($path ? "/" . $path : ''));
     if(file_exists("$dir/$controllerName.php")){

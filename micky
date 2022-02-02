@@ -5,6 +5,9 @@ use Core\MKYCommand\MickyCLI;
 if (php_sapi_name() === 'cli') {
     require 'vendor/autoload.php';
     $cli = getopt('', MickyCLI::cliLongOptions());
-    $mky = new MickyCLI($cli);
-    $mky->run();
+    if(count($cli) == 1 && isset($cli['help'])){
+        echo file_get_contents('./core/MkyCommand/help.txt');
+    }else{
+        (new MickyCLI($cli))->run();
+    }
 }

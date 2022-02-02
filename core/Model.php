@@ -65,7 +65,7 @@ abstract class Model
      * @return object
      * @throws ReflectionException
      */
-    protected static function getCurrentModel()
+    public static function getCurrentModel()
     {
         $current = new ReflectionClass(get_called_class());
         return $current->newInstance();
@@ -599,7 +599,7 @@ abstract class Model
      * @return array
      * @throws ReflectionException
      */
-    public static function setDatetime(array $data): array
+    private static function setDatetime(array $data): array
     {
         if(!empty(self::getCurrentModel()->dateTimes)){
             foreach (self::getCurrentModel()->dateTimes as $key => $datetime) {
@@ -618,7 +618,7 @@ abstract class Model
      * @return array
      * @throws ReflectionException
      */
-    public static function setUpdate(array $data): array
+    private static function setUpdate(array $data): array
     {
         if(!empty(self::getCurrentModel()->dateTimes) && isset(self::getCurrentModel()->dateTimes['UPDATED_AT'])){
             $data[self::getCurrentModel()->dateTimes['UPDATED_AT']] = date('Y-m-d H:i:s');

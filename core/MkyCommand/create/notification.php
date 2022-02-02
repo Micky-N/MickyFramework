@@ -11,9 +11,8 @@ if(php_sapi_name() === "cli"){
     $via = $cli['via'];
     $tovia = 'to' . ucfirst($via);
     $name = ucfirst($cli['name']);
-    $module = isset($cli['module']) ? ucfirst($cli['module']) : null;
     $path = isset($cli['path']) ? ucfirst($cli['path']) : null;
-    $namespace = sprintf("App%s\\Notifications%s", ($module ? "\\" . $module : ''), $path ? "\\" . $path : '');
+    $namespace = sprintf("App\\Notifications%s", $path ? "\\" . $path : '');
     if(!strpos($name, 'Notification')){
         throw new MkyCommandException("$name notification must be suffixed by Notification");
     }
@@ -22,7 +21,7 @@ if(php_sapi_name() === "cli"){
     $template = str_replace('!path', $namespace, $template);
     $template = str_replace('!via', "'$via'", $template);
     $template = str_replace('!tovia', $tovia, $template);
-    $dir = sprintf("app%s/Notifications%s", ($module ? '/' . $module : ''), ($path ? "/" . $path : ''));
+    $dir = sprintf("app/Notifications%s", ($path ? "/" . $path : ''));
     if(file_exists("$dir/$name.php")){
         throw new MkyCommandException("$name notification already exist");
     }

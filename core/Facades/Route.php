@@ -11,12 +11,10 @@ use Core\Router as CoreRouter;
  * @method static \Core\Route post(string $path, $action)
  * @method static bool namespaceRoute(string $route = '')
  * @method static array routesByName()
- * @method static void parseRoutes(array $routesYaml, Module $module = null, bool $isAdminRoute = false)
  * @method static \Core\Route[] getRoutes()
- * @method static void crud(string $namespace, string $controller, array $only = [], string $moduleName = null, bool $isAdminRoute = false)
- * @method static string routeNeedParams(string $path)
  * @method static string generateUrlByName(string $routeName, array $params = [])
  * @method static bool|string currentRoute(string $route = '', bool $path = false)
+ * @method static bool isModuleRoute()
  * @method static void run(\Psr\Http\Message\ServerRequestInterface $request)
  * @method static \Core\Router redirectName(string $name)
  * @method static \Core\Router redirect(string $url)
@@ -24,7 +22,6 @@ use Core\Router as CoreRouter;
  * @method static \Core\Router withSuccess(array $success)
  * @method static \Core\Router with(array $messages)
  * @method static \Core\Router back()
- * @method static array toArray()
  *
  * @see \Core\Router
  */

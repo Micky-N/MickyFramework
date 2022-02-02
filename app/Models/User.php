@@ -18,16 +18,11 @@ class User extends Model
         return sprintf("%s %s", $this->first_name, $this->last_name);
     }
 
-    public function webPushUser()
-    {
-        return $this->hasOne(Notifiable::class, 'notifiable_id');
-    }
-
     public function routeNotificationFor(string $channel)
     {
         switch ($channel):
             default:
-                return $this->webPushUser();
+                return $this->hasOne(Notifiable::class, 'notifiable_id');
                 break;
         endswitch;
     }

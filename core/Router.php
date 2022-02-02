@@ -28,7 +28,7 @@ class Router
      * @param string $path
      * @param callable|array $action
      * @param string|null $name
-     * @param null $middleware
+     * @param array|string|null $middleware
      * @param string|null $module
      * @return Route
      * @throws RouteAlreadyExistException
@@ -49,7 +49,7 @@ class Router
      * @param string $path
      * @param callable|array $action
      * @param string|null $name
-     * @param null $middleware
+     * @param array|string|null $middleware
      * @param string|null $module
      * @return Route
      * @throws RouteAlreadyExistException
@@ -104,12 +104,13 @@ class Router
      *
      * @param string $namespace
      * @param string $controller
+     * @param array $middleware
      * @param array $only
      * @param string|null $moduleName
      * @param bool $isAdminRoute
      * @return Router
      */
-    public function crud(string $namespace, string $controller, array $only = [], string $moduleName = null, bool $isAdminRoute = false): Router
+    public function crud(string $namespace, string $controller, array $middleware = [], array $only = [], string $moduleName = null, bool $isAdminRoute = false): Router
     {
         $path = '';
         $action = '';
@@ -176,12 +177,12 @@ class Router
             if(!empty($only) && in_array($key, $only)){
                 call_user_func_array(
                     [$this, $crudAction['request']],
-                    [($isAdminRoute ? 'admin/' : '') . $crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '') . $crudAction['name'], null, $moduleName]
+                    [($isAdminRoute ? 'admin/' : '') . $crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '') . $crudAction['name'], $middleware, $moduleName]
                 );
             } elseif(empty($only)) {
                 call_user_func_array(
                     [$this, $crudAction['request']],
-                    [($isAdminRoute ? 'admin/' : '') . $crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '') . $crudAction['name'], null, $moduleName]
+                    [($isAdminRoute ? 'admin/' : '') . $crudAction['path'], $crudAction['action'], ($isAdminRoute ? 'admin.' : '') . $crudAction['name'], $middleware, $moduleName]
                 );
             }
         }
@@ -251,6 +252,14 @@ class Router
             return $path ? $currentRoute[key($currentRoute)]->getPath() === $route : key($currentRoute) === $route;
         }
         return trim($currentPath, '/') === trim($route, '/');
+    }
+
+    public function isModuleRoute()
+    {
+        $currentPath = ServerRequest::fromGlobals()->getUri()->getPath();
+        $currentRoute = array_filter($this->routesByName(), fn($route) => trim($route->getPath(), '/') === trim($currentPath, '/'));
+        $currentRoute = $currentRoute[key($currentRoute)];
+        return !is_null($currentRoute->getModule());
     }
 
     /**
@@ -415,18 +424,18 @@ class Router
     public function parseRoutes(array $routesYaml, Module $module = null, bool $isAdminRoute = false)
     {
         $configModule = $module ? include $module::CONFIG : null;
+        $moduleName = !is_null($module) ? get_class($module) : null;
         foreach ($routesYaml as $namespace => $routesName) {
             foreach ($this->arrayNamespaces($routesName, [($isAdminRoute ? 'admin.' : '') . $namespace]) as $name => $route) {
+                $middleware = isset($route['middleware']) ? (array) $route['middleware'] : [];
                 if($route['path'] === 'crud'){
                     $name = str_replace('admin.', '', $name);
-                    $moduleName = !is_null($module) ? get_class($module) : null;
-                    $this->crud($name, $route['controller'], [], $moduleName, $isAdminRoute);
+                    $only = $route['only'] ?? [];
+                    $this->crud($name, $route['controller'], $middleware, $only, $moduleName, $isAdminRoute);
                 } else {
-                    $middleware = $route['middleware'] ?? null;
                     $moduleRoot = !is_null($module) ? $module->getRoot() : null;
                     $action = $this->getAction($route['action'], $moduleRoot);
                     $path = ($isAdminRoute ? '/admin' : '') . '/' . trim(($configModule['url_prefix'] ?? ''), '/') . '/' . trim($route['path'], '/');
-                    $moduleName = !is_null($module) ? get_class($module) : null;
                     $this->{$route['method']}($path, $action, $name, $middleware, $moduleName);
                 }
             }
