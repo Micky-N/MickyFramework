@@ -57,9 +57,11 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
 
 ### Point de configuration
 
-| Dossier | Point de Config| description |
+Dans le dossier /config
+
+| fichier | Point de Config| description |
 |--|--|--|
-| app.php | app_name | nom de l'application |
+| app | app_name | nom de l'application |
 || cache | dossier de cache |
 || env | environnement d'application |
 || structure | structure de l'application (MVC ou HMVC) |
@@ -119,12 +121,12 @@ users:
 |request             |path                |controller          |method              |name                |middleware
 |--|--|--|--|--|--
 |GET                 |/users              |App\Http\Controllers\UserController|index               |users.index         |auth
-|GET                 |  /:user             |App\Http\Controllers\UserController|show                |users.show          |auth
-|GET                 |  /new               |App\Http\Controllers\UserController|new                 |users.new           |auth
-|GET                 |  /edit/:user        |App\Http\Controllers\UserController|edit                |users.edit          |auth
-|GET                 |  /delete/:user      |App\Http\Controllers\UserController|delete              |users.delete        |auth
+|GET                 |/users/:user             |App\Http\Controllers\UserController|show                |users.show          |auth
+|GET                 |/users/new               |App\Http\Controllers\UserController|new                 |users.new           |auth
+|GET                 |/users/edit/:user        |App\Http\Controllers\UserController|edit                |users.edit          |auth
+|GET                 |/users/delete/:user      |App\Http\Controllers\UserController|delete              |users.delete        |auth
 |POST                |/users              |App\Http\Controllers\UserController|create              |users.create        |auth
-|POST                |  /update/:user      |App\Http\Controllers\UserController|update              |users.update        |auth
+|POST                |/users/update/:user      |App\Http\Controllers\UserController|update              |users.update        |auth
 
 
 ### Providers
@@ -136,8 +138,8 @@ Ce provider sert à stocker les events et leurs listeners selon leur actions son
 ```php
 [
     \App\Events\TodoEvent::class => [  
-	    'update' => \App\Listeners\UpdateTodoListener::class,
-	    'otherAction' => \App\Listeners\OtherListener::class,  
+	'update' => \App\Listeners\UpdateTodoListener::class,
+        'otherAction' => \App\Listeners\OtherListener::class,  
     ]
 ];
 ```
@@ -152,7 +154,7 @@ Ce provider sert à stocker les middleware de route avec un alias, et les voters
     ],  
   
     'voters' => [  
-	 	\App\Voters\TodoVoter::class,  
+	 \App\Voters\TodoVoter::class,  
     ],  
 ];
 ```
@@ -163,10 +165,10 @@ Ce provider sert à stocker les fonctions et les formats personnalisés pour le 
 ```php
 [  
     'formatters' => [ 
-  	     App\MkyFormatters\TestFormatters::class
+  	 App\MkyFormatters\TestFormatters::class
     ],  
     'directives' => [
-  	     App\MkyDirectives\TestDirective::class  
+         App\MkyDirectives\TestDirective::class  
     ]
 ];
 ```
@@ -177,7 +179,7 @@ Ce provider sert à stocker des classes pour des utilisations spéciaux, comme d
 ```php
 [  
     'alias' => [  
-  	    'webPush' => \App\Utils\WebPushNotification::class  
+        'webPush' => \App\Utils\WebPushNotification::class  
     ]
 ];
 ```
@@ -408,7 +410,7 @@ $todo = new Todo();
 ### Middleware
 
 Les middlewares implémentent l'interface Core\Interfaces\MiddlewareInterface avec la méthode 
-process(callable  $next, ServerRequestInterface  $request) qui contrôle la requête passée par l'utilisateur et exécute une action, généralement une redirection ou renvoi la requête à un autre middleware ou sinon au contrôleur. les RouteMiddlewares doit être inscrit dans le MiddlewareServiceProvider.php sont à utiliser dans les routes:
+process(callable  $next, ServerRequestInterface  $request) qui contrôle la requête passée par l'utilisateur et exécute une action, généralement une redirection ou renvoi la requête à un autre middleware ou sinon au contrôleur. les RouteMiddlewares doivent être inscrit dans le MiddlewareServiceProvider.php et sont à utiliser dans les routes:
 ```yaml
 # Fichier web.yaml
 categories:  
@@ -440,8 +442,8 @@ Les actions sont ce qui feront le lien entre l'event et ses listeners, pour que 
 ```php
 [
     \App\Events\TodoEvent::class => [  
-	    'update' => \App\Listeners\UpdateTodoListener::class,
-	    'otherAction' => \App\Listeners\OtherListener::class,  
+	 'update' => \App\Listeners\UpdateTodoListener::class,
+	 'otherAction' => \App\Listeners\OtherListener::class,  
     ]
 ];
 ```
@@ -729,7 +731,7 @@ cache:
 
 ## HMVC
 
-La structure HMVC permet d'organiser l'application en module de MVC ou chaque module (dossier) a sa propre architecture MVC. Pour créer un module en ligne de commande `php micky --create=module --name=User`, la commande créera les dossiers et les fichiers directement est inscrira le module dans le ModuleServiceProvider.php: 
+La structure HMVC permet d'organiser l'application en module de MVC ou chaque module (dossier) a sa propre architecture MVC. Pour créer un module en ligne de commande `php micky --create=module --name=Todo`, la commande créera les dossiers et les fichiers directement est inscrira le module dans le ModuleServiceProvider.php: 
 ```php
 [  
     \App\Todo\TodoModule::class  
@@ -764,7 +766,7 @@ TodoModule.php
 ```
 Pour active le mode HMVC, dans le point de config config/app.php mettre `'structure' => 'HMVC'`.
 - Config
-La configuration du module se trouve dans le fichier app/Module/config.php
+La configuration du module se trouve dans le fichier app/Nom_du_Module/config.php
 ```php
 return [
     'views' => __DIR__ . '/views',
