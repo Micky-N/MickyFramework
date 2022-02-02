@@ -739,7 +739,7 @@ La structure HMVC permet d'organiser l'application en module de MVC ou chaque mo
         \App\Todo\TodoModule::class  
     ];
 ```
-L'organisation du module: 
+Organisation du module: 
 ```yaml
 Events
 Http:
