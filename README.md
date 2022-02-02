@@ -3,7 +3,7 @@
 
 # MickyFramework    
   
-> *Framework MVC et HMVC par Micky_N version 0.1*  
+> *Framework MVC et HMVC par Micky_N version 0.0.0* [![Generic badge](https://img.shields.io/badge/mky-master-orange.svg)](https://shields.io/)
   
 Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise un moteur de Template Mky.
 
@@ -17,7 +17,6 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
     - [Providers](#providers)
  - [Application](#application)
    - [Model](#model)
-   - [Controller](#controller)
    - [Middleware](#middleware)
    - [Voter](#voter)
    - [Event](#event)
@@ -31,8 +30,6 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
  - [MkyCommand CLI](#mkycommand-cli)
 
 
-
-  
 ## Structure  
   
  ### Dossiers  
@@ -407,8 +404,6 @@ $todo = new Todo();
 // Todo::select('task', 'created_todo_at')->where('completed', true)->stringify()
 // retourne la requête en string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
 ```
-
-### Controller
 
 ### Middleware
 

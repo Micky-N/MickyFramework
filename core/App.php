@@ -154,7 +154,8 @@ class App
             Route::parseRoutes(Yaml::parseFile($filename) ?? [], null, strpos($filename, 'admin.yaml') !== false);
         }
         if(config('structure') === 'HMVC'){
-            foreach (self::$modules as $module) {
+            $modules = !empty(self::$modules) ? self::$modules : (file_exists(dirname(__DIR__).'/app/Providers/ModuleServiceProvider.php') ? include(dirname(__DIR__).'/app/Providers/ModuleServiceProvider.php') : []);
+            foreach ($modules as $module) {
                 $currentModule = new $module();
                 foreach (glob($currentModule->getRoot() . '/routes/*.yaml') as $filename) {
                     Route::parseRoutes(Yaml::parseFile($filename) ?? [], $currentModule, strpos($filename, 'admin.yaml') !== false);

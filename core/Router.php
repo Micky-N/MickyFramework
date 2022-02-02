@@ -410,6 +410,7 @@ class Router
                     is_array($route->action) ? $route->action[1] : null,
                     $route->name,
                     $route->middleware,
+                    config('structure') === 'HMVC' ? ($route->module ?? null) : null
                 ];
             }
         }
