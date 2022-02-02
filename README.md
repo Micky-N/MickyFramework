@@ -3,13 +3,18 @@
 
 # MickyFramework    
   
-> *Framework MVC et HMVC par Micky_N version 0.0.0* [![Generic badge](https://img.shields.io/badge/mky-master-orange.svg)](https://shields.io/)
-  
-Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise un moteur de Template Mky.
+> *Framework MVC et HMVC par Micky_N* 
 
+[![Generic badge](https://img.shields.io/badge/mky-master-orange.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/version-0.1.0-green.svg)](https://shields.io/)
+  
+Framework inspirée de Laravel, modulable en architecture MVC ou HMVC et utilise un moteur de Template Mky.
 
 ## Sommaire
 
+<details>
+	<summary>Afficher le sommaire</summary>
+	<br>
+	
 - [Structure](#structure)
     - [Dossiers](#dossiers)
     - [Point de configuration](#point-de-configuration)
@@ -29,6 +34,7 @@ Framework inspirée de Laravel, modulable en structure MVC et/ou HMVC et utilise
    - [MkyFormatter](#mkyformatter)
  - [MkyCommand CLI](#mkycommand-cli)
 
+</details>
 
 ## Structure  
   
@@ -560,6 +566,9 @@ les vues .mky utilisent le système d'**extends**, **yield** et **sections**, av
 	<mky:include name="includeView" data="['var' => 'variable1']"/>
 </mky:section>
 ```
+
+la directive yield peut avoir une valeur par défaut grâce au paramètre value `<mky:yield name="title" value="Home"/>` et section peut devenir une directive courte en rajoutant
+le paramètre value `<mky:section name="title" value="TodoPage"/>` 
 
 
 ### Liste des directives
