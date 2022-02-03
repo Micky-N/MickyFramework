@@ -528,7 +528,7 @@ Les méthodes de route:
 // dans la vue: {{ $flashMessage['thanks'] }}
 ```
 
-## Vue
+## Vue (Mky Template Engine)
 
 Les vues sont préfixées par l'extension .mky (index.mky), le dossier des vues sont par défaut dans /views, cela peut être modifié dans la config module.php et le cache des vues compilées, par défaut dans /cache/views peut être modifié dans la config mkyEngine.php.
 
@@ -537,7 +537,8 @@ le nom des $view s'écrit avec un point todos.index: dossier /views/todos/index.
 
 ### MkyDirective
 
-Inspirée de Twig et Jsp (java), les directives s'écrivent dans la vue avec des balises (comme du html) :
+Inspirée de Twig et Jsp (java), les directives s'écrivent dans la vue avec des balises (comme du html):
+
 ```html
 <mky:if cond="$todo->task == 'Coder'">
 	<div>true</div>
