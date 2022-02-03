@@ -32,6 +32,9 @@ class MkyEngine
 
     public function __construct(array $config)
     {
+        if(!isset($config['cache'])){
+            $config['cache'] = './cache/views';
+        }
         $this->config = $config;
         $this->errors = $_GET['errors'] ?? [];
     }
@@ -67,6 +70,19 @@ class MkyEngine
     }
 
     /**
+     * Add global variable to view
+     *
+     * @param string $name
+     * @param mixed $variable
+     * @return MkyEngine
+     */
+    public function addGlobalVariable(string $name, $variable)
+    {
+        $this->data[$name] = $variable;
+        return $this;
+    }
+
+    /**
      * Compile and send the view
      *
      * @param string $viewName
@@ -81,14 +97,13 @@ class MkyEngine
         if(!$extends){
             $viewPath = $this->getConfig('views') . '/' . $this->parseViewName($viewName);
             $this->viewName = $viewName;
-            $this->data = $data;
+            $this->data = array_merge($this->data, $data);
             $this->viewPath = $viewPath;
         } else {
             $viewPath = $this->getConfig('layouts') . '/' . $this->parseViewName($viewName);
         }
         $this->view = file_get_contents($viewPath);
         $this->data = array_merge($this->data, $this->includeData);
-        $this->data['_ENV'] = $_ENV;
         $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
         $success = Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS'));
         $flashMessages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));

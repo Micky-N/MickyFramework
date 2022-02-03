@@ -2,7 +2,7 @@
 
 <mky:section name="content">
     <mky:test int="5"/>
-    {{ 5#test }}
+    {{ $test#test }}
     <mky:each loop="['mky' => 'do','re','mi','fa']" key="l">
         <mky:include name="includes.form" data="['var' => $l]"/>
     </mky:each>
