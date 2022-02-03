@@ -14,7 +14,7 @@ class MkyDirective
      */
     private static array $directives = [];
 
-    public function __construct()
+    public function __construct(array $directives = [])
     {
         self::$directives[] = new BaseDirective();
         self::$directives[] = new StyleDirective();

@@ -2,6 +2,8 @@
 
 namespace Core\MkyCompiler;
 
+use Core\Interfaces\MkyDirectiveInterface;
+use Core\Interfaces\MkyFormatterInterface;
 use Core\MkyCompiler\MkyDirectives\Directive;
 use Exception;
 use Core\Facades\Cache;
@@ -32,6 +34,36 @@ class MkyEngine
     {
         $this->config = $config;
         $this->errors = $_GET['errors'] ?? [];
+    }
+
+    /**
+     * Add directives
+     *
+     * @param MkyDirectiveInterface[]|MkyDirectiveInterface $directives
+     * @return $this
+     */
+    public function addDirectives($directives)
+    {
+        $directives = !is_array($directives) ? [$directives] : $directives;
+        foreach ($directives as $directive){
+            MkyDirective::addDirective($directive);
+        }
+        return $this;
+    }
+
+    /**
+     * Add formatters
+     *
+     * @param MkyFormatterInterface[]|MkyFormatterInterface $formatters
+     * @return $this
+     */
+    public function addFormatters($formatters)
+    {
+        $formatters = !is_array($formatters) ? [$formatters] : $formatters;
+        foreach ($formatters as $formatter){
+            MkyFormatter::addFormatter($formatter);
+        }
+        return $this;
     }
 
     /**
