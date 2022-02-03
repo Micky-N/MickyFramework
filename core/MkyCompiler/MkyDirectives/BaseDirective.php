@@ -66,7 +66,7 @@ class BaseDirective extends Directive implements MkyDirectiveInterface
 
     public function if($cond)
     {
-        $variable = self::getRealVariable($cond);
+        $variable = $this->getRealVariable($cond);
         $cond = $variable ?? json_encode($cond);
         $expression = $cond;
         return "<?php if($expression): ?>";
@@ -74,7 +74,7 @@ class BaseDirective extends Directive implements MkyDirectiveInterface
 
     public function elseif($cond)
     {
-        $variable = self::getRealVariable($cond);
+        $variable = $this->getRealVariable($cond);
         $cond = $variable ?? json_encode($cond);
         $expression = $cond;
         return "<?php else if($expression): ?>";

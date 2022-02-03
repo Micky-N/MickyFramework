@@ -23,6 +23,7 @@ class MysqlDatabase
             $dsn = 'mysql:dbname=' . $config['name'] . ';host=' . $config['host'];
             $pdo = new PDO($dsn, $config['user'], $config['password']);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->query("SET NAMES utf8");
             self::$connection = $pdo;
             if(config('env') == 'local'){
                 self::$connection = new TraceablePDO(self::$connection);

@@ -20,7 +20,7 @@ class View
     public function render(string $view, array $params = [], bool $isModuleView = true)
     {
         try {
-            $moduleBaseConfig = include ROOT . 'config/module.php';
+            $moduleBaseConfig = include ROOT . '/config/module.php';
             $test = 1993;
             $mkyServiceProvider = include ROOT.'/app/Providers/MkyServiceProvider.php';
             $config = array_merge(config('*', 'mkyEngine'), ($isModuleView ? config('*', 'module') : $moduleBaseConfig));

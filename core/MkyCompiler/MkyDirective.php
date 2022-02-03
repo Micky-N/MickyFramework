@@ -4,8 +4,6 @@ namespace Core\MkyCompiler;
 
 use Core\Interfaces\MkyDirectiveInterface;
 use Core\MkyCompiler\MkyDirectives\BaseDirective;
-use Core\MkyCompiler\MkyDirectives\ScriptDirective;
-use Core\MkyCompiler\MkyDirectives\StyleDirective;
 
 class MkyDirective
 {
@@ -17,8 +15,6 @@ class MkyDirective
     public function __construct(array $directives = [])
     {
         self::$directives[] = new BaseDirective();
-        self::$directives[] = new StyleDirective();
-        self::$directives[] = new ScriptDirective();
     }
 
     public static function addDirective(MkyDirectiveInterface $directive)

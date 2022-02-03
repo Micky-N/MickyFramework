@@ -34,7 +34,7 @@ class MkyEngine
     public function __construct(array $config)
     {
         if(!isset($config['cache'])){
-            $config['cache'] = './cache/views';
+            $config['cache'] = 'cache/views';
         }
         $this->config = $config;
         $this->errors = $_GET['errors'] ?? [];

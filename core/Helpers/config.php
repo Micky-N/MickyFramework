@@ -8,7 +8,7 @@ if(!function_exists('_env')){
     {
         $dotenv = new Dotenv();
         $dotenv->load(dirname(__DIR__) . '/../.env');
-        return $_ENV[$key] ?: $default;
+        return !empty($_ENV[$key]) ? $_ENV[$key] : $default;
     }
 }
 

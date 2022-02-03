@@ -8,7 +8,7 @@ window.addEventListener('load', () => {
     if (!('PushManager' in window)) {
         return;
     }
-    navigator.serviceWorker.register('https://mickyframework.loc/public/assets/js/sw.js')
+    navigator.serviceWorker.register('https://mickyframework.mndinga.loc:444/public/assets/js/sw.js')
         .then((registration) => {
             serviceWorkerRegistration = registration
             initializePushMessage()
