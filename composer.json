@@ -1,10 +1,10 @@
 {
-  "name": "nding/micky-framework",
-  "description": "Framework MVC",
+  "name": "micky/micky-framework",
+  "description": "Framework MVC/HMVC",
   "authors": [
     {
       "name": "Ndinga Mickael",
-      "email": "mickydev@gmail.com"
+      "email": "ndingamickael@gmail.com"
     }
   ],
   "require": {
