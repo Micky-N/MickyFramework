@@ -28,7 +28,7 @@ class AuthController extends Controller
             }
         }
 
-        return Route::back();
+        return Route::back()->withError(['login' => 'User not found']);
     }
 
     public function logout()

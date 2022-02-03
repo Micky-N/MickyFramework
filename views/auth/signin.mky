@@ -3,6 +3,9 @@
 <mky:section name="content">
     <div>
         <form class="w-50 p-4 bg-light rounded mx-auto" method="post" action="">
+            <mky:if cond="isset($errors['login'])">
+                <div class="alert alert-warning">{{ $errors['login'] }}</div>
+            </mky:if>
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>
                 <input type="text" name="username" class="form-control" id="username">

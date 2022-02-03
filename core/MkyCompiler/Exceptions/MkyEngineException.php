@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\MkyCompiler;
+namespace Core\MkyCompiler\Exceptions;
 
 
 use Exception;

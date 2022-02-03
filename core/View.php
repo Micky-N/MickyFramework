@@ -3,6 +3,7 @@
 namespace Core;
 
 use Core\Facades\Route;
+use Core\Facades\Session;
 use Exception;
 use Core\MkyCompiler\MkyEngine;
 
@@ -27,7 +28,10 @@ class View
             $mkyEngine->addDirectives($mkyServiceProvider['directives'])
                 ->addFormatters($mkyServiceProvider['formatters'])
                 ->addGlobalVariable('_ENV', $_ENV)
-                ->addGlobalVariable('test', $test);
+                ->addGlobalVariable('test', $test)
+                ->addGlobalVariable('errors', Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR')))
+                ->addGlobalVariable('success', Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS')))
+                ->addGlobalVariable('flashMessage', Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE')));
 
             return $mkyEngine->view($view, $params);
         } catch (Exception $ex) {

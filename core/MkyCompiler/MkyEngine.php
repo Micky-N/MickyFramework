@@ -4,6 +4,7 @@ namespace Core\MkyCompiler;
 
 use Core\Interfaces\MkyDirectiveInterface;
 use Core\Interfaces\MkyFormatterInterface;
+use Core\MkyCompiler\Exceptions\MkyEngineException;
 use Core\MkyCompiler\MkyDirectives\Directive;
 use Exception;
 use Core\Facades\Cache;
@@ -104,9 +105,6 @@ class MkyEngine
         }
         $this->view = file_get_contents($viewPath);
         $this->data = array_merge($this->data, $this->includeData);
-        $errors = Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR'));
-        $success = Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS'));
-        $flashMessages = Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE'));
         $this->parse();
 
         $cachePath = $this->getConfig('cache') . '/' . md5($this->viewName) . self::CACHE_SUFFIX;
@@ -126,9 +124,6 @@ class MkyEngine
         }
         if(!$extends){
             ob_start();
-            $this->data['errors'] = $errors;
-            $this->data['success'] = $success;
-            $this->data['flashMessages'] = $flashMessages;
             extract($this->data);
             require $cachePath;
             echo ob_get_clean();
@@ -333,13 +328,7 @@ class MkyEngine
                 if(strpos($attribute, '$') !== false){
                     extract($this->data);
                     $getvar = str_replace('$', '', $attribute);
-                    if(strpos($getvar, '->') !== false){
-                        $getvar = explode('->', $getvar)[0];
-                    }
-                    if(strpos($getvar, '[') !== false){
-                        $getvar = explode('[', $getvar)[0];
-                    }
-                    if(array_key_exists($getvar, $this->data)){
+                    if(array_key_exists($getvar, $this->data) || strpos($getvar, '->') !== false ||strpos($getvar, '[') !== false){
                         @eval("\$var = $attribute; return true;");
                         $var = is_string($var) ? "'$var'" : $var;
                         $exprArray[$k] = $var;

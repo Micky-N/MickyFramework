@@ -331,8 +331,8 @@ abstract class Model
      *
      * @param string $model
      * @param string $pivot
-     * @param string $foreignKeyOne
-     * @param string $foreignKeyTwo
+     * @param string $primaryKeyOne
+     * @param string $primaryKeyTwo
      * @return array|bool|mixed
      * @throws ReflectionException
      * @example Many to Many
