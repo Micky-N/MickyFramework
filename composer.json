@@ -14,7 +14,6 @@
     "minishlink/web-push": "^6.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "phpunit/php-code-coverage": "^9.2",
     "symfony/yaml": "^5.4",
     "ext-simplexml": "*"
   },
@@ -37,6 +36,7 @@
     "symfony/var-dumper": "^5.3",
     "robmorgan/phinx": "^0.12.7",
     "fakerphp/faker": "^1.15",
+    "phpunit/php-code-coverage": "^9.2",
     "mbezhanov/faker-provider-collection": "^2.0",
     "spatie/phpunit-watcher": "^1.23"
   }
