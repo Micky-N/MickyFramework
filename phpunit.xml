@@ -9,9 +9,6 @@
         <include>
             <directory suffix=".php">tests</directory>
         </include>
-<!--        <exclude>-->
-<!--            <directory suffix=".php">tests/ProductModule</directory>-->
-<!--        </exclude>-->
         <report>
             <html outputDirectory="tests/report" lowUpperBound="50" highLowerBound="90"/>
         </report>
