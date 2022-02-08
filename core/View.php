@@ -2,10 +2,10 @@
 
 namespace Core;
 
-use Core\Facades\Route;
 use Core\Facades\Session;
+use Core\MkyDirectives\BaseDirective;
 use Exception;
-use Core\MkyCompiler\MkyEngine;
+use MkyEngine\MkyEngine;
 
 class View
 {
@@ -21,19 +21,18 @@ class View
     {
         try {
             $moduleBaseConfig = include ROOT . '/config/module.php';
-            $test = 1993;
-            $mkyServiceProvider = include ROOT.'/app/Providers/MkyServiceProvider.php';
+            $mkyServiceProvider = include ROOT . '/app/Providers/MkyServiceProvider.php';
             $config = array_merge(config('*', 'mkyEngine'), ($isModuleView ? config('*', 'module') : $moduleBaseConfig));
             $mkyEngine = new MkyEngine($config);
-            $mkyEngine->addDirectives($mkyServiceProvider['directives'])
+            echo $mkyEngine->addDirectives(new BaseDirective())
+                ->addDirectives($mkyServiceProvider['directives'])
                 ->addFormatters($mkyServiceProvider['formatters'])
                 ->addGlobalVariable('_ENV', $_ENV)
-                ->addGlobalVariable('test', $test)
                 ->addGlobalVariable('errors', Session::getFlashMessagesByType(Session::getConstant('FLASH_ERROR')))
                 ->addGlobalVariable('success', Session::getFlashMessagesByType(Session::getConstant('FLASH_SUCCESS')))
-                ->addGlobalVariable('flashMessage', Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE')));
+                ->addGlobalVariable('flashMessage', Session::getFlashMessagesByType(Session::getConstant('FLASH_MESSAGE')))
+                ->view($view, $params);
 
-            return $mkyEngine->view($view, $params);
         } catch (Exception $ex) {
             dd($ex);
         }

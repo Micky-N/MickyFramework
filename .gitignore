@@ -1,11 +1,11 @@
-/node_modules
 /vendor
-.env
 /.idea
-/.vscode
+/.vscode/
 /cache/*
-!cache/views
-cache/views/*.cache.php
 tests/report/
 database/
-/*.php
+/.env
+/*.cache.php
+/.phpunit.result.cache
+/composer.lock
+/phpunit.xml

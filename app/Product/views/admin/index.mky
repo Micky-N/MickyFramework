@@ -1,4 +1,4 @@
-<mky:extends name='template'/>
+<mky:extends name='layouts.template'/>
 
 <mky:section name='content'>
 <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un produit</button>

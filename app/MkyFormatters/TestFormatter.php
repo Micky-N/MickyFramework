@@ -2,8 +2,7 @@
 
 namespace App\MkyFormatters;
 
-
-use Core\Interfaces\MkyFormatterInterface;
+use MkyEngine\Interfaces\MkyFormatterInterface;
 
 class TestFormatter implements MkyFormatterInterface
 {

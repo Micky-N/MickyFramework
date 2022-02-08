@@ -8,8 +8,6 @@ use Core\Interfaces\EventInterface;
 use Core\Interfaces\ListenerInterface;
 use Core\Interfaces\MiddlewareInterface;
 use Core\Interfaces\VoterInterface;
-use Core\MkyCompiler\MkyDirective;
-use Core\MkyCompiler\MkyFormatter;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -165,29 +163,6 @@ class App
         self::$routes = Route::getRoutes();
     }
 
-
-    /**
-     * Add voters list to Permission
-     */
-    public static function MkyFormatterInit()
-    {
-        $mkyFormatters = self::$mkyServiceProvider['formatters'];
-        foreach ($mkyFormatters as $mkyFormatter) {
-            MkyFormatter::addFormatter($mkyFormatter);
-        }
-    }
-
-    /**
-     * Add voters list to Permission
-     */
-    public static function MkyDirectiveInit()
-    {
-        $mkyDirectives = self::$mkyServiceProvider['directives'];
-        foreach ($mkyDirectives as $mkyDirective) {
-            MkyDirective::addDirective($mkyDirective);
-        }
-    }
-
     /**
      * Run the application
      *
@@ -205,8 +180,6 @@ class App
         self::MkyServiceProvider();
         self::VotersInit();
         self::RoutesInit();
-        self::MkyFormatterInit();
-        self::MkyDirectiveInit();
         try {
             Route::run($request);
         } catch (Exception $ex) {

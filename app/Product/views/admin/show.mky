@@ -1,4 +1,4 @@
-<mky:extends name='template'/>
+<mky:extends name='layouts.template'/>
 
 <mky:section name='content'>
 <div class="container-fluid">

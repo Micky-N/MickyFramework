@@ -3,21 +3,21 @@
 namespace App\MkyDirectives;
 
 
-use Core\Interfaces\MkyDirectiveInterface;
-use Core\MkyCompiler\MkyDirectives\Directive;
+use MkyEngine\Interfaces\MkyDirectiveInterface;
+use MkyEngine\MkyEngine;
 
-class TestDirective extends Directive implements MkyDirectiveInterface
+class TestDirective implements MkyDirectiveInterface
 {
 
     public function getFunctions()
     {
         return [
-            'test' => [[$this, 'test']],
+            'test' => [$this, 'test'],
         ];
     }
 
     public function test($int)
     {
-        return sprintf('%s = %s (%s + 5)', $this->getRealVariable($int), $int + 5, $int);
+        return sprintf('%s = %s (%s + 5)', MkyEngine::getRealVariable($int), $int + 5, $int);
     }
 }

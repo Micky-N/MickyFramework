@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="<mky:assets path='css/style.css' />">
+    <link rel="stylesheet" href="<mky:asset path='css/style.css' />">
     <mky:yield name="style"/>
 </head>
 
@@ -97,7 +97,7 @@
     var auth = <mky:json data="auth()"/>;
 </script>
 <mky:auth>
-    <script type="text/javascript" src="<mky:assets path='js/script.js' />"></script>
+    <script type="text/javascript" src="<mky:asset path='js/script.js' />"></script>
 </mky:auth>
 <mky:yield name="js"/>
 
