@@ -3,6 +3,8 @@
 
 namespace Core\MkyDirectives;
 
+use Core\Facades\Route;
+use Core\Security\CsrfMiddleware;
 use MkyEngine\Interfaces\MkyDirectiveInterface;
 
 class BaseDirective implements MkyDirectiveInterface
@@ -11,13 +13,14 @@ class BaseDirective implements MkyDirectiveInterface
     public function getFunctions()
     {
         return [
-            'assets' => [$this, 'assets'],
+            'asset' => [$this, 'asset'],
             'dump' => [$this, 'dump'],
             'can' => [[$this, 'can'], [$this, 'endcan']],
             'notcan' => [[$this, 'notcan'], [$this, 'endnotcan']],
             'auth' => [[$this, 'auth'], [$this, 'endauth']],
             'currentRoute' => [[$this, 'currentRoute'], [$this, 'endcurrentRoute']],
-            'route' => [$this, 'route']
+            'route' => [$this, 'route'],
+            'csrf' => [$this, 'csrfInput']
         ];
     }
 
@@ -75,7 +78,7 @@ class BaseDirective implements MkyDirectiveInterface
         return '<?php endif; ?>';
     }
 
-    public function assets(string $path)
+    public function asset(string $path)
     {
         $path = trim($path, '\'\"');
         return BASE_ULR . 'public/' . 'assets/' . $path;
@@ -84,5 +87,11 @@ class BaseDirective implements MkyDirectiveInterface
     public function route(string $name, array $params = [])
     {
         return \Core\Facades\Route::generateUrlByName($name, $params);
+    }
+
+    public function csrfInput()
+    {
+        $token = (new CsrfMiddleware())->generateToken();
+        return "<input type='hidden' name='_csrf' value='$token'/>";
     }
 }

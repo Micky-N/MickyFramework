@@ -23,16 +23,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item<mky:currentRoute name='home.index'> active</mky:currentRoute>">
+                <li class="nav-item">
                     <a class="nav-link" href="<mky:route name='home.index' />">Accueil</a>
                 </li>
-                <li class="nav-item<mky:currentRoute name='categories.index'> active</mky:currentRoute>">
+                <li class="nav-item">
                     <a class="nav-link" href="<mky:route name='categories.index' />">Categories</a>
                 </li>
-                <li class="nav-item<mky:currentRoute name='/products' path='true'> active</mky:currentRoute>">
+                <li class="nav-item">
                     <a class="nav-link" href="/products">Produits</a>
                 </li>
-                <li class="nav-item<mky:currentRoute name='suppliers.index'> active</mky:currentRoute>">
+                <li class="nav-item">
                     <a class="nav-link" href="<mky:route name='suppliers.index' />">Fournisseurs</a>
                 </li>
             </ul>

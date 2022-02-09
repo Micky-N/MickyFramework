@@ -24,6 +24,7 @@ class MiddlewareTest extends TestCase
     public function setUp(): void
     {
         $this->router = new Router();
+        App::ConfigInit();
         App::setRouteMiddleware('passed', PassedMiddleware::class);
         App::setRouteMiddleware('blocked', BlockedMiddleware::class);
         App::setRouteMiddleware('condition', ConditionMiddleware::class);
@@ -54,15 +55,6 @@ class MiddlewareTest extends TestCase
 
         $this->router->get('block', function () {}, '', 'blocked');
         $this->assertFalse($this->router->run(new ServerRequest('get', 'block')));
-    }
-
-    public function testConditionRouteMiddleware()
-    {
-        $this->router->post('/route', function (array $data) {
-            return 'boo';
-        }, '', 'condition');
-        $this->assertFalse($this->router->run((new ServerRequest('post', '/route'))->withParsedBody(['go' => false])));
-        $this->assertEquals('boo', $this->router->run((new ServerRequest('post', '/route'))->withParsedBody(['go' => true])));
     }
 
     public function testPriorityRouteMiddleware()

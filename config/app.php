@@ -5,5 +5,6 @@ return [
     'cache' => dirname(__DIR__) . '/cache',
     'env' => _env('ENV', 'local'),
     'structure' => _env('STRUCTURE', 'MVC'),
+    'security' => ['csrf', 'xss'],
     'debugMode' => _env('ENV') == 'local',
 ];

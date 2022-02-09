@@ -263,25 +263,6 @@ class Router
     }
 
     /**
-     * Get route namespace
-     * @param string $route
-     * @return bool
-     * @example namespace(x/y/z) = x
-     *
-     */
-    public function namespaceRoute(string $route = '')
-    {
-        $currentRoute = ServerRequest::fromGlobals()
-            ->getUri()
-            ->getPath();
-        $currentRouteArray = explode('/', trim($currentRoute, '/'));
-        if($route){
-            return $currentRouteArray[0] === $route;
-        }
-        return false;
-    }
-
-    /**
      * Run router application
      *
      * @param ServerRequestInterface $request

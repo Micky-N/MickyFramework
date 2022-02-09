@@ -29,6 +29,7 @@
                 </h4>
 
                 <form action=<mky:route name="categories.update" params="['category' => $category->code_category]" /> method="POST">
+                    <mky:csrf />
                     <div class="form-group">
                         <label for="name">Nom</label>
                         <input type="text" name="name" class="form-control" id="name" value="{{ $category->name }}"

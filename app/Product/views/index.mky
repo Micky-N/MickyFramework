@@ -7,11 +7,10 @@
     <button class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i> Ajouter un
         produit</button>
         <ul class="d-flex flex-row">
-            <a class="btn btn-success mr-1" href="?max=5">5</a>
-            <a class="btn btn-success mr-1" href="?max=10">10</a>
-            <a class="btn btn-success mr-1" href="?max=15">15</a>
-            <a class="btn btn-success mr-1" href="?max=20">20</a>
-            <a class="btn btn-success mr-1" href="?max=25">25</a>
+            <mky:repeat for="25" step="5">
+                <mky:set key="max" value='$_GET["max"] ?? $products->getMaxLength()' />
+                <a class="btn btn-success mr-1 <mky:if cond='$max == $i + 5'>active</mky:if>" href="?max={{ $i + 5 }}">{{ $i + 5 }}</a>
+            </mky:repeat>
         </ul>
     <table id="table"></table>
     <ul class="d-flex flex-row">
