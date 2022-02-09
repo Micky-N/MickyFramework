@@ -1,4 +1,4 @@
-<mky:extends name='error' />
+<mky:extends name="layouts.error" />
 
 <mky:section name="title" value='Error $code'/>
 

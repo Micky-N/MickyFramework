@@ -1,11 +1,6 @@
 <mky:extends name="layouts.template"/>
 
 <mky:section name="content">
-    <mky:test int="5"/>
-    {{ $test#test }}
-    <mky:each loop="['mky' => 'do','re','mi','fa']" key="l">
-        <mky:include name="includes.form" data="['var' => $l]"/>
-    </mky:each>
     <table id="table"></table>
     <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

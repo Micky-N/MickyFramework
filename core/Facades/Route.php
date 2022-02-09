@@ -9,7 +9,6 @@ use Core\Router as CoreRouter;
 /**
  * @method static \Core\Route get(string $path, $action)
  * @method static \Core\Route post(string $path, $action)
- * @method static bool namespaceRoute(string $route = '')
  * @method static array routesByName()
  * @method static \Core\Route[] getRoutes()
  * @method static string generateUrlByName(string $routeName, array $params = [])

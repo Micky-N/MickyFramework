@@ -6,6 +6,7 @@
             <mky:if cond="isset($errors['login'])">
                 <div class="alert alert-warning">{{ $errors['login'] }}</div>
             </mky:if>
+            <mky:csrf />
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>
                 <input type="text" name="username" class="form-control" id="username">

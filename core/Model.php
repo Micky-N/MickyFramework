@@ -298,7 +298,7 @@ abstract class Model
     {
         $table = new $model();
         $second = strtolower((new ReflectionClass($table))->getShortName());
-        $foreignKey = $foreignKey ?? $second . '_' . $table->primaryKey;
+        $foreignKey = $foreignKey ?: $second . '_' . $table->primaryKey;
         return MysqlDatabase::prepare(
             "
 		SELECT {$table->getTable()}.*
@@ -357,8 +357,8 @@ abstract class Model
             }
         }
 
-        $primaryKeyOne = $primaryKeyOne ?? $first . '_' . $this->getPrimaryKey();
-        $primaryKeyTwo = $primaryKeyTwo ?? $second . '_' . $secondInstance->getPrimaryKey();
+        $primaryKeyOne = $primaryKeyOne ?: $first . '_' . $this->getPrimaryKey();
+        $primaryKeyTwo = $primaryKeyTwo ?: $second . '_' . $secondInstance->getPrimaryKey();
         return MysqlDatabase::prepare(
             "
 		SELECT {$table}.*, {$pivot}.*

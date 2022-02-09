@@ -57,10 +57,12 @@ class Route
             $params = $this->matches;
         }
         App::setRouteMiddleware('csrf', CsrfMiddleware::class);
-        if(!empty($this->middleware) && is_string($this->middleware)){
-            $this->middleware = [$this->middleware];
+        if(!empty($this->middleware)){
+            $this->middleware = is_string($this->middleware) ? [$this->middleware] : $this->middleware;
+            $this->middleware[] = 'csrf';
+        }else{
+            $this->middleware = 'csrf';
         }
-        $this->middleware[] = 'csrf';
         if(!empty($this->middleware)){
             $routeMiddleware = new RouteMiddleware($this->middleware, $this->matches);
             if(!$routeMiddleware->process($request)){
