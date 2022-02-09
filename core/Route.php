@@ -71,6 +71,16 @@ class Route
         }
         if($request->getParsedBody()){
             $params[] = $request->getParsedBody();
+            foreach ($params as $k => $param){
+                $params[$k] = htmlspecialchars($param);
+            }
+        }
+        if($request->getQueryParams()){
+            $queryParams = $request->getQueryParams();
+            foreach ($queryParams as $k => $queryParam){
+                $queryParams[$k] = htmlspecialchars($queryParam);
+            }
+            $request->withQueryParams($queryParams);
         }
         if(is_array($this->action)){
             $controller = new $this->action[0]();
@@ -106,7 +116,7 @@ class Route
         if(preg_match($pathToMatch, $url, $matches)){
             $key = array_map(function ($pa) {
                 if(strpos($pa, ':') !== false){
-                    $pa = preg_match('/(.*)?:(.*)?/', $pa, $matches);
+                    preg_match('/(.*)?:(.*)?/', $pa, $matches);
                     return $matches[2];
                 }
                 return null;
