@@ -3,6 +3,7 @@
 namespace Core;
 
 use Closure;
+use Core\Security\CsrfMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Route
@@ -55,6 +56,11 @@ class Route
         if($this->matches){
             $params = $this->matches;
         }
+        App::setRouteMiddleware('csrf', CsrfMiddleware::class);
+        if(!empty($this->middleware) && is_string($this->middleware)){
+            $this->middleware = [$this->middleware];
+        }
+        $this->middleware[] = 'csrf';
         if(!empty($this->middleware)){
             $routeMiddleware = new RouteMiddleware($this->middleware, $this->matches);
             if(!$routeMiddleware->process($request)){

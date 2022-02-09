@@ -342,8 +342,9 @@ class App
 
     public static function ConfigInit()
     {
-        foreach (glob(ROOT . '/config/*.php') as $filename) {
-            $configFile = trim(str_replace(ROOT . '/config', '', $filename), '/');
+        $root = defined('ROOT') ? ROOT : dirname(__DIR__);
+        foreach (glob($root . '/config/*.php') as $filename) {
+            $configFile = trim(str_replace($root . '/config', '', $filename), '/');
             $configFile = str_replace('.php', '', $configFile);
             self::$config[$configFile] = include $filename;
         }

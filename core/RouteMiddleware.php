@@ -25,7 +25,7 @@ class RouteMiddleware
                 $this->permissionCan($middleware, $matches);
             } else {
                 if(is_null(App::getRouteMiddlewares($middleware))){
-                    throw new RouteMiddlewareException(sprintf('No middleware found for ths alias %s', $middleware));
+                    throw new RouteMiddlewareException(sprintf('No middleware found for this alias %s', $middleware));
                 }
                 $routeMiddlewares[] = App::getRouteMiddlewares($middleware);
             }
@@ -45,8 +45,9 @@ class RouteMiddleware
         if ($this->index < count($this->routeMiddlewares)) {
             $index = $this->index;
             $this->index++;
-            if (!empty($this->routeMiddlewares[$index]) && new $this->routeMiddlewares[$index]() instanceof MiddlewareInterface) {
-                return call_user_func([new $this->routeMiddlewares[$index](), 'process'], [$this, 'process'], $request);
+            $instance = new $this->routeMiddlewares[$index]();
+            if (!empty($this->routeMiddlewares[$index]) && $instance instanceof MiddlewareInterface) {
+                return call_user_func([$instance, 'process'], [$this, 'process'], $request);
             }
         }
         $this->index = 0;
