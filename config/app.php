@@ -6,5 +6,6 @@ return [
     'env' => _env('ENV', 'local'),
     'structure' => _env('STRUCTURE', 'MVC'),
     'security' => ['csrf', 'xss'],
+    'permission' => 'affirmative',
     'debugMode' => _env('ENV') == 'local',
 ];
