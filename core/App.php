@@ -342,9 +342,8 @@ class App
 
     public static function ConfigInit()
     {
-        $root = defined('ROOT') ? ROOT : dirname(__DIR__);
-        foreach (glob($root . '/config/*.php') as $filename) {
-            $configFile = trim(str_replace($root . '/config', '', $filename), '/');
+        foreach (glob(ROOT . '/config/*.php') as $filename) {
+            $configFile = trim(str_replace(ROOT . '/config', '', $filename), '/');
             $configFile = str_replace('.php', '', $configFile);
             self::$config[$configFile] = include $filename;
         }
@@ -356,5 +355,17 @@ class App
     public static function getConfig()
     {
         return self::$config ?? null;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $config
+     * @return App
+     */
+    public static function setConfig(string $key, array $config): App
+    {
+        $newConfig[$key] = $config;
+        self::$config = array_merge(self::$config ?? [], $newConfig);
+        return new static;
     }
 }

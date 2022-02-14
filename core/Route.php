@@ -49,19 +49,21 @@ class Route
     public function execute(ServerRequestInterface $request)
     {
         $params = [];
-        if(config('structure') === 'HMVC' && !is_null($this->module)){
+        if(config('structure') && config('structure') === 'HMVC' && !is_null($this->module)){
             App::setCurrentModule(new $this->module());
             App::setApplication();
         }
         if($this->matches){
             $params = $this->matches;
         }
-        App::setRouteMiddleware('csrf', CsrfMiddleware::class);
-        if(!empty($this->middleware)){
-            $this->middleware = is_string($this->middleware) ? [$this->middleware] : $this->middleware;
-            $this->middleware[] = 'csrf';
-        }else{
-            $this->middleware = 'csrf';
+        if(config('csrf')){
+            App::setRouteMiddleware('csrf', CsrfMiddleware::class);
+            if(!empty($this->middleware)){
+                $this->middleware = is_string($this->middleware) ? [$this->middleware] : $this->middleware;
+                $this->middleware[] = 'csrf';
+            } else {
+                $this->middleware = 'csrf';
+            }
         }
         if(!empty($this->middleware)){
             $routeMiddleware = new RouteMiddleware($this->middleware, $this->matches);
@@ -71,13 +73,19 @@ class Route
         }
         if($request->getParsedBody()){
             $params[] = $request->getParsedBody();
-            foreach ($params as $k => $param){
-                $params[$k] = htmlspecialchars($param);
+            foreach ($params as $k => $param) {
+                if(!is_array($param)){
+                    $params[$k] = htmlspecialchars($param);
+                }else{
+                    foreach($param as $key => $value){
+                        $param[$k] = htmlspecialchars($value);
+                    }
+                }
             }
         }
         if($request->getQueryParams()){
             $queryParams = $request->getQueryParams();
-            foreach ($queryParams as $k => $queryParam){
+            foreach ($queryParams as $k => $queryParam) {
                 $queryParams[$k] = htmlspecialchars($queryParam);
             }
             $request->withQueryParams($queryParams);
@@ -181,18 +189,21 @@ class Route
      */
     public function routesDebugBar(ServerRequestInterface $request, array $params, $controller, string $method = null, string $module = null)
     {
-        if($module){
-            $module = explode('\\', $module);
-            $module = $module[1];
+        if(config('env') && strtoupper(config('env')) === 'LOCAL'){
+            if($module){
+                $module = explode('\\', $module);
+                $module = $module[1];
+            }
+            $array = array_filter([
+                'url' => $request->getUri()->getPath(),
+                'params' => $params,
+                'controller' => get_class($controller),
+                'method' => $method,
+                'module' => $module
+            ]);
+            \Core\Facades\StandardDebugBar::addMessage('Routes', $array);
         }
-        $array = array_filter([
-            'url' => $request->getUri()->getPath(),
-            'params' => $params,
-            'controller' => get_class($controller),
-            'method' => $method,
-            'module' => $module
-        ]);
-        \Core\Facades\StandardDebugBar::addMessage('Routes', $array);
+        return null;
     }
 
     public function __get($name)

@@ -24,7 +24,7 @@ class MiddlewareTest extends TestCase
     public function setUp(): void
     {
         $this->router = new Router();
-        App::ConfigInit();
+        App::setConfig('app', ['csrf' => false]);
         App::setRouteMiddleware('passed', PassedMiddleware::class);
         App::setRouteMiddleware('blocked', BlockedMiddleware::class);
         App::setRouteMiddleware('condition', ConditionMiddleware::class);
