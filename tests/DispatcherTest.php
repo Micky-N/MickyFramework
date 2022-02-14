@@ -8,11 +8,13 @@ use Core\Exceptions\Dispatcher\EventNotImplementException;
 use Core\Exceptions\Dispatcher\ListenerNotFoundException;
 use Core\Exceptions\Dispatcher\ListenerNotImplementException;
 use PHPUnit\Framework\TestCase;
+use Tests\App\Event\TestAliasListener;
 use Tests\App\Event\TestEvent;
 use Tests\App\Event\TestNotFoundEvent;
 use Tests\App\Event\TestNotImplementEvent;
 use Tests\App\Event\TestNoAliasListener;
 use Tests\App\Event\TestNotImplementListener;
+use Tests\App\Event\TestPropagationListener;
 use Tests\App\Event\TodoTestClass;
 
 class DispatcherTest extends TestCase
@@ -25,8 +27,9 @@ class DispatcherTest extends TestCase
     public function setUp(): void
     {
         $this->todoTest = new TodoTestClass('eat burger', false);
-        App::setEvents(\Tests\App\Event\TestEvent::class, 'test', \Tests\App\Event\TestAliasListener::class);
-        App::setEvents(\Tests\App\Event\TestEvent::class, 'propagation', \Tests\App\Event\TestPropagationListener::class);
+        App::setEvents(\Tests\App\Event\TestEvent::class, 'test', TestAliasListener::class);
+        App::setEvents(\Tests\App\Event\TestEvent::class, 'propagation', TestPropagationListener::class);
+        App::setEvents(\Tests\App\Event\TestEvent::class, 'notImplement', TestNotImplementListener::class);
     }
 
     public function testConstructor()
@@ -44,8 +47,11 @@ class DispatcherTest extends TestCase
 
     public function testEventWithNoAlias()
     {
-        TestEvent::dispatch($this->todoTest, TestNoAliasListener::class);
-        $this->assertTrue($this->todoTest->getName() === 'burger eaten');
+        try {
+            TestEvent::dispatch($this->todoTest, TestNoAliasListener::class);
+        }catch(\Exception $ex){
+            $this->assertInstanceOf(ListenerNotFoundException::class, $ex);
+        }
     }
 
     public function testEventStopPropagation()
@@ -85,7 +91,7 @@ class DispatcherTest extends TestCase
     public function testListenerNotImplementException()
     {
         try {
-            TestEvent::dispatch($this->todoTest, TestNotImplementListener::class);
+            TestEvent::dispatch($this->todoTest, 'notImplement');
         } catch (\Exception $ex) {
             $this->assertInstanceOf(ListenerNotImplementException::class, $ex);
         }

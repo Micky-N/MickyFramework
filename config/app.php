@@ -7,9 +7,7 @@ return [
     'structure' => _env('STRUCTURE', 'MVC'),
     'csrf' => true,
     'permission' => [
-        'strategy' => 'affirmative',
-        'allow_if_all_abstain' => false,
-        'allow_if_equal_granted_denied' => true
+        'strategy' => 'affirmative'
     ],
     'debugMode' => _env('ENV') == 'local',
 ];

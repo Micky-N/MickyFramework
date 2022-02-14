@@ -10,6 +10,13 @@ use Core\Interfaces\VoterInterface;
 
 class Permission
 {
+    private const AFFIRMATIVE = 'affirmative';
+    private const CONSENSUS = 'consensus';
+    private const UNANIMOUS = 'unanimous';
+    private const DEFAULT_ALLOW_IF_ALL_ABSTAIN = false;
+    private const DEFAULT_ALLOW_IF_EQUAL_GRANTED_DENIED = true;
+    private const DEFAULT_STRATEGY = 'affirmative';
+
     /**
      * @var VoterInterface[]
      */
@@ -59,28 +66,8 @@ class Permission
      */
     public function authorize($user, string $permission, $subject = null): bool
     {
-        $configPermission = config('permission');
-        $method = $configPermission['strategy'] ?? null;
-        $allow_default = $configPermission['allow_default'] ?? null;
-        if(method_exists($this, $method)){
-            return $this->{$method}($user, $permission, $subject, $allow_default);
-        } else {
-            return $this->affirmative($user, $permission, $subject);
-        }
-    }
-
-
-    /**
-     * This grants access as soon as there is one voter granting access
-     *
-     * @param $user
-     * @param $permission
-     * @param null $subject
-     * @return bool
-     * @throws Exception
-     */
-    public function affirmative($user, $permission, $subject = null): bool
-    {
+        $granted = 0;
+        $denied = 0;
         foreach ($this->voters as $voter) {
             if($voter->canVote($permission, $subject)){
                 $vote = $voter->vote($user, $permission, $subject);
@@ -88,89 +75,35 @@ class Permission
                     $this->voterDebugBar($voter, $vote, $permission);
                 }
                 if($vote === true){
-                    return true;
+                    $granted += 1;
+                } else {
+                    $denied += 1;
                 }
             }
         }
-        return false;
+        return $this->result($granted, $denied);
     }
 
-    /**
-     * This grants access if there are more voters granting access than denying
-     * In case of a tie the decision is based on the allow_if_equal_granted_denied
-     * config option (defaulting to true)
-     *
-     * @param $user
-     * @param $permission
-     * @param null $subject
-     * @param bool $allow_if_equal_granted_denied
-     * @return bool
-     * @throws Exception
-     */
-    public function consensus($user, $permission, $subject = null, bool $allow_if_equal_granted_denied = true): bool
+    private function result(int $granted, int $denied): bool
     {
-        foreach ($this->voters as $voter) {
-            if($voter->canVote($permission, $subject)){
-                $vote = $voter->vote($user, $permission, $subject);
-                if(config('env') === 'local'){
-                    $this->voterDebugBar($voter, $vote, $permission);
-                }
-                if($vote === true){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+        $allow_if_all_abstain = config('permission.allow_if_all_abstain') ?? self::DEFAULT_ALLOW_IF_ALL_ABSTAIN;
+        $allow_if_equal_granted_denied = config('permission.allow_if_equal_granted_denied') ?? self::DEFAULT_ALLOW_IF_EQUAL_GRANTED_DENIED;
+        $strategy = config('permission.strategy') ?? self::DEFAULT_STRATEGY;
 
-    /**
-     * This only grants access if there is no voter denying access
-     *
-     * @param $user
-     * @param $permission
-     * @param null $subject
-     * @return bool
-     * @throws Exception
-     */
-    public function unanimous($user, $permission, $subject = null): bool
-    {
-        foreach ($this->voters as $voter) {
-            if($voter->canVote($permission, $subject)){
-                $vote = $voter->vote($user, $permission, $subject);
-                if(config('env') === 'local'){
-                    $this->voterDebugBar($voter, $vote, $permission);
-                }
-                if($vote === true){
-                    return true;
-                }
+        if($granted || $denied){
+            if($strategy === self::AFFIRMATIVE){
+                return $granted > 0;
             }
-        }
-        return false;
-    }
 
-    /**
-     * This grants or denies access by the first voter that does not abstain, based on their service priority
-     *
-     * @param $user
-     * @param $permission
-     * @param null $subject
-     * @return bool
-     * @throws Exception
-     */
-    public function priority($user, $permission, $subject = null): bool
-    {
-        foreach ($this->voters as $voter) {
-            if($voter->canVote($permission, $subject)){
-                $vote = $voter->vote($user, $permission, $subject);
-                if(config('env') === 'local'){
-                    $this->voterDebugBar($voter, $vote, $permission);
-                }
-                if($vote === true){
-                    return true;
-                }
+            if($strategy === self::CONSENSUS){
+                return $granted != $denied ? $granted > $denied : $allow_if_equal_granted_denied;
+            }
+
+            if($strategy === self::UNANIMOUS){
+                return $denied == 0;
             }
         }
-        return false;
+        return $allow_if_all_abstain;
     }
 
     /**

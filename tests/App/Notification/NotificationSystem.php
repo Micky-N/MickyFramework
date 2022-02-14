@@ -4,7 +4,9 @@
 namespace Tests\App\Notification;
 
 
-class NotificationSystem
+use Core\Interfaces\NotificationSystemInterface;
+
+class NotificationSystem implements NotificationSystemInterface
 {
 
     private array $messageTest;
@@ -14,7 +16,7 @@ class NotificationSystem
         $this->messageTest = [];
     }
 
-    public function send($notifiable, $message)
+    public function send($notifiable, array $message): void
     {
         ReturnNotificationClass::setReturn($message);
     }

@@ -11,5 +11,5 @@ interface NotificationSystemInterface
      * @param array $message
      * @throws ErrorException
      */
-    public function send($notifiable, array $message): void;
+    public function send($notifiable, array $message);
 }
