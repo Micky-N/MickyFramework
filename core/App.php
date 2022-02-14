@@ -342,9 +342,10 @@ class App
 
     public static function ConfigInit()
     {
-        $root = defined('ROOT') ? ROOT : dirname(__DIR__);
-        foreach (glob($root . '/config/*.php') as $filename) {
-            $configFile = trim(str_replace($root . '/config', '', $filename), '/');
+        dump(Yaml::parseFile(ROOT. '/config/app.yaml'));
+
+        foreach (glob(ROOT . '/config/*.php') as $filename) {
+            $configFile = trim(str_replace(ROOT . '/config', '', $filename), '/');
             $configFile = str_replace('.php', '', $configFile);
             self::$config[$configFile] = include $filename;
         }

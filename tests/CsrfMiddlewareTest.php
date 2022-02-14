@@ -20,7 +20,7 @@ class CsrfMiddlewareTest extends TestCase
 
     public function setUp(): void
     {
-        App::setConfig('app', ['security' => ['csrf']]);
+        App::setConfig('app', ['csrf' => true]);
         $this->router = new Router();
     }
 
@@ -65,7 +65,7 @@ class CsrfMiddlewareTest extends TestCase
         });
         $request = new ServerRequest('post', '/passed');
         $token = (new CsrfMiddleware())->generateToken();
-        $this->assertEquals('boo', $this->router->run($request->withParsedBody(['_csrf' => $token])));
+        $this->assertEquals('boo', $this->router->run($request->withParsedBody(['name' => 'Micky','_csrf' => $token])));
     }
 
     public function testLetPassTokenOnce()

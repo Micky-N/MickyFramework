@@ -56,7 +56,7 @@ class Route
         if($this->matches){
             $params = $this->matches;
         }
-        if(in_array('csrf', config('security'))){
+        if(config('csrf')){
             App::setRouteMiddleware('csrf', CsrfMiddleware::class);
             if(!empty($this->middleware)){
                 $this->middleware = is_string($this->middleware) ? [$this->middleware] : $this->middleware;
@@ -74,7 +74,13 @@ class Route
         if($request->getParsedBody()){
             $params[] = $request->getParsedBody();
             foreach ($params as $k => $param) {
-                $params[$k] = htmlspecialchars($param);
+                if(!is_array($param)){
+                    $params[$k] = htmlspecialchars($param);
+                }else{
+                    foreach($param as $key => $value){
+                        $param[$k] = htmlspecialchars($value);
+                    }
+                }
             }
         }
         if($request->getQueryParams()){

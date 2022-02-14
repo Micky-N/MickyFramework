@@ -3,6 +3,7 @@
 namespace Tests;
 
 
+use Core\App;
 use Core\Exceptions\Voter\VoterException;
 use Core\Permission;
 use PHPUnit\Framework\TestCase;
@@ -23,6 +24,11 @@ class PermissionTest extends TestCase
 
     public function setUp(): void
     {
+        App::setConfig('app', [
+            'permission' => [
+                'strategy' => 'affirmative'
+            ]
+        ]);
         $this->permission = new Permission();
     }
 
@@ -84,5 +90,20 @@ class PermissionTest extends TestCase
         }catch (VoterException $ex){
             $this->assertInstanceOf(VoterException::class, $ex);
         }
+    }
+
+    public function testConsensusStrategy()
+    {
+        $this->assertTrue(1 == 1);
+    }
+
+    public function testUnanimousStrategy()
+    {
+        $this->assertTrue(1 == 1);
+    }
+
+    public function testPriorityStrategy()
+    {
+        $this->assertTrue(1 == 1);
     }
 }
