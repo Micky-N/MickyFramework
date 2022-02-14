@@ -109,18 +109,7 @@ class Permission
      */
     public function consensus($user, $permission, $subject = null, bool $allow_if_equal_granted_denied = true): bool
     {
-        foreach ($this->voters as $voter) {
-            if($voter->canVote($permission, $subject)){
-                $vote = $voter->vote($user, $permission, $subject);
-                if(config('env') === 'local'){
-                    $this->voterDebugBar($voter, $vote, $permission);
-                }
-                if($vote === true){
-                    return true;
-                }
-            }
-        }
-        return false;
+        //TODO: implement consensus method 
     }
 
     /**
@@ -134,18 +123,7 @@ class Permission
      */
     public function unanimous($user, $permission, $subject = null): bool
     {
-        foreach ($this->voters as $voter) {
-            if($voter->canVote($permission, $subject)){
-                $vote = $voter->vote($user, $permission, $subject);
-                if(config('env') === 'local'){
-                    $this->voterDebugBar($voter, $vote, $permission);
-                }
-                if($vote === true){
-                    return true;
-                }
-            }
-        }
-        return false;
+        //TODO: implement unanimous method 
     }
 
     /**
@@ -159,18 +137,7 @@ class Permission
      */
     public function priority($user, $permission, $subject = null): bool
     {
-        foreach ($this->voters as $voter) {
-            if($voter->canVote($permission, $subject)){
-                $vote = $voter->vote($user, $permission, $subject);
-                if(config('env') === 'local'){
-                    $this->voterDebugBar($voter, $vote, $permission);
-                }
-                if($vote === true){
-                    return true;
-                }
-            }
-        }
-        return false;
+       //TODO: implement priority method 
     }
 
     /**
