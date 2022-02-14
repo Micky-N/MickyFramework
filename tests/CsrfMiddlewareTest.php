@@ -20,7 +20,7 @@ class CsrfMiddlewareTest extends TestCase
 
     public function setUp(): void
     {
-        App::ConfigInit();
+        App::setConfig('app', ['security' => ['csrf']]);
         $this->router = new Router();
     }
 

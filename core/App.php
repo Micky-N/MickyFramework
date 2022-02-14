@@ -357,4 +357,16 @@ class App
     {
         return self::$config ?? null;
     }
+
+    /**
+     * @param string $key
+     * @param mixed $config
+     * @return App
+     */
+    public static function setConfig(string $key, array $config): App
+    {
+        $newConfig[$key] = $config;
+        self::$config = array_merge(self::$config ?? [], $newConfig);
+        return new static;
+    }
 }
