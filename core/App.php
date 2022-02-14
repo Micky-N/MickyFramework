@@ -342,8 +342,6 @@ class App
 
     public static function ConfigInit()
     {
-        dump(Yaml::parseFile(ROOT. '/config/app.yaml'));
-
         foreach (glob(ROOT . '/config/*.php') as $filename) {
             $configFile = trim(str_replace(ROOT . '/config', '', $filename), '/');
             $configFile = str_replace('.php', '', $configFile);
