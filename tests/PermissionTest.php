@@ -24,11 +24,6 @@ class PermissionTest extends TestCase
 
     public function setUp(): void
     {
-        App::setConfig('app', [
-            'permission' => [
-                'strategy' => 'affirmative'
-            ]
-        ]);
         $this->permission = new Permission();
     }
 
@@ -37,6 +32,13 @@ class PermissionTest extends TestCase
         $user = new \stdClass();
         $user->id = 7;
         $this->assertFalse($this->permission->authorize($user, 'demo'));
+
+        App::setConfig('app', [
+            'permission' => [
+                'allow_if_all_abstain' => true
+            ]
+        ]);
+        $this->assertTrue($this->permission->authorize($user, 'demo'));
     }
 
     public function testWithTrueVoter()
@@ -55,8 +57,13 @@ class PermissionTest extends TestCase
         $this->assertFalse($this->permission->authorize($user, 'demo'));
     }
 
-    public function testWithOneVoterTrue()
+    public function testAffirmativeStrategy()
     {
+        App::setConfig('app', [
+            'permission' => [
+                'strategy' => 'affirmative'
+            ]
+        ]);
         $user = new \stdClass();
         $user->id = 7;
         $this->permission->addVoter(new AlwaysYesVoter());
@@ -94,16 +101,48 @@ class PermissionTest extends TestCase
 
     public function testConsensusStrategy()
     {
-        $this->assertTrue(1 == 1);
+        App::setConfig('app', [
+            'permission' => [
+                'strategy' => 'consensus'
+            ]
+        ]);
+        $user = 'user';
+        $this->permission->addVoter(new AlwaysNoVoter());
+        $this->permission->addVoter(new AlwaysNoVoter());
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->assertFalse($this->permission->authorize($user, ''));
+
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->permission->addVoter(new AlwaysNoVoter());
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->assertTrue($this->permission->authorize($user, ''));
+
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->permission->addVoter(new AlwaysNoVoter());
+        $this->assertTrue($this->permission->authorize($user, ''));
+
+        App::setConfig('app', [
+            'permission' => [
+                'strategy' => 'consensus',
+                'allow_if_equal_granted_denied' => false
+            ]
+        ]);
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->permission->addVoter(new AlwaysNoVoter());
+        $this->assertFalse($this->permission->authorize($user, ''));
     }
 
     public function testUnanimousStrategy()
     {
-        $this->assertTrue(1 == 1);
-    }
-
-    public function testPriorityStrategy()
-    {
-        $this->assertTrue(1 == 1);
+        App::setConfig('app', [
+            'permission' => [
+                'strategy' => 'unanimous'
+            ]
+        ]);
+        $user = 'user';
+        $this->permission->addVoter(new AlwaysNoVoter());
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->permission->addVoter(new AlwaysYesVoter());
+        $this->assertFalse($this->permission->authorize($user, ''));
     }
 }

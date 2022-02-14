@@ -34,9 +34,7 @@ class CsrfMiddlewareTest extends TestCase
 
     public function testBlockPostRequestWithoutCsrf()
     {
-        $this->router->post('/route', function (array $data) {
-            return 'boo';
-        });
+        $this->router->post('/route', function (array $data) {});
         $request = new ServerRequest('post', '/route');
         try {
             $this->router->run($request->withParsedBody(['go' => false]));
@@ -47,9 +45,7 @@ class CsrfMiddlewareTest extends TestCase
 
     public function testBlockPostRequestWithInvalidCsrf()
     {
-        $this->router->post('/route', function (array $data) {
-            return 'boo';
-        });
+        $this->router->post('/route', function (array $data) {});
         $request = new ServerRequest('post', '/route');
         try {
             $this->router->run($request->withParsedBody(['go' => false, '_csrf' => 'azeaze']));
