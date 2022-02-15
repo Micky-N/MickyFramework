@@ -5,7 +5,6 @@ return [
     'cache' => dirname(__DIR__) . '/cache',
     'env' => _env('ENV', 'local'),
     'structure' => _env('STRUCTURE', 'MVC'),
-    'csrf' => true,
     'permission' => [
         'strategy' => 'affirmative'
     ],
