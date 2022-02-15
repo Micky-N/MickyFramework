@@ -37,15 +37,15 @@
                 </li>
             </ul>
             <ul class="navbar-nav mr-4">
-                <mky:auth is="false">
+                <mky:guest>
                     <li class="mr-3">
                         <a class="btn btn-warning" href="{{ route('auth.subscribe') }}">Inscription</a>
                     </li>
                     <li class="">
                         <a class="btn btn-primary" href="{{ route('auth.signin') }}">Connexion</a>
                     </li>
-                </mky:auth>
-                <mky:auth is="true">
+                </mky:guest>
+                <mky:auth>
                     <li class="mr-3">
                         <a class="btn btn-outline-dark">{{ auth()->username }}</a>
                     </li>
@@ -94,7 +94,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
 <script>
     var env = <mky:json data="$_ENV"/>;
-    var auth = <mky:json data="auth()"/>;
+    <mky:if cond="auth() != null">
+        var auth = <mky:json data="auth()"/>;
+    </mky:if>
 </script>
 <mky:auth>
     <script type="text/javascript" src="<mky:asset path='js/script.js' />"></script>

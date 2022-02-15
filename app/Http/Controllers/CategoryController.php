@@ -46,6 +46,7 @@ class CategoryController extends Controller
     public function update($category, array $data)
     {
         $update_category = Category::update($category, $data);
+        auth()->notify(new CategoryNotification($update_category, 'update'));
         CategoryEvent::dispatch($update_category, ['update'], ['username' => auth()->username]);
         return Route::redirectName('categories.index');
     }

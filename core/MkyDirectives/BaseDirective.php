@@ -18,6 +18,7 @@ class BaseDirective implements MkyDirectiveInterface
             'can' => [[$this, 'can'], [$this, 'endcan']],
             'notcan' => [[$this, 'notcan'], [$this, 'endnotcan']],
             'auth' => [[$this, 'auth'], [$this, 'endauth']],
+            'guest' => [[$this, 'guest'], [$this, 'endguest']],
             'currentRoute' => [[$this, 'currentRoute'], [$this, 'endcurrentRoute']],
             'route' => [$this, 'route'],
             'csrf' => [$this, 'csrfInput']
@@ -52,13 +53,24 @@ class BaseDirective implements MkyDirectiveInterface
         return '<?php endif; ?>';
     }
 
-    public function auth(bool $is = null)
+    public function auth()
     {
-        $cond = json_encode($is === (new \Core\AuthManager())->isLogin());
+        $cond = json_encode((new \Core\AuthManager())->isLogin());
         return "<?php if($cond): ?>";
     }
 
     public function endauth()
+    {
+        return '<?php endif; ?>';
+    }
+
+    public function guest()
+    {
+        $cond = json_encode(!(new \Core\AuthManager())->isLogin());
+        return "<?php if($cond): ?>";
+    }
+
+    public function endguest()
     {
         return '<?php endif; ?>';
     }
@@ -81,7 +93,7 @@ class BaseDirective implements MkyDirectiveInterface
     public function asset(string $path)
     {
         $path = trim($path, '\'\"');
-        return BASE_ULR . 'public/' . 'assets/' . $path;
+        return BASE_ULR . 'assets/' . $path;
     }
 
     public function route(string $name, array $params = [])

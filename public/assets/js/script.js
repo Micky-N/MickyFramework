@@ -8,7 +8,7 @@ window.addEventListener('load', () => {
     if (!('PushManager' in window)) {
         return;
     }
-    navigator.serviceWorker.register('https://mickyframework.mndinga.loc:444/public/assets/js/sw.js')
+    navigator.serviceWorker.register(window.location.origin+'/sw.js')
         .then((registration) => {
             serviceWorkerRegistration = registration
             initializePushMessage()
@@ -64,7 +64,7 @@ function subscribeUserToPush() {
 function updateSubscriptionOnServer(subscription = null, subscribe = true) {
     return new Promise((resolve, reject) => {
         let extra = (subscribe) ? '/subscribe' : '/unsubscribe';
-        axios.post('https://mickyframework.loc/subscription' + extra, subscription, {
+        axios.post(window.location.origin+'/subscription' + extra, subscription, {
             headers: {
                 'Content-Type': 'application/json',
             },

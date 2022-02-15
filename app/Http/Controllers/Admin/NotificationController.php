@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Notifiable;
 use App\Models\Notifiables;
 use Core\Controller;
 
@@ -35,7 +36,7 @@ class NotificationController extends Controller
                         die();
                     }
                 } else {
-                    $query = Notifiables::create($add);
+                    $query = Notifiable::create($add);
                     if($query !== false){
                         echo json_encode(['status' => 'ok', 'message' => 'subscribed']);
                         die();
