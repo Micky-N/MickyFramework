@@ -4,7 +4,7 @@
 namespace App\Product;
 
 
-use Core\Module;
+use MkyCore\Module;
 
 class ProductModule extends Module
 {

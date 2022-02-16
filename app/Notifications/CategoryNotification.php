@@ -5,7 +5,7 @@ namespace App\Notifications;
 
 
 use App\Utils\WebPushMessage;
-use Core\Interfaces\NotificationInterface;
+use MkyCore\Interfaces\NotificationInterface;
 
 class CategoryNotification implements NotificationInterface
 {

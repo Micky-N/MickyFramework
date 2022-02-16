@@ -1,6 +1,6 @@
 <?php
 
-use Core\App;
+use MkyCore\App;
 use GuzzleHttp\Psr7\ServerRequest;
 
 

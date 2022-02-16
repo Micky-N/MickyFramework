@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Core\Model;
+use MkyCore\Model;
 
 
 class Notifiable extends Model

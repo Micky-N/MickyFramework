@@ -5,9 +5,9 @@ namespace App\Product\Http\Controllers\Admin;
 use App\Models\Category;
 use App\Product\Models\Product;
 use App\Models\Supplier;
-use Core\Controller;
-use Core\Facades\Route;
-use Core\Facades\View;
+use MkyCore\Controller;
+use MkyCore\Facades\Route;
+use MkyCore\Facades\View;
 
 
 class ProductController extends Controller

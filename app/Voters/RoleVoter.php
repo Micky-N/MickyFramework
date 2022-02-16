@@ -5,8 +5,7 @@ namespace App\Voters;
 
 
 use App\Models\Role;
-use App\Models\User;
-use Core\Interfaces\VoterInterface;
+use MkyCore\Interfaces\VoterInterface;
 
 class RoleVoter implements VoterInterface
 {

@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Notifications\SupplierNotification;
-use Core\Controller;
-use Core\Facades\Permission;
-use Core\Facades\View;
-use Core\Facades\Route;
+use MkyCore\Controller;
+use MkyCore\Facades\View;
+use MkyCore\Facades\Route;
 use App\Models\Supplier;
-use Core\Notification;
 
 
 class SupplierController extends Controller

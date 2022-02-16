@@ -2,7 +2,7 @@
 
 namespace App\Product\Models;
 
-use Core\Model;
+use MkyCore\Model;
 
 
 class ProductSupplier extends Model

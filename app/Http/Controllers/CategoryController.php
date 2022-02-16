@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Events\CategoryEvent;
-use App\Listeners\TestCategoryListener;
-use App\Models\User;
 use App\Notifications\CategoryNotification;
-use Core\Controller;
-use Core\Facades\View;
-use Core\Facades\Route;
+use MkyCore\Controller;
+use MkyCore\Facades\View;
+use MkyCore\Facades\Route;
 use App\Models\Category;
-use Core\Notification;
 
 class CategoryController extends Controller
 {

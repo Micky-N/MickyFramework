@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
-use Core\AuthManager;
-use Core\Controller;
-use Core\Facades\Route;
-use Core\Facades\View;
+use MkyCore\AuthManager;
+use MkyCore\Controller;
+use MkyCore\Facades\Route;
+use MkyCore\Facades\View;
 use App\Models\User;
-use Core\Validate\Validator;
+use MkyCore\Validate\Validator;
 
 class AuthController extends Controller
 {

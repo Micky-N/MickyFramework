@@ -3,7 +3,7 @@
 
 namespace App\Utils;
 
-use Core\Interfaces\NotificationSystemInterface;
+use MkyCore\Interfaces\NotificationSystemInterface;
 use ErrorException;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;

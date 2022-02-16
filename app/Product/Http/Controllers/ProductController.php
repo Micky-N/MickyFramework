@@ -2,10 +2,10 @@
 
 namespace App\Product\Http\Controllers;
 
-use Core\Controller;
-use Core\Facades\View;
+use MkyCore\Controller;
+use MkyCore\Facades\View;
 use App\Product\Models\Product;
-use Core\Facades\Route;
+use MkyCore\Facades\Route;
 use App\Models\Category;
 use App\Product\Models\ProductSupplier;
 use App\Models\Supplier;

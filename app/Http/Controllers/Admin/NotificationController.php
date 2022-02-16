@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\Notifiable;
-use App\Models\Notifiables;
-use Core\Controller;
+use MkyCore\Controller;
 
 class NotificationController extends Controller
 {

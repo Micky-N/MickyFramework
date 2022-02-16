@@ -1,13 +1,14 @@
 <?php
 
-use Core\MKYCommand\MickyCLI;
+use MkyCore\MKYCommand\MickyCLI;
 
 if (php_sapi_name() === 'cli') {
     require 'vendor/autoload.php';
     $cli = getopt('', MickyCLI::cliLongOptions());
+    $mkyCli = new MickyCLI($cli);
     if(count($cli) == 1 && isset($cli['help'])){
-        echo file_get_contents('./core/MkyCommand/help.txt');
+        echo $mkyCli->help();
     }else{
-        (new MickyCLI($cli))->run();
+        $mkyCli->run();
     }
 }

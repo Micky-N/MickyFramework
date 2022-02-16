@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Core\Model;
-use Core\Traits\Notify;
+use MkyCore\Model;
+use MkyCore\Traits\Notify;
 
 
 class User extends Model

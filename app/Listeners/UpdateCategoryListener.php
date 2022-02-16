@@ -4,9 +4,9 @@
 namespace App\Listeners;
 
 
-use Core\Facades\Session;
-use Core\Interfaces\EventInterface;
-use Core\Interfaces\ListenerInterface;
+use MkyCore\Facades\Session;
+use MkyCore\Interfaces\EventInterface;
+use MkyCore\Interfaces\ListenerInterface;
 
 class UpdateCategoryListener implements ListenerInterface
 {
