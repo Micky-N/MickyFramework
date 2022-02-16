@@ -1,9 +1,9 @@
 {
-  "name": "micky/micky-framework",
-  "description": "Framework MVC/HMVC",
+  "name": "micky/mkyframework",
+  "description": "PHP Framework MVC/HMVC",
   "authors": [
     {
-      "name": "Ndinga Mickael",
+      "name": "Mickaël Ndinga",
       "email": "ndingamickael@gmail.com"
     }
   ],
@@ -20,7 +20,7 @@
     "robmorgan/phinx": "^0.12.7",
     "fakerphp/faker": "^1.15",
     "mbezhanov/faker-provider-collection": "^2.0",
-    "micky/mky-engine": "^1.0"
+    "micky/mkyengine": "^1.0"
   },
   "autoload": {
     "psr-4": {

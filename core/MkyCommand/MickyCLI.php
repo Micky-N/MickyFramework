@@ -58,8 +58,7 @@ class MickyCLI
         'format' => 'required',
         'directive' => 'required',
         'fn' => 'required',
-        'help' => 'novalue',
-        'start-app' => 'novalue'
+        'help' => 'novalue'
     ];
 
     /**
@@ -70,7 +69,6 @@ class MickyCLI
      * @var array|string[][][]
      */
     private static array $required = [
-        'start-app',
         'create' => [
             'module' => [
                 'name' => 'required',
