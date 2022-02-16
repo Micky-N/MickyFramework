@@ -3,8 +3,8 @@
 namespace App\Product\Voters;
 
 use App\Product\Models\Product;
-use Core\Exceptions\Voter\VoterException;
-use Core\Interfaces\VoterInterface;
+use MkyCore\Exceptions\Voter\VoterException;
+use MkyCore\Interfaces\VoterInterface;
 
 class ProductVoter implements VoterInterface
 {

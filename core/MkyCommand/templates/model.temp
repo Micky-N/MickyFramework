@@ -1,9 +1,0 @@
-namespace !path;
-
-use Core\Model;
-
-
-class !name extends Model
-{
-    !table!pk
-}

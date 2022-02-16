@@ -3,7 +3,7 @@
 namespace App\Product\Models;
 
 use App\Models\User;
-use Core\Model;
+use MkyCore\Model;
 use App\Models\Stock;
 use App\Models\Supplier;
 use App\Models\Category;

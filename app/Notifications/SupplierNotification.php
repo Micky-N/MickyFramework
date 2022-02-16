@@ -4,8 +4,8 @@
 namespace App\Notifications;
 
 
-use Core\Interfaces\NotificationInterface;
-use Core\WebPushMessage;
+use MkyCore\Interfaces\NotificationInterface;
+use MkyCore\WebPushMessage;
 
 class SupplierNotification implements NotificationInterface
 {

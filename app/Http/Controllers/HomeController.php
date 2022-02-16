@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Core\Controller;
-use Core\Facades\View;
+use MkyCore\Controller;
+use MkyCore\Facades\View;
 use App\Models\Category;
 use App\Product\Models\Product;
 use App\Product\Models\ProductSupplier;
 use App\Models\Supplier;
-use Core\Model;
 
 class HomeController extends Controller
 {

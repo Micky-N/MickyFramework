@@ -3,9 +3,9 @@
 namespace App\Http\Middlewares;
 
 
-use Core\AuthManager;
-use Core\Facades\Route;
-use Core\Interfaces\MiddlewareInterface;
+use MkyCore\AuthManager;
+use MkyCore\Facades\Route;
+use MkyCore\Interfaces\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AuthMiddleware implements MiddlewareInterface

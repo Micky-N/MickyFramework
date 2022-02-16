@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Product\Models\Product;
-use Core\Model;
+use MkyCore\Model;
 
 class Supplier extends Model
 {

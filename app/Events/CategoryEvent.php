@@ -3,7 +3,7 @@
 
 namespace App\Events;
 
-use Core\Event;
+use MkyCore\Event;
 
 class CategoryEvent extends Event
 {
