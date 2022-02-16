@@ -56,7 +56,7 @@ class Route
         if($this->matches){
             $params = $this->matches;
         }
-        if(in_array('_csrf', $request->getParsedBody())){
+        if(!is_null($request->getParsedBody()) && array_key_exists('_csrf', $request->getParsedBody())){
             App::setRouteMiddleware('csrf', CsrfMiddleware::class);
             if(!empty($this->middleware)){
                 $this->middleware = is_string($this->middleware) ? [$this->middleware] : $this->middleware;

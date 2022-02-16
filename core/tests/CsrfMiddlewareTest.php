@@ -72,7 +72,7 @@ class CsrfMiddlewareTest extends TestCase
         $token = (new CsrfMiddleware())->generateToken();
         $this->assertEquals('boo', $this->router->run($request->withParsedBody(['_csrf' => $token])));
         try {
-            $this->expectException($this->router->run($request->withParsedBody(['_csrf' => $token])));
+            $this->router->run($request->withParsedBody(['_csrf' => $token]));
         }catch (\Exception $ex){
             $this->assertInstanceOf(CsrfMiddlewareException::class, $ex);
         }
