@@ -24,20 +24,18 @@
   },
   "autoload": {
     "psr-4": {
-      "Core\\": "core/",
-      "Tests\\": "tests/",
-      "App\\": "app/",
-      "DebugBar\\": "core/DebugBar/"
-    },
-    "files": [
-      "core/Helpers/config.php",
-      "core/Helpers/route.php",
-      "core/Helpers/view.php",
-      "core/Helpers/lang.php"
-    ]
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   },
   "require-dev": {
     "phpunit/phpunit": "9.5.9",
     "phpunit/php-code-coverage": "^9.2"
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
