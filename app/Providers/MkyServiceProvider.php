@@ -2,9 +2,9 @@
 
 return [
     'formatters' => [
-	    new \App\MkyFormatters\TestFormatter(),
+	    // new \App\MkyFormatters\TestFormatter(),
     ],
     'directives' => [
-	    new \App\MkyDirectives\TestDirective(),
+	    // new \App\MkyDirectives\TestDirective(),
     ]
 ];

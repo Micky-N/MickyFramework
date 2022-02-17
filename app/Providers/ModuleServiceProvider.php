@@ -1,5 +1,5 @@
 <?php
 
 return [
-    \App\Product\ProductModule::class,
+    // TestModule::class,
 ];

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'getUser' => function ($id) {
-        echo("user $id");
-    }
+    // 'getUser' => function ($id) {
+    //     echo("user $id");
+    // }
 ];

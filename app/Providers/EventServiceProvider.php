@@ -1,8 +1,10 @@
 <?php
 
-
+/**
+ * \App\Events\TestEvent::class => [
+ *       'update' => \App\Listeners\UpdateTestListener::class,
+ *   ],
+ */
 return [
-    \App\Events\CategoryEvent::class => [
-        'update' => \App\Listeners\UpdateCategoryListener::class,
-    ],
+    
 ];
