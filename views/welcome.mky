@@ -1,179 +1,23 @@
 <mky:extends name="layouts.template"/>
 
 <mky:section name="content">
-    <table id="table"></table>
-    <div class="modal fade" id="imageModal" data-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body p-0 m-0">
-                    <img id="photo" class="img-thumbnail" width="700" height="700" src="">
-                </div>
+    <div class="flex justify-center grow bg-no-repeat bg-contain bg-[length:100%_100%]"
+         style="background-image: url(<mky:asset path='img/header.jpg'/>)">
+        <div class="flex justify-center mx-auto text-white">
+            <div class="flex flex-col mr-5 my-auto">
+                <h1 class="text-6xl font-bold mb-5">
+                    MKY Framework
+                </h1>
+                <h2 class="text-4xl italic">Framework PHP MVC</h2>
+                <h2 class="text-3xl italic">or HMVC</h2>
+                <h3 class="text-xl italic">
+                    to see documentation
+                    <a class="bg-blue-800 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded" href="https://github.com/Micky-N/mky/wiki">click here !</a>
+                </h3>
+            </div>
+            <div class="my-auto">
+                <img class="w-96" src="<mky:asset path='img/mky.png'/>">
             </div>
         </div>
     </div>
-</mky:section>
-
-<mky:section name="js">
-    <script>
-        var $table = $('#table')
-        var categories = <mky:json data="$categories"/>;
-
-        function categories_Table($el, categories) {
-            var cells = Object.keys(categories[0]).filter(c => !['products'].includes(c))
-            var i;
-            var j;
-            var row
-            var columns = []
-            var data = []
-
-            for (i = 0; i < cells.length; i++) {
-                columns.push({
-                    field: cells[i],
-                    title: cells[i],
-                    sortable: true
-                })
-            }
-            columns.push({
-                field: 'show',
-                title: 'Voir',
-            })
-
-            for (i = 0; i < categories.length; i++) {
-                row = {}
-                for (j = 0; j < cells.length; j++) {
-                    row[cells[j]] = categories[i][cells[j]]
-                }
-                row['show'] = `
-        <div class="d-flex justify-content-center">
-        <a href="/categories/${categories[i].code_category}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
-        </div>
-        `
-                data.push(row)
-            }
-            $el.bootstrapTable({
-                columns: columns,
-                data: data,
-                classes: 'table table-bordered table-sm',
-                theadClasses: 'table-primary',
-                detailView: cells.length > 1,
-                onExpandRow: function (index, row, $detail) {
-                    let {code_category, name} = row
-                    let category = {code_category, name}
-                    productsTable($detail.html('<table></table>').find('table'), category)
-                }
-            })
-        }
-
-        function productsTable($el, category) {
-            var products = <mky:json data="$products"/>.filter(p => p.code_category === category.code_category)
-            products.forEach(p => {
-                p.categorie = category.name
-                delete p.code_category
-            })
-            var cells = Object.keys(products[0]).filter(p => !['suppliers', 'user_id'].includes(p))
-            var i;
-            var j;
-            var row
-            var columns = []
-            var data = []
-
-            for (i = 0; i < cells.length; i++) {
-                columns.push({
-                    field: cells[i],
-                    title: cells[i],
-                    sortable: true
-                })
-            }
-            columns.push({
-                field: 'show',
-                title: 'Voir',
-            })
-
-            for (i = 0; i < products.length; i++) {
-                row = {}
-                for (j = 0; j < cells.length; j++) {
-                    row[cells[j]] = products[i][cells[j]]
-                }
-                row['show'] = `
-      <div class="d-flex justify-content-center">
-      <a href="/products/${products[i].code_product}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
-      </div>
-      `
-                data.push(row)
-            }
-            $el.bootstrapTable({
-                columns: columns,
-                classes: 'table table-bordered table-sm',
-                theadClasses: 'table-warning',
-                data: data,
-                pagination: true,
-                pageList: [5, 10, 20],
-                pageSize: 5,
-                paginationParts: ['pageList', 'pageSize'],
-                detailView: cells.length > 1,
-                onExpandRow: function (index, row, $detail) {
-                    suppliersTable($detail.html('<table></table>').find('table'), row.code_product)
-                }
-            })
-        }
-
-
-        function suppliersTable($el, code_product) {
-            var productSuppliers = <mky:json data="$productSuppliers"/>.filter(ps => ps.code_product === code_product);
-            var suppliers = <mky:json data="$suppliers"/>
-            var codes = []
-            productSuppliers.forEach(ps => {
-                codes.push(ps.code_supplier)
-            })
-            suppliers = suppliers.filter(s => codes.includes(s.code_supplier))
-            var cells = Object.keys(suppliers[0])
-            var i;
-            var j;
-            var row
-            var columns = []
-            var data = []
-
-            for (i = 0; i < cells.length; i++) {
-                columns.push({
-                    field: cells[i],
-                    title: cells[i],
-                    sortable: true
-                })
-            }
-            columns.push({
-                field: 'show',
-                title: 'Voir',
-            })
-
-
-            for (i = 0; i < suppliers.length; i++) {
-                row = {}
-                for (j = 0; j < cells.length; j++) {
-                    row[cells[j]] = suppliers[i][cells[j]]
-                }
-                row['show'] = `
-      <div class="d-flex justify-content-center">
-      <a href="/suppliers/${suppliers[i].code_supplier}" class="btn btn-outline-success mr-1"><i class="fa fa-eye"></i></a>
-      </div>
-      `
-                data.push(row)
-            }
-            $el.bootstrapTable({
-                columns: columns,
-                data: data,
-                classes: 'table table-bordered table-sm',
-                theadClasses: 'table-success',
-            })
-        }
-
-        function showModal(e) {
-            var photo = e.getAttribute('data-ref')
-            $('img#photo').attr('src', photo)
-            $('#imageModal').modal('toggle')
-        }
-
-        $(function () {
-            categories_Table($table, categories)
-        })
-    </script>
 </mky:section>
