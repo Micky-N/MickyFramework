@@ -1,12 +1,21 @@
 <?php
 
+/*
+ * -------------------------------------------------------------
+ *  MiddlewareServiceProvider
+ * -------------------------------------------------------------
+ *
+ * This provider records all routes middlewares with an alias and
+ * all voters for permission
+ *
+ */
 
 return [
     'routeMiddlewares' => [
-        'auth' => \App\Http\Middlewares\AuthMiddleware::class
+        //'test' => \App\Http\Middlewares\TestMiddleware::class
     ],
 
     'voters' => [
-        \App\Voters\RoleVoter::class,
+        // \App\Voters\TestVoter::class,
     ],
 ];

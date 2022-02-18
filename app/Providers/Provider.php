@@ -1,8 +1,18 @@
 <?php
 
 
+/*
+ * -------------------------------------------------------------
+ *  Provider
+ * -------------------------------------------------------------
+ *
+ * This provider records all third systems with an alias, useful
+ * for notification system
+ *
+ */
+
 return [
     'alias' => [
-        'webPush' => \App\Utils\WebPushNotification::class
+       // 'test' => TestNotification::class
     ]
 ];

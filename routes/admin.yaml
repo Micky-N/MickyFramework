@@ -1,3 +1,0 @@
-notification:
-    path: crud
-    controller: App\Http\Controllers\Admin\NotificationController

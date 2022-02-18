@@ -1,5 +1,15 @@
 <?php
 
+
+/*
+ * -------------------------------------------------------------
+ *  ModuleServiceProvider
+ * -------------------------------------------------------------
+ *
+ * This provider records all modules created with their modules class
+ *
+ */
+
 return [
-    \App\Product\ProductModule::class,
+    // TestModule::class,
 ];

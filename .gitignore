@@ -4,7 +4,6 @@ vendor
 .vscode/
 cache/*
 tests/report/
-database/
 .env
 *.cache.php
 .phpunit.result.cache
