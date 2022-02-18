@@ -12,7 +12,7 @@
                 <h2 class="text-3xl italic">or HMVC</h2>
                 <h3 class="text-xl italic">
                     to see documentation
-                    <a class="bg-blue-800 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded" href="https://github.com/Micky-N/mky/wiki">click here !</a>
+                    <a class="bg-blue-800 hover:bg-blue-500 text-white font-bold py-1 px-2 rounded" href="https://micky-n.github.io/mky">click here !</a>
                 </h3>
             </div>
             <div class="my-auto">
