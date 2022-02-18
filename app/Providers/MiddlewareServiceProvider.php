@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * -------------------------------------------------------------
+ *  MiddlewareServiceProvider
+ * -------------------------------------------------------------
+ *
+ * This provider records all routes middlewares with an alias and
+ * all voters for permission
+ *
+ */
 
 return [
     'routeMiddlewares' => [

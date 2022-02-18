@@ -1,7 +1,13 @@
 <?php
 
+/*
+ * -------------------------------------------------------------
+ *  Functions for route
+ * -------------------------------------------------------------
+ *
+ * Exemple : 'getUser' => function ($id) { echo("user $id"); }
+ *
+ */
 return [
-    // 'getUser' => function ($id) {
-    //     echo("user $id");
-    // }
+
 ];
