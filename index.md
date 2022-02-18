@@ -1,6 +1,3 @@
-# MickyFramework    
-  
-> *Framework MVC et HMVC par Micky_N* 
   
 Framework PHP, modulable en architecture MVC ou HMVC et utilise un moteur de Template Mky.
 
@@ -33,7 +30,7 @@ Framework PHP, modulable en architecture MVC ou HMVC et utilise un moteur de Tem
 
 ## Structure  
   
- ### Dossiers  
+### Dossiers  
 - app  
    - Events : contient  les évènements à déclencher  
    - Listeners : contient  les écouteurs d'évènement  
