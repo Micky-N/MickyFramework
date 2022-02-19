@@ -4,6 +4,15 @@ html.dark body {
     color: #888888;
 }
 
+
+
+@media (min-width: 1280px){
+    .main {
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+}
+
 html.dark h1,
 html.dark h2,
 html.dark h3,
@@ -34,6 +43,10 @@ html.dark .docs-sidebar .nav>li:not(.active)>a:hover {
 html.dark .docs-sidebar .nav>li>a:hover {
     color: #cc8548;
     border-left: 2px solid #cc8548;
+}
+
+html.dark .licence {
+    color: #cc8548;
 }
 
 html.dark .dark-text hr {
@@ -146,7 +159,8 @@ html #mode .dark {
 
 @media (min-width: 992px) {
     .affix,
-    .affix-bottom {
+    .affix-bottom,
+    .affix-top {
         width: 213px
     }
     .affix {
@@ -165,7 +179,8 @@ html #mode .dark {
 
 @media (min-width: 1200px) {
     .affix,
-    .affix-bottom {
+    .affix-bottom,
+    .affix-top {
         width: 263px
     }
 }
