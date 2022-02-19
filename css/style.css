@@ -153,6 +153,10 @@ sub {
     top: .5ex;
 }
 
+#wrapper {
+    overflow-x: hidden;
+}
+
 .check li:before {
     content: "\f00c";
     font-family: "FontAwesome";

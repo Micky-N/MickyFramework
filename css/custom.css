@@ -345,3 +345,8 @@ html.dark .docs-sidebar {
 .syntaxhighlighter .js.keyword {
     color: #b48ead !important;
 }
+
+table.table-responsive {
+    width: 100%;
+    display: block;
+}

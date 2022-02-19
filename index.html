@@ -60,7 +60,7 @@
                 <div class="row">
                     <div class="col-md-12 mx-auto">
                         <div class="big-title text-center">
-                            <img src="images/mky.png" style="width:50vw" alt="Logo">
+                            <img src="images/mky.png" style="width:75%; min-width: 300px;margin-bottom: 10px;" alt="Logo">
                             <p class="lead">MkyFramework / PHP (H)MVC Framework</p>
                         </div>
                     </div>
@@ -221,7 +221,7 @@
 
                         <h3>Configuration</h3>
 
-                        <p>This command will install the new app in your app name folder. After you have to set config in the config folder</p>
+                        <p>This command will install the new app in your app name folder. After that you have to config your app in the config folder</p>
                         
                         <table class="table table-responsive">
                             <thead>
@@ -302,7 +302,7 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <p>Application fetches all routes in routes/*.yaml folder, route files are written in .yaml format and custom route functions in functions.php file</p>
+                                <p>All routes are fetched in the routes/*.yaml folder, route files are written in YAML format and custom route functions are registered as array in the functions.php file</p>
 
                                 <h3 id="line3_1">YAML route format</h3>
                                 <pre class="brush: php">
@@ -346,10 +346,10 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <p>Voters write in the route <b>can: permission, subject</b>. Only the routes located in the admin.yaml file are prefixed (url name and path) by admin example: name = admin.todos.index and path = /admin/todos.</p>
+                                <p>Voters are written in the route as <b>can: permission, subject</b> format. Only the routes located in the admin.yaml file are prefixed (route name and url path) by 'admin' example: name = admin.todos.index and path = /admin/todos.</p>
                                 <p>To use the route functions in the functions.php file, the route action must be written like <b>func::function_name</b> example: <b>func::getUser</b></p>
 
-                                <pre class="brush: js">
+                                <pre class="brush: php">
                                     // routes/functions.php
                                     // path: test/Micky, action: func::getUser
                                     [  
@@ -362,13 +362,13 @@
                                     ];
                                 </pre>
 
-                                <strong>To implement 7 CRUD methods</strong>
-                                <pre class="brush: js">
+                                <b>To implement 7 CRUD methods</b>
+                                <pre class="brush: php">
                                     users:  
                                         path: crud  
                                         controller: App\Http\Controllers\UserController
                                         middleware: auth
-                                    # only: [index, create] to implement index() and create() methods only
+                                        only: [index, create] // Optional, to implement index() and create() methods only
                                 </pre>
 
                                 <table class="table table-responsive">
@@ -466,21 +466,18 @@
                                 <p>Providers register classes for a defined use.
                                 </p>
                                 <h4>EventServiceProvider</h4>
-                                <div style="margin-left: 25px">
-                                    <p>This provider is used to store events and their listeners according to their actions as alias :</p>
+                                <p>This provider is used to store events and their listeners according to their actions as alias :</p>
                                     <pre class="brush: php">
                                         // app/Providers/EventServiceProvider.php
                                         [
                                             \App\Events\TodoEvent::class => [
-                                            'update' => \App\Listeners\UpdateTodoListener::class,
+                                                'update' => \App\Listeners\UpdateTodoListener::class,
                                                 'otherAction' => \App\Listeners\OtherListener::class,
                                             ]
                                         ];
                                     </pre>
-                                </div>
                                 <h4>MiddlewareServiceProvider</h4>
-                                <div style="margin-left: 25px">
-                                    <p>This provider is used to store route middlewares with aliases, and voters :</p>
+                                <p>This provider is used to store route middlewares with aliases, and voters :</p>
                                     <pre class="brush:php">
                                         // app/Providers/MiddlewareServiceProvider.php
                                         [
@@ -493,34 +490,29 @@
                                             ],
                                         ];
                                     </pre>
-                                </div>
                                 <h4>MkyServiceProvider</h4>
-                                <div style="margin-left: 25px">
-                                    <p>This provider is used to store custom directives and formats for the Mky template engine :</p>
+                                <p>This provider is used to store custom directives and formats for the Mky template engine :</p>
                                     <pre class="brush: php">
                                         // app/Providers/MkyServiceProvider.php
                                         [
                                             'formatters' => [
-                                            App\MkyFormatters\TestFormatters::class
+                                                App\MkyFormatters\TestFormatters::class
                                             ],
                                             'directives' => [
                                                 App\MkyDirectives\TestDirective::class
                                             ]
                                         ];
                                     </pre>
-                                </div>
                                 <h4>Provider</h4>
-                                <div style="margin-left: 25px">
-                                    <p>This provider is used to store classes for special uses, such as notification systems, classes are stored with aliases :</p>
+                                <p>This provider is used to store classes for special uses, such as notification systems, classes are stored with aliases :</p>
                                     <pre class="brush: php">
-                                        /app/Providers/Provider.php
+                                        // app/Providers/Provider.php
                                         [
                                             'alias' => [
                                                 'webPush' => \App\Utils\WebPushNotification::class
                                             ]
                                         ];
                                     </pre>
-                                </div>
                             </div>
 
                         </div>
@@ -545,14 +537,14 @@
                                 <p>Model classes use the PDO class to perform queries in the MYSQL database, it also uses a QueryMysql trait which serves as a Query Builder to simplify the writing of SQL queries.
                                     They must enter:
                                     <li>Table name: <b>protected string $table</b></li>
-                                    <p>If the name of the table is the plural of the name of the class model then defining the name of the table is optional, ex: model Todo => table todos, otherwise you must enter the name of the table.</p >
+                                    <p>If the name of the table is the plural of the name of the class model then defining the name of the table is optional, example : model Todo => table todos, otherwise you must enter the name of the table.</p >
                         
                                     <li>Primary key: <b>protected string $primaryKey (if primary key != 'id')</b></li>
                                     <li style="margin-top: 25px;"> Optional record creation time and update time fields <b>protected array $dateTimes</b>. Enterable fields <b>protected array $settable</b> to handle fields</li>
                                 </p>
                                 <h4 id="line5_1_1">List of model methods</h4>
 
-                                ex: 
+                                Example : 
                                 <pre class="brush: php">
                                     // Class declaration
                                     Todo extends MkyCore\Model;
@@ -565,48 +557,48 @@
                                 </pre>
 
                                 <pre class="brush:php">
-                                    public function getTable();
+                                    @method function getTable();
                                 </pre>
                                 <p>Returns the name of the database table</p>
                                 
                                 <pre class="brush:php">
-                                    public function getPrimaryKey();
+                                    @method function getPrimaryKey();
                                 </pre>
 
                                 Returns the name of the primary key
 
                                 <pre class="brush:php">
-                                    public static function getCurrentModel();
+                                    @method static function getCurrentModel();
                                 </pre>
                                 
                                 Returns the currently instantiated model
 
                                 <pre class="brush:php">
-                                    public static function find($id);
+                                    @method static function find($id);
                                 </pre>
                                 
                                 Returns the record using the value of its primary key
 
                                 <pre class="brush: php">
-                                    public static function all();  
+                                    @method static function all();  
                                 </pre>
                                 
                                 Returns all records
 
                                 <pre class="brush:php">
-                                    public static function count();
+                                    @method static function count();
                                 </pre>
                                 
                                 Returns the number of records
 
                                 <pre class="brush:php">
-                                    public static function create(array $data, string $table = '');
+                                    @method static function create(array $data, string $table = '');
                                 </pre>
                                 
                                 create a new record
 
                                 <pre class="brush:php">
-                                    public function save();
+                                    @method function save();
                                 </pre>
                                 
                                 Saves the created object from the model instance
@@ -618,13 +610,13 @@
                                 </b>
                                 
                                 <pre class="brush:php">
-                                    public static function update($id, array $data);
+                                    @method static function update($id, array $data);
                                 </pre>
                                 
                                 Modify a record
 
                                 <pre class="brush:php">
-                                    public function modify(array $data = []);
+                                    @method function modify(array $data = []);
                                 </pre>
 
                                 Modifies a record from the object
@@ -636,13 +628,13 @@
                                 </b>
                                 
                                 <pre class="brush:php">
-                                    public static function delete($id);
+                                    @method static function delete($id);
                                 </pre>
                                 
                                 Delete a record
 
                                 <pre class="brush:php">
-                                    public function destroy();
+                                    @method function destroy();
                                 </pre>
                                 
                                 Deletes the record from its instance
@@ -654,7 +646,7 @@
                                 </b>
                                 
                                 <pre class="brush:php">
-                                    public static function shuffleId();
+                                    @method static function shuffleId();
                                 </pre>
                                 
                                 Randomly returns a primary key value from the table
@@ -667,7 +659,7 @@
                                 <br>
                                 To be used in the class of the current model:
                                 <br>
-                                <b>public function todos(){ return $this->hasMany(Todo::class, $fk); } => $user->todos</b><br>
+                                <b>@method function todos(){ return $this->hasMany(Todo::class, $fk); } => $user->todos</b><br>
                                 if foreign key == table name (singular English) suffixed by '_id' then $fk is optional
                                 
                                 <pre class="brush:php">
@@ -677,7 +669,7 @@
                                 Returns table record by primary key
                                 <br>
                                 To be used in the class of the current model: <br>
-                                <b>public function user(){ return $this->belongsTo(User::class, $fk); } => $todo->user</b><br>
+                                <b>@method function user(){ return $this->belongsTo(User::class, $fk); } => $todo->user</b><br>
                                 if foreign key == table name (singular English) suffixed by '_id' then $fk is optional
                                 
                                 <pre class="brush: php">
@@ -687,35 +679,35 @@
                                 Returns all records in table by primary key in relationship ManyToMany
                                 <br>
                                 To be used in the class of the current model:<br>
-                                <b>public function categories(){ return $this->belongsToMany(Category::class, $pivot, $pk1, $pk2); } => $todo->categories</b>
+                                <b>@method function categories(){ return $this->belongsToMany(Category::class, $pivot, $pk1, $pk2); } => $todo->categories</b>
                                 <br>
                                 if the association table == todo_category or category_todo the argument $pivot is optional<br>
-                                if primary key 1 == (current class name suffixed by _id) ex:todo_id then $pk1 is optional<br>
-                                if primary key 2 == (class name of 1st argument suffixed by _id) ex:category_id then $pk2 is optional
+                                if primary key 1 == (current class name suffixed by _id), example :todo_id then $pk1 is optional<br>
+                                if primary key 2 == (class name of 1st argument suffixed by _id), example :category_id then $pk2 is optional
                                 
                                 <pre class="brush:php">
                                     protected function hasOne(string $model, string $foreignKey = '');
                                 </pre>
 
                                 Returns table record by primary key relationship OneToOne <br>
-                                To be used in the class of the current model, ex:<br>
-                                <b>public function user(){ return $this->hasOne(User::class, $fk); } => $todo->user</b>
+                                To be used in the class of the current model, example :<br>
+                                <b>@method function user(){ return $this->hasOne(User::class, $fk); } => $todo->user</b>
                                 <br> if foreign key == table name (singular) suffixed by '_id' then $fk is optional
                                 
                                 <pre class="brush:php">
-                                    public function with(string $relation, array $properties = []);
+                                    @method function with(string $relation, array $properties = []);
                                 </pre>
 
                                 <p>Returns related table records and selected fields</p>
 
                                 <pre class="brush: php">
-                                    public function modifyManyRelation(string $relation, string $id, array $data);  
+                                    @method function modifyManyRelation(string $relation, string $id, array $data);  
                                 </pre>
 
                                 <p>Modify all table records in OneToMany relationship</p>
 
                                 <pre class="brush:php">
-                                    public function attach($table, array $data);
+                                    @method function attach($table, array $data);
                                 </pre>
 
                                 <p>Create new record in the relation table</p>
@@ -776,13 +768,13 @@
                                 </pre>
                                 <b>Todo::map('task', $value)</b> => reorganizes all the records in an array with the value $key ('task') as key<br>
                                 if $value == null then $value = all fields in the record<br>
-                                if $value == type string ex: 'user_id' then the array will be like <b>'task' => user_id ('Coder' => 'USR001')</b><br>
-                                if $value == type array ex: [user_id, completed] then <b>'Coder' => ['USR001', true]</b>
+                                if $value == type string, example : 'user_id' then the array will be like <b>'task' => user_id ('Coder' => 'USR001')</b><br>
+                                if $value == type array, example : [user_id, completed] then <b>'Coder' => ['USR001', true]</b>
 
                                 <pre class="brush: php">
                                     @method static array get() 
                                 </pre>
-                                retrieves the records following the query passed, by default <b>Todo::get() => SELECT * FROM todolist</b> possible to chain the methods to finish with get() ex:<br>
+                                retrieves the records following the query passed, by default <b>Todo::get() => SELECT * FROM todolist</b> possible to chain the methods to finish with get(), example :<br>
                                 <b>Todo::select('task', 'username')->join('users', 'user_id', 'id')->where('completed', true)->get()</b>
 
                                 <pre class="brush:php">
@@ -825,7 +817,7 @@
                             which checks if the Voter can vote
                             <pre class="brush: php">vote($user, string $permission, $subject = null)</pre>
                             which retrieves the Voter's vote. Voters must be registered in config/MiddlewareServiceProvider.php<br>
-                            Voters can be used with routes like RouteMiddleware with a can suffix ex: <b>middleware: can:permission, subject</b>, they can be used in the application with the method
+                            Voters can be used with routes like RouteMiddleware with a can suffix, example : <b>middleware: can:permission, subject</b>, they can be used in the application with the method
                             <pre class="brush: php">MkyCore\Permission::authorize($user, string $permission, $subject = null)</pre>
                             or the $user can be any user, the return will be a boolean. can be used for views as a directive to display an element according to user rights.</p>
                             
@@ -835,12 +827,12 @@
                             <pre class="brush:php">
                                 TodoEvent::dispatch($target = null, $actions = null, array $params = [])
                             </pre>
-                            example :
+                            Example :
                             <pre class="brush:php">
                                 App\Events\TodoEvent::dispatch($update_todo, ['update'], ['user' => $user])
                                 $update_todo => modified Todo instance
                             </pre>
-                            The actions are what will make the link between the event and its listeners, so that the application knows which listener to call, the event must be registered in the app/Providers/EventServiceProvider.php with the associated listeners ex:
+                            The actions are what will make the link between the event and its listeners, so that the application knows which listener to call, the event must be registered in the app/Providers/EventServiceProvider.php with the associated listeners, example :
                             <pre class="brush:php">
                             // [event => ['action' => listener]]
                             [
@@ -854,7 +846,7 @@
 
                         <h3 id="line5_5">Listener</h3>
 
-                        <p>Listeners implement the MkyCore\Interfaces\ListenerInterface interface. The listener receives the instance of the event which emits the event (subject, action and parameters) in the method handle($event) processes and executes an action ex: sending mail.</p>
+                        <p>Listeners implement the MkyCore\Interfaces\ListenerInterface interface. The listener receives the instance of the event which emits the event (subject, action and parameters) in the method handle($event) processes and executes an action, example : sending mail.</p>
 
                         <h3 id="line5_6">Notification</h3>
                         <li>Notifications</li>
@@ -869,7 +861,7 @@
                                 ]
                             ];
                            </pre>
-                            The alias entered in the via method must have a method named to followed by the name of the alias with the first letter in capitals ex: toWebPush($notifiable) which will create the message according to the format of the system filled in by the alias.
+                            The alias entered in the via method must have a method named to followed by the name of the alias with the first letter in capitals, example : toWebPush($notifiable) which will create the message according to the format of the system filled in by the alias.
                         </p>
                         <li>Notification systems</li>
                         <p style="margin-left: 25px;">
@@ -981,11 +973,11 @@
                                             <div>false</div>
                                         &lt;/mky:if&gt
                                     </pre>
-                                    <p>If the condition is true then it will display the text true otherwise false, there are 2 types of directives: long range and short range. The long scopes include the html code to transform it, ex: if, each, repeat... they are written
+                                    <p>If the condition is true then it will display the text true otherwise false, there are 2 types of directives: long range and short range. The long scopes include the html code to transform it, example : if, each, repeat... they are written
                                     <pre class="brush: html">
                                         <mky:directive params="">...html...</mky:directive>
                                     </pre> 
-                                    and the short ranges display a result ex: route, json, ... and are written
+                                    and the short ranges display a result, example : route, json, ... and are written
                                     <pre class="brush:html">
                                         &ltmky:params="" directive /&gt
                                     </pre>
@@ -1000,7 +992,7 @@
                                     </pre>
                                     <pre class="brush:html">
                                         // views/todos/index.mky
-                                        &ltmky:extends name="name of layouts ex: layouts.template" /&gt
+                                        &ltmky:extends name="name of layouts, example : layouts.template" /&gt
                                         <mky:section name="content">
                                             -- HTML --
                                             &ltmky:include name="includeView" data="['var' => 'variable1']"/&gt
@@ -1049,7 +1041,7 @@
                                     class TestDirective extends Directive implements MkyDirectiveInterface  
                                     {  
                                     
-                                        public function getFunctions()  
+                                        @method function getFunctions()  
                                         {
                                             // declare the functions in the array
                                             return [
@@ -1059,7 +1051,7 @@
                                         }
                                         
                                         // implement the functions
-                                        public function shortTest($int)
+                                        @method function shortTest($int)
                                         {
                                             // $var = 10;
                                             // in view: <div><mky:shortTest int="$var"/></div>
@@ -1070,8 +1062,8 @@
 
                                         // <mky:longTest cls="customClass">-- HTML --</mky:longTest>
                                         // becomes <div class="customClass">-- HTML --</div>
-                                        public function longTest($cls) { return '<div class="'.$cls.'">'; }
-                                        public function endlongTest() { return '</div>'; }
+                                        @method function longTest($cls) { return '<div class="'.$cls.'">'; }
+                                        @method function endlongTest() { return '</div>'; }
                                     }
                                 </pre>
 
@@ -1089,7 +1081,7 @@
                                     class ArrayFormatter implements MkyFormatterInterface  
                                     {  
 
-                                        public function getFormats()
+                                        @method function getFormats()
                                         {
                                             // declare the functions in the array
                                             return [
@@ -1099,13 +1091,13 @@
                                         }
 
                                         // implement the functions
-                                        public function join(array $array, string $glue = ', ')
+                                        @method function join(array $array, string $glue = ', ')
                                         {
                                             // $var = [1,5,3]; {{ $var#join('!') }} => 1!5!3
                                             return join($glue, $array);
                                         }
 
-                                        public function count(array $array)
+                                        @method function count(array $array)
                                         {
                                             // $var = [1,5,3]; {{ $var#count }} => 3
                                             return count($array);
@@ -1133,7 +1125,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <p>
-                                    CLI commands allow to generate files from the command line ex:
+                                    CLI commands allow to generate files from the command line, example :
                                     <pre class="brush:powershell">
                                         php micky --create=controller --name=TodoController
                                     </pre>
