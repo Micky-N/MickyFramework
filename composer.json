@@ -44,6 +44,11 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ]
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
