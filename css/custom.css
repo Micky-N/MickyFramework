@@ -157,11 +157,13 @@ html #mode .dark {
 
 /* SIDEBAR */
 
-@media (min-width: 768px) {
-    .docs-sidebar {
-        padding-top: 20px;
-        padding-left: 20px;
-    }
+.docs-sidebar {
+    background-color: #f5f5fa;
+    padding: 20px 0 20px 20px;
+    margin-bottom: 75px;
+}
+html.dark .docs-sidebar {
+    background-color: #0c0c0c;
 }
 
 /* all links */
@@ -212,10 +214,11 @@ html #mode .dark {
     font-weight: 500;
 }
 
+
 @media (min-width: 992px) {
     .docs-sidebar {
-        background-color: #f5f5fa;
         height: 100vh;
+        margin-bottom: 0;
     }
     .docs-sidebar .nav ul {
         display: none;
@@ -223,6 +226,9 @@ html #mode .dark {
     }
     .docs-sidebar .nav>.active>ul {
         display: block;
+    }
+    .toc {
+        display: none;
     }
 }
 /*Syntax Highlighter : Sublime Theme */
