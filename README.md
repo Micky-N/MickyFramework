@@ -21,3 +21,7 @@ composer create-project micky/mky
 ```
 
 To see documentation [click here](https://micky-n.github.io/mky/).
+
+## Licence
+
+[MIT](https://github.com/Micky-N/mky/blob/master/LICENSE)
