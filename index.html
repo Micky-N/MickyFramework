@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+
+    <title>Item Name | Documentation by Author Name</title>
+
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/stroke.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <link rel="stylesheet" type="text/css" href="css/prettyPhoto.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <link rel="stylesheet" type="text/css" href="js/syntax-highlighter/styles/shCore.css" media="all">
+    <link rel="stylesheet" type="text/css" href="js/syntax-highlighter/styles/shThemeFadeToGrey.css" media="all">
+
+    <!-- CUSTOM -->
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+
+</head>
+
+<body>
+    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-chevron-up" aria-hidden="true"></i>
+</button>
+
+    <script>
+        var mybutton = document.getElementById("myBtn");
+        window.onscroll = function() {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        function topFunction() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+            document.documentElement.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector('#mode').addEventListener('click', () => {
+                document.querySelector('html').classList.toggle('dark');
+            })
+        });
+    </script>
+
+    <div id="wrapper">
+
+        <div id="mode">
+            <div class="dark">
+                <svg aria-hidden="true" viewBox="0 0 512 512">
+                <title>lightmode</title>
+                <path fill="currentColor"
+                      d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path>
+            </svg>
+            </div>
+            <div class="light">
+                <svg aria-hidden="true" viewBox="0 0 512 512">
+                <title>darkmode</title>
+                <path fill="currentColor"
+                      d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path>
+            </svg>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <section id="top" class="section docs-heading">
+
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <div class="big-title text-center">
+                            <img src="images/mky.png" style="width:50vw" alt="Logo">
+                            <p class="lead">MkyFramework / PHP (H)MVC Framework</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </section>
+            <div class="row">
+                <div class="col-md-3 rowleft">
+                    <nav class="docs-sidebar" data-spy="affix" data-offset-top="300" data-offset-bottom="200" role="navigation">
+                        <ul class="nav">
+                            <li><a href="#line1">Getting Started</a></li>
+                            <li><a href="#line2">How to Install</a></li>
+                            <li><a href="#line3">Routing</a>
+                                <ul class="nav">
+                                    <li><a href="#line3_1">YAML route format</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#line4">Providers</a></li>
+                            <li><a href="#line5">Application</a>
+                                <ul class="nav">
+                                    <li><a href="#line5_1">Model</a></li>
+                                    <li><a href="#line5_2">Middleware</a></li>
+                                    <li><a href="#line5_3">Voter</a></li>
+                                    <li><a href="#line5_4">Event</a></li>
+                                    <li><a href="#line5_5">Listener</a></li>
+                                    <li><a href="#line5_6">Notification</a></li>
+                                    <li><a href="#line5_7">Router</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#line6">MkyEngine</a>
+                                <ul class="nav">
+                                    <li><a href="#line6_1">MkyDirective</a></li>
+                                    <li><a href="#line6_2">Liste des directives</a></li>
+                                    <li><a href="#line6_3">MkyFormatter</a></li>
+                                </ul>
+                            </li>
+                            
+                            <li><a href="#line7">MkyCommand CLI</a>
+                                <ul class="nav">
+                                    <li><a href="#line7_1">Liste des commandes</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#line8">Mode HMVC</a>
+                                <ul class="nav">
+                                    <li><a href="#line8_1">Organisation des dossiers</a></li>
+                                    <li><a href="#line8_2">Configuration</a></li>
+                                    <li><a href="#line8_3">Application HMVC</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#line9">Copyright and license</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-9">
+                    <section class="welcome">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Introduction
+                                    <hr>
+                                </h2>
+                                <div class="row">
+
+                                    <div class="col-md-12 full">
+                                        <div class="intro1">
+                                            <ul>
+                                                <li><strong>Name : </strong>MkyFramework</li>
+                                                <li><strong>Current version : </strong> v1.0.0</li>
+                                                <li><strong>Author : </strong>
+                                                    <a href="https://github.com/Micky-N" target="_blank">Mickaël Ndinga</a>
+                                                </li>
+                                                <li>
+                                                    <strong>License : </strong>
+                                                    <a href="https://github.com/Micky-N/mky/blob/master/LICENSE" target="_blank">MIT License</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <hr>
+                                        <div>
+                                            <p>Framework PHP, modular in MVC or HMVC architecture and uses a Template engine MkyEngine.
+                                            </p>
+                                            <h3>Requirements</h3>
+                                            <p>You will need the following application to customize this template.</p>
+                                            <ol>
+                                                <li>PHP version greater than 7.4</li>
+                                                <li>Composer</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="line1" class="section">
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Getting Started
+                                    <hr>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    This framework is organized with some files that are useful for the application.
+                                </p>
+                                <div>
+                                    <li>app</li>
+                                    <div style="margin-left: 25px; list-style-type: circle;">
+                                        <li>Events : contient les évènements à déclencher</li>
+                                        <li>Listeners : contient les écouteurs d'évènement</li>
+                                        <li>Http</li>
+                                        <div style="margin-left: 25px; list-style-type: square">
+                                            <li>Controllers : contient les contrôleurs</li>
+                                            <li>Middlewares : contient les middlewares</li>
+                                        </div>
+                                        <li>MkyDirectives : contient les méthodes personnalisées pour les vues
+                                        </li>
+                                        <li>MkyFilters : contient les filtres personnalisées pour les vues
+                                        </li>
+                                        <li>Models : contient les modèles de la base de données MYSQL</li>
+                                        <li>Notifications : contient les systèmes de notifications</li>
+                                        <li>Providers : contient le MiddlewareServiceProvider.php, l'EventServiceProvider.php, le MkyServiceProvider.php et le Provider.php
+                                        </li>
+                                        <li>Voters : contient Les voters</li>
+                                    </div>
+                                </div>
+                                <p>En mode HMVC, les dossiers des modules se situent dans le dossier app/Nom_du_module)</p>
+                                <li>config : contient les fichiers de configuration</li>
+                                <li>public : contient les fichiers index.php et les css et js</li>
+                                <li>routes : contient les fichiers de route, web.yaml, admin.yaml et functions.php</li>
+                                <li>views : contient toutes les vues .mky</li>
+
+                                <p>Our you can use the grid system with 3 columns like this;</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="line2" class="section">
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">How to Install
+                                    <hr>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <h3>Composer</h3>
+
+                        <p>To install MkyFramework with composer use the command</p>
+                        <pre class="brush: powershell">
+                            composer create-project micky/mky appname
+                        </pre>
+
+                        <h3>Configuration</h3>
+
+                        <p>This command will install the new app in your app name folder. After you have to set config in the config folder</p>
+                        
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Fichier</th>
+                                    <th>Point de config</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>app</td>
+                                    <td>app_name</td>
+                                    <td>Nom de l'application</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>cache</td>
+                                    <td>dossier de cache</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>env</td>
+                                    <td>environnement de l'application</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>structure</td>
+                                    <td>structure de l'application (MVC ou HMVC)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>debugMode</td>
+                                    <td>activation de la barre de debug</td>
+                                </tr>
+                                <tr>
+                                    <td>database</td>
+                                    <td>connections.mysql</td>
+                                    <td>données de connexion à MYSQL</td>
+                                </tr>
+                                <tr>
+                                    <td>mkyEngine</td>
+                                    <td>cache</td>
+                                    <td>sous-dossier de cache pour les vues compilées</td>
+                                </tr>
+                                <tr>
+                                    <td>module</td>
+                                    <td>views</td>
+                                    <td>dossier de base pour les vues .mky</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>layouts</td>
+                                    <td>dossier de base pour les templates .mky</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>includes</td>
+                                    <td>dossier de base pour les vues incluees .mky</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </section>
+                    <!-- end section -->
+
+                    <section id="line3" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Routing
+                                    <hr>
+                                </h2>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>L'application récupère toutes les routes dans le dossier /routes/*.yaml, les routes sont écrites en format .yaml ainsi que les fonctions de route personnalisées dans le fichier functions.php</p>
+
+                                <h3 id="line3_1">YAML route format</h3>
+                                <pre class="brush: php">
+                                    // Fichier web.yaml
+                                    todos:  
+                                        index:  
+                                            path: /todos
+                                            action: App\Http\Controllers\TodoController::index  
+                                            method: GET
+                                            middleware: # Optionnel
+                                                - auth
+                                                - can: edit, todo
+                                </pre>
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Paramètre</th>
+                                            <th>Valeur</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Nom de la route</td>
+                                            <td>todos.index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Url</td>
+                                            <td>/todos</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Action (contrôleur::méthode)</td>
+                                            <td>App\Http\Controllers\TodoController::index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Méthode de requête HTTP</td>
+                                            <td>GET</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Middleware (en option)</td>
+                                            <td>RouteMiddlewares et/ou Voters</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>Les voters ecrivent dans la route <strong>can: permission, sujet</strong>. Seul les routes situées dans le fichier admin.yaml sont prefix (nom et chemin de l'url) par admin exemple : nom = admin.todos.index et path = /admin/todos.</p>
+                                <p>Pour utiliser les fonctions de route dans le fichier functions.php l'action doit être prefixer par func::*nom_de_la_fonction* exemple : func::getUser</p>
+
+                                <pre class="brush: js">
+                                    // routes/functions.php
+                                    // path: test/Micky, action: func::getUser
+                                    [  
+                                        'getUser' => function ($username) {  
+                                            echo("user ".$username); // user Micky
+                                        },
+                                        'otherFunction' => function () {  
+                                            echo("otherFunctionReturn");  
+                                        }, 
+                                    ];
+                                </pre>
+
+                                <strong>pour implémentation des 7 methodes CRUD:</strong>
+                                <pre class="brush: js">
+                                    users:  
+                                        path: crud  
+                                        controller: App\Http\Controllers\UserController
+                                        middleware: auth
+                                    # only: [index, create] pour implémenter uniquement les méthodes index() et create()
+                                </pre>
+
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Requête</th>
+                                            <th>Url</th>
+                                            <th>Controller</th>
+                                            <th>Méthode</th>
+                                            <th>Nom</th>
+                                            <th>Middleware</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/users</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>index</td>
+                                            <td>users.index</td>
+                                            <td>auth</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/users/:user</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>show</td>
+                                            <td>users.show</td>
+                                            <td>auth</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/users/new</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>new</td>
+                                            <td>users.new</td>
+                                            <td>auth</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/users/edit/:user</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>edit</td>
+                                            <td>users.edit</td>
+                                            <td>auth</td>
+                                        </tr>
+                                        <tr>
+                                            <td>DELETE</td>
+                                            <td>/users/delete/:user</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>delete</td>
+                                            <td>users.delete</td>
+                                            <td>auth</td>
+                                        </tr>
+                                        <tr>
+                                            <td>POST</td>
+                                            <td>/users</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>create</td>
+                                            <td>users.create</td>
+                                            <td>auth</td>
+                                        </tr>
+                                        <tr>
+                                            <td>PUT</td>
+                                            <td>/users/update/:user</td>
+                                            <td>App\Http\Controllers\UserController</td>
+                                            <td>update</td>
+                                            <td>users.update</td>
+                                            <td>auth</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </section>
+                    <!-- end section -->
+
+                    <section id="line4" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Providers
+                                    <hr>
+                                </h2>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <p>Les providers sont des enregistrements de classes dans un but définie.
+                                </p>
+                                <li>
+                                    <span style="font-size: 1.2em; color: black;">EventServiceProvider</span>
+                                    <div style="margin-left: 25px">
+                                        <p>Ce provider sert à stocker les events et leurs listeners selon leur actions sont forme de tableau :</p>
+                                        <pre class="brush: js">
+                                            [
+                                                \App\Events\TodoEvent::class => [  
+                                                'update' => \App\Listeners\UpdateTodoListener::class,
+                                                    'otherAction' => \App\Listeners\OtherListener::class,  
+                                                ]
+                                            ];
+                                        </pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span style="font-size: 1.2em; color: black;">MiddlewareServiceProvider</span>
+                                    <div style="margin-left: 25px">
+                                        <p>Ce provider sert à stocker les middleware de route avec un alias, et les voters :</p>
+                                        <pre class="brush: js">
+                                            [  
+                                                'routeMiddlewares' => [  
+                                                    'todo' => \App\Http\Middlewares\TodoMiddleware::class  
+                                                ],  
+                                            
+                                                'voters' => [  
+                                                \App\Voters\TodoVoter::class,  
+                                                ],  
+                                            ];
+                                        </pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span style="font-size: 1.2em; color: black;">MkyServiceProvider</span>
+                                    <div style="margin-left: 25px">
+                                        <p>Ce provider sert à stocker les fonctions et les formats personnalisés pour le moteur de template Mky :</p>
+                                        <pre class="brush: js">
+                                            [  
+                                                'formatters' => [ 
+                                                App\MkyFormatters\TestFormatters::class
+                                                ],  
+                                                'directives' => [
+                                                    App\MkyDirectives\TestDirective::class  
+                                                ]
+                                            ];
+                                        </pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span style="font-size: 1.2em; color: black;">Provider</span>
+                                    <div style="margin-left: 25px">
+                                        <p>Ce provider sert à stocker des classes pour des utilisations spéciaux, comme des systèmes de notification, les classes sont stockées avec des alias :</p>
+                                        <pre class="brush: js">
+                                            [  
+                                                'alias' => [  
+                                                    'webPush' => \App\Utils\WebPushNotification::class  
+                                                ]
+                                            ];
+                                        </pre>
+                                    </div>
+                                </li>
+                            </div>
+
+                        </div>
+                        <!-- end row -->
+
+                    </section>
+                    <!-- end section -->
+
+                    <section id="line5" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Application
+                                    <hr>
+                                </h2>
+                            </div>
+                        </div>
+                        <h3 id="line5_1">Model</h3>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Les classes héritant de MkyCore\Model utilise la classe PDO pour effectuer des requêtes dans la base de données MYSQL, elle utilise aussi un trait QueryMysql qui sert de Query Builder pour simplifié l'écriture des requêtes SQL.
+
+            Elles doivent saisir : 
+            <li>Le nom de la table : <strong>protected string $table</strong></li>
+            <p>(En anglais) Si le nom de la table est le pluriel du nom de la classe model alors définir le nom de la table est optionnel ex: model Todo => table todos sinon saisir le nom de la table.</p>
+
+            <li>La clé primaire : <strong>protected string $primaryKey (si clé primaire != 'id')</strong></li>
+            <li style="margin-top: 25px;"> En option, les champs de création et de modification d'enregistrement <strong>protected array $dateTimes</strong> ainsi que les champs saisissable <strong>protected array $settable</strong></li>
+            </p>
+                                <h4 id="line5_1_1">Liste des méthodes Model</h4>
+
+                                ex: 
+                                <pre class="brush: js">
+                                    // Déclaration de classe
+                                    Todo extends Core\Model;
+                                    protected string $table= 'todolist';
+                                    protected string $primairKey = 'id';
+                                    protected array $dateTimes = ['CREATED_AT' => 'created_todo_at', 'UPDATED_AT' => 'updated_todo_at'];
+                                    protected array $settable = ['task', 'completed', 'created_todo_at', 'updated_todo_at'];
+                                    // Instanciation de la classe Todo
+                                    $todo = new Todo();
+                                </pre>
+
+                                <pre class="brush: js">
+                                    public function getTable();  
+                                </pre>
+                                <p>Retourne le nom de la table en base de données</p>
+                                
+                                <pre class="brush: js">
+                                    public function getPrimaryKey();  
+                                </pre>
+
+                                Retourn le nom de la clé primaire
+
+                                <pre class="brush: js">
+                                    public static function getCurrentModel();  
+                                </pre>
+                                
+                                Retourne le model actuellement instantié
+
+                                <pre class="brush: js">
+                                    public static function find($id);  
+                                </pre>
+                                
+                                Retourne l'enregistrement grâce à la valeur de sa clé primaire
+
+                                <pre class="brush: js">
+                                    public static function all();  
+                                </pre>
+                                
+                                Retourne tous les enregistrements
+
+                                <pre class="brush: js">
+                                    public static function count();  
+                                </pre>
+                                
+                                Retourne le nombre d'enregistrement
+
+                                <pre class="brush: js">
+                                    public static function create(array $data, string $table = '');  
+                                </pre>
+                                
+                                crée un nouvel enregistrement
+
+                                <pre class="brush: js">
+                                    public function save();  
+                                </pre>
+                                
+                                Enregistre l'object créer à partir de l'instance du model
+                                <br>
+                                $todo = new Todo();<br>
+                                $todo->task = 'Coder'; $todo->completed = 1;...<br>
+                                $todo->save();
+                                
+                                <pre class="brush: js">
+                                    public static function update($id, array $data);
+                                </pre>
+                                
+                                Modifie un enregistrement
+
+                                <pre class="brush: js">
+                                    public function modify(array $data = []);  
+                                </pre>
+
+                                Modifie un enregistrement à partir l'object
+                                <br>
+                                $todo = Todo::find(1);<br>
+                                $todo->task = 'Coder_Modifié'; $todo->completed = 0;...<br>
+                                $todo->modify();
+                                
+                                <pre class="brush: js">
+                                    public static function delete($id);
+                                </pre>
+                                
+                                Supprime un enregistrement
+
+                                <pre class="brush: js">
+                                    public function destroy();
+                                </pre>
+                                
+                                Supprime l'enregistrement à partir de son instance
+                                <br>
+                                $todo = Todo:find(1); // $todo = instance de Todo<br>
+                                $todo->destroy()<br>
+                                Todo::find(1) => null
+                                
+                                <pre class="brush: js">
+                                    public static function shuffleId();
+                                </pre>
+                                
+                                Retourne au hasard une valeur de clé primaire de la table
+                                
+                                <pre class="brush: js">
+                                    protected function hasMany(string $model, string $foreignKey = '');
+                                </pre>
+                                
+                                Retourne tous les enregistrements de la table en relation OneToMany
+                                <br>
+                                A utiliser dans la classe du model en cours:
+                                <br>
+                                public function todos(){ return $this->hasMany(Todo::class, $fk); } => $user->todos<br>
+                                si la clé etrangère == nom de la table (au singulier anglais) suffixé par '_id' alors $fk est faculatif
+                                
+                                <pre class="brush: js">
+                                    protected function belongsTo(string $model, string $foreignKey = '');
+                                </pre>
+                                
+                                Retourne l'enregistrement de la table par la clé primaire
+                                <br>
+                                A utiliser dans la classe du model en cours: <br>
+                                public function user(){ return $this->belongsTo(User::class, $fk); } => $todo->user<br>
+                                si la clé etrangère == nom de la table (au singulier anglais) suffixé par '_id' alors $fk est faculatif
+                                
+                                <pre class="brush: js">
+                                    protected function belongsToMany(string $model, string $pivot = '', string $primaryKeyOne = '', string $primaryKeyTwo = '');
+                                </pre>
+                                
+                                Retourne tous les enregistrements de la table par la clé primaire en relation ManyToMany
+                                <br>
+                                A utiliser dans la classe du model en cours: 
+                                public function categories(){ return $this->belongsToMany(Category::class, $pivot, $pk1, $pk2); } => $todo->categories
+                                <br>
+                                si la table d'association == todo_category ou category_todo l'argument $pivot est facultatif<br>
+                                si la clé primaire 1 == (nom de la classe en cours suffixé par _id) ex:todo_id alors $pk1 est facultative<br>
+                                si la clé primaire 2 == (nom de la classe du 1er argument suffixé par _id) ex:category_id alors $pk2 est facultative
+                                
+                                <pre class="brush: js">
+                                    protected function hasOne(string $model, string $foreignKey = '');
+                                </pre>
+
+                                Retourne l'enregistrement de la table par la clé primaire relation OneToOne <br>
+                                A utiliser dans la classe du model en cours, ex:<br> public function user(){ return $this->hasOne(User::class, $fk); } => $todo->user<br> si la clé etrangère == nom de la table (au singulier anglais) suffixé par '_id' alors $fk est faculatif 
+                                
+                                <pre class="brush: js">
+                                    public function with(string $relation, array $properties = []);
+                                </pre>
+
+                                <p>Retourne les enregistrements de la table en relation et les champs selectionnés</p>
+
+                                <pre class="brush: js">
+                                    public function modifyManyRelation(string $relation, string $id, array $data);  
+                                </pre>
+
+                                <p>Modification de tous les enregistrements de la table en relation OneToMany</p>
+
+                                <pre class="brush: js">
+                                    public function attach($table, array $data);
+                                </pre>
+
+                                <p>Create new record in the relation table</p>
+
+                                <h4 id="line5_1_2">QueryBuilder</h4>
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql where($args) 
+                                </pre>
+                                si 3 arguments, Todo::where('task', '!=', 'Coder') => WHERE task != 'Coder'<br> 
+                                si 2 arguments, Todo::where('task', 'Coder') => WHERE task = 'Coder'
+                                    
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql select($args)
+                                </pre>
+                                Todo::select('id', 'task') => SELECT id, task...
+                                    
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
+                                </pre>
+                                Todo::from('todolist', 'tdl') => FROM todolist (si $alias non null: AS tdl), utile si la table désiré est différente de la table du model en cours, sinon ne pas utiliser from() car elle est sous-entendu
+                                    
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
+                                </pre>
+                                // Todo::join('users', 'user_id', '=', 'id', 'usr') => JOIN users (si $alias non null: AS usr) ON todo.user_id = users.id (ou avec alias usr.id) 
+                                
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql first()
+                                </pre>
+                                //Todo::first() => ORDER BY id ASC LIMIT 1, recupère le premier enregistrement de la table du model
+                                
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql query(string $statement)
+                                </pre>
+                                Todo::query('SELECT ....') => execute un requête
+                                
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
+                                </pre>
+                                Todo::prepare('INSERT INTO ....', [...]) => execute un requête preparé avec le paramètre
+
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql orderBy($args)
+                                </pre>
+                                Todo::orderBy('id') => ORDER BY id, si orderBy('id', 'DESC') => ORDER BY id DESC
+                                    
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql limit($args)
+                                </pre>
+                                Todo::limit(1) => LIMIT 1 ou Todo::limit(1,2) => LIMIT 1 OFFSET 2
+                                    
+                                <pre class="brush: js">
+                                    @method static \Core\QueryBuilderMysql groupBy($args)
+                                </pre>
+                                Todo::groupBy('completed') => GROUP BY completed
+                                
+                                <pre class="brush: js">
+                                    @method static array map(string $key, $value = null)
+                                </pre>
+                                Todo('task', $value) => réorganise tous les enregistrements en tableau avec comme clé la valeur $key ('task')<br>
+                                si $value == null alors $value = tous les champs de l'enregistrement<br>
+                                si $value == type string ex: 'user_id' alors le tableau sera composé de task => user_id (Coder => USR001)<br>
+                                si $value == type array ex: [user_id, completed] alors 'Coder' => [USR001, true]
+
+                                <pre class="brush: js">
+                                    @method static array get() 
+                                </pre>
+                                récupère les enregistrement suivant la requête passé, par défaut Todo::get() => SELECT * FROM todolist possible de chainer les methodes pour finir avec get() ex:<br>
+                                Todo::select('task', 'username')->join('users', 'user_id', 'id')->where('completed', true)->get()
+
+                                <pre class="brush: js">
+                                    @method static array toArray()
+                                </pre>
+                                Transforme l'instance en tableau associatif
+                                
+                                <pre class="brush: js">
+                                    @method static \Core\Model|bool last()
+                                </pre>
+                                Todo::last() => Récupère le dernier enregistrement de la table en cours
+
+                                <pre class="brush: js">
+                                @method static string stringify()
+                                </pre>
+                                Todo::select('task', 'created_todo_at')->where('completed', true)->stringify()<br>
+                                retourne la requête en string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
+                            </div>
+                        </div>
+
+                        <h3 id="line5_2">Middleware</h3>
+                        <p>Les middlewares implémentent l'interface MkyCore\Interfaces\MiddlewareInterface avec la méthode 
+                            process(callable  $next, ServerRequestInterface  $request) qui contrôle la requête passée par l'utilisateur et exécute une action, généralement une redirection ou renvoi la requête à un autre middleware ou sinon au contrôleur. les RouteMiddlewares doivent être inscrit dans le config/MiddlewareServiceProvider.php et sont à utiliser dans les routes:</p>
+
+                        <pre class="brush: js">
+                            # Fichier web.yaml
+                            categories:  
+                                index:  
+                                    path: /categories  
+                                    action: App\Http\Controllers\CategoryController::index  
+                                    method: GET
+                                    middleware: auth
+                        </pre>
+                        <p>Il peut être aussi utiliser dans l'application avec la méthode static MkyCore\Middleware::run(App\Http\Middlewares\AuthMiddleware::class) ou pour utiliser plusieurs middlewares à la suite MkyCore\Middleware::run([middleware1, middleware2,...])</p>
+
+                        <h3 id="line5_3">Voters</h3>
+
+                        <p>Inspirée de Symfony, le Voter est un système de permission qui gère les accès et possibilités au utilisateurs <a style="text-decoration: underline!important;" href="https://grafikart.fr/tutoriels/permissions-php-voter-1323">Voir plus</a>.
+                        Les Voters implémentent le MkyCore\Interfaces\VoterInterface avec les méthodes :
+                        <pre class="brush: js">canVote(string  $permission, $subject = null)</pre>
+                        qui vérifie si le Voter peut voter et
+                        <pre class="brush: js">vote($user, string  $permission, $subject = null)</pre>
+                        qui récupère le vote du Voter. Les voters doivent être inscrit dans le config/MiddlewareServiceProvider.php
+                        les Voters peut-être utilisés avec les routes comme RouteMiddleware avec un suffixe can ex: `middleware: can:permission, sujet`, ils peuvent être utilisés dans l'application avec la méthode
+                        <pre class="brush: js">MkyCore\Permission::authorize($user, string  $permission, $subject = null)</pre>
+                        ou le $user peut être n'importe quel utilisateur, le retour sera un booléen. peut être utiliser pour les vues comme directive pour afficher un élément selon les droits d'utilisation.</p>
+
+                        <h3 id="line5_4">Event</h3>
+
+                        <p>Les events sont des classes qui émettent des évènements depuis un contrôleur, ils implémentent l'interface MkyCore\Interfaces\EventInterface et héritent de MkyCore\Event pour utilise la méthode :
+                            <pre class="brush: js">
+                                TodoEvent::dispatch($target = null, $actions = null, array $params = [])
+                            </pre>
+                            exemple :
+                            <pre class="brush: js">
+                                App\Events\TodoEvent::dispatch($update_todo, ['update'], ['user' => $user])
+                                $update_todo => instance de Todo modifiée
+                            </pre>
+                            Les actions sont ce qui feront le lien entre l'event et ses listeners, pour que l'application sache quel listener appeler l'event doit être renseigné dans l'EventServiceProvider.php avec les listener associés ex:
+                            [event => ['action' => listener]]
+                            <pre class="brush: js">
+                            [
+                                \App\Events\TodoEvent::class => [  
+                                    'update' => \App\Listeners\UpdateTodoListener::class,
+                                    'otherAction' => \App\Listeners\OtherListener::class,  
+                                ]
+                            ];
+                            </pre>
+                        </p>
+
+                        <h3 id="line5_5">Listener</h3>
+
+                        <p>Les listeners implémentent l'interface MkyCore\Interfaces\ListenerInterface. Le listener reçoit l'instance de l'event qui émet l'évènement (sujet, action et les paramètres) dans la méthode handle($event) traite et éxecute une action ex: envoi de mail.</p>
+
+                        <h3 id="line5_6">Notification</h3>
+                        <li>Les notifications</li>
+                        <p style="margin-left: 25px"> 
+                            Les classes notifications implémentent l'interface MkyCore\Interfaces\NotificationInterface. une notification sert à notifier un utilisateur à travers un système (généralement depuis la base de données) la classe qui sera notifié (généralement le model User) doit utiliser le trait Core\Traits\Notify.
+                            La méthode via() permet de renseigner le système ou les systèmes de notification en indiquant leur alias, renseigné dans le Provider.php :
+                           <pre class="brush: js">
+                            //via($notifiable){ return ['webPush']; }
+                            [  
+                                'alias' => [  
+                                    'webPush' => \App\Utils\WebPushNotification::class  
+                                ]
+                            ];
+                           </pre>
+                            L'alias renseigné dans la méthode via doit avoir une méthode nommé to suivi du nom de l'alias avec la première lettre en majuscule ex : <strong>toWebPush($notifiable)</strong> qui créera le message selon le format du système renseigné par l'alias.
+                        </p>
+                        <li>Les systèmes de notification</li>
+                        <p style="margin-left: 25px;">
+                            Les systèmes de notification doivent implémenter l'interface MkyCore\Interfaces\SystemNotificationInterface, le système se chargera d'envoyer la notification au utilisateurs autorisés.
+                        </p>
+
+                        <h3 id="line5_7">Routing</h3>
+
+                        <p>Les méthodes de route:</p>
+                        <pre class="brush: js">
+                            @method static bool namespaceRoute(string $route = '')
+                        </pre>
+                        /todos/update/5 => todos
+                        
+                        <pre class="brush: js">
+                            @method static array routesByName()
+                        </pre>
+                        Retourne la liste des routes en tableau par leur nom
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Route[] getRoutes()
+                        </pre>
+                        Retourne la liste des routes en tableau par les méthodes de requête
+                        
+                        <pre class="brush: js">
+                            @method static string generateUrlByName(string $routeName, array $params = [])
+                        </pre>
+                        Retourne l'url de la route grâce au nom et au paramètres de la route<br>
+                        Route::generateUrlByName('todos.update', ['id' => 1]) => /todos/update/1
+                        
+                        <pre class="brush: js">
+                            @method static bool|string currentRoute(string $route = '', bool $path = false)
+                        </pre>
+                        Retourne la route actuelle si pas de $route saisie<br>
+                        Si $route alors vérifie si la route actuel == $route
+                        L'argument $path si true signifie que la $route est un lien et vérifie le lien $route avec le lien actuel<br>
+                        Si $path = false (par défaut) alors $route est un nom de route et vérifie la route
+                        
+                        <pre class="brush: js">
+                            @method static bool isModuleRoute()
+                        </pre>
+                        Vérifie si la route appartient à un module
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Router redirectName(string $name)
+                        </pre>
+                        Redirection avec le nom de la route
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Router redirect(string $url)
+                        </pre>
+                        Redirection avec l'url de la route
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Router back()
+                        </pre>
+                        Redirection à la page précédente
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Router withError(array $errors)
+                        </pre>
+                        Redirection avec un message flash d'erreur dans la session
+                        dans le controller:<br>Route::back->withError(['wrong' => 'all is wrong'])
+                        dans la vue: {{ $errors['wrong'] }}
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Router withSuccess(array $success)
+                        </pre>
+                        Redirection avec un message flash de succès dans la session
+                        dans le controller:<br>Route::back->withSuccess(['right' => 'all is right'])
+                        dans la vue: {{ $success['right'] }}
+                        
+                        <pre class="brush: js">
+                            @method static \Core\Router with(array $messages)
+                        </pre>
+                        Redirection avec un message flash dans la session
+                        dans le controller:<br>Route::back->with(['thanks' => 'Thanks for reading'])
+                        dans la vue: {{ $flashMessage['thanks'] }}
+                    </section>
+                    <!-- end section -->
+
+
+                    <section id="line6" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">MkyEngine
+                                    <hr>
+                                </h2>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Les vues sont préfixées par l'extension .mky (index.mky), le dossier des vues sont par défaut dans /views, cela peut être modifié dans la config module.php et le cache des vues compilées, par défaut dans /cache/views peut être modifié dans la config mkyEngine.php.
+                                    <br>
+                                    Pour afficher une vue utiliser la méthode MkyCore\Facades\View::render(string $view, array $params = []), 
+                                    le chemin des $view s'écrit avec un point todos.index: dossier /views/todos/index.mky et les variables passées en tableau ['todo' => $todo].
+                                </p>
+                            
+                                <h3 id="line6_1">MkyDirective</h3>
+                            
+                                <div>
+                                    <p>Les directives s'écrivent dans la vue avec des balises (du type html):</p>
+
+                                    <pre class="brush: html">
+                                        &lt;mky:if cond="$todo->task == 'Coder'"&gt
+                                            <div>true</div>
+                                            &lt;mky:else /&gt
+                                            <div>false</div>
+                                        &lt;/mky:if&gt
+                                    </pre>
+                                    <p>Si la condition est vrai alors il affichera le texte true sinon false, il existe 2 types de directives : longue portée et courte portée. Les longues portées englobe le code html pour le transformer, ex: if, each, repeat... ils s'écrivent
+                                    <pre class="brush: html">
+                                        <mky:directive params="">...html...</mky:directive>
+                                    </pre> 
+                                    et les courtes portées affichent un resultat ex: route, json, ... et s'écrivent
+                                    <pre class="brush: html">
+                                        &ltmky:directive params="" /&gt 
+                                    </pre> 
+                                    pour les paramètres les guillemets ne sont pas obligatoire.</p>
+
+                                    <p>les vues .mky utilisent le système d'<strong>extends</strong>, <strong>yield</strong> et <strong>sections</strong>, avec la directive <strong>include</strong> la vue peut intégrer d'autres vues, les vue inclues héritent des variables des parents et peuvent recevoir des variables personnalisées.</p>
+                                    <pre class="brush: html">
+                                        // views/layouts/template.mky
+                                        -- HEADER HTML --
+                                            &ltmky:yield name="content"/&gt
+                                        -- FOOTER HTML --
+                                    </pre>
+                                    <pre class="brush: html">
+                                        // views/todos/index.mky
+                                        &ltmky:extends name="nom du layouts ex: layouts.template" /&gt
+                                        <mky:section name="content">
+                                            -- HTML --
+                                            &ltmky:include name="includeView" data="['var' => 'variable1']"/&gt
+                                        </mky:section>
+                                    </pre>
+
+                                    <p>La directive yield peut avoir une valeur par défaut grâce au paramètre value</p>
+                                    <pre class="brush: html">
+                                        &ltmky:yield name="title" value="Home"/&gt
+                                    </pre>
+                                    <p>et section peut devenir une directive courte en rajoutant le paramètre value</p>
+                                    <pre class="brush: html">
+                                        &ltmky:section name="title" value="TodoPage"/&gt
+                                    </pre>
+                                </div>
+                            
+                                <h3 id="line6_2">Liste des directives</h3>
+
+                                <div>
+                                    <pre class="core">
+assets: courte
+script: court si src, sinon longue
+style: court si href, sinon longue
+if: longue
+elseif: courte
+else: courte
+each: longue
+repeat: longue
+switch: longue
+case: courte
+break: courte
+default: courte
+dump: courte
+permission: longue
+notpermission: longue
+auth: longue
+json: courte
+currentRoute: longue
+route: courte
+</pre>
+                                </div>
+                                <p>
+                                    Pour créer des directives, déclarer une classe qui implémente l'interface MkyCore\Interfaces\MkyDirectiveInterface et étendre de la classe MkyCore\MkyCompiler\MkyDirectives\Directive. La classe doit être inscrit dans le MkyServiceProvider.php
+                                </p>
+                                <pre class="brush: php">
+                                    class TestDirective extends Directive implements MkyDirectiveInterface  
+                                    {  
+                                    
+                                        public function getFunctions()  
+                                        {  
+                                            // déclarer les fonctions dans le tableau
+                                            return [  
+                                                'shortTest' => [[$this, 'shortTest']], // pour les courtes directives
+                                                'longTest' => [[$this, 'longTest'], [$this, 'endlongTest']] // pour les longues directives
+                                            ];  
+                                        }  
+                                        
+                                        // implémenter les fonctions
+                                        public function shortTest($int)  
+                                        {  
+                                            // $var = 10;
+                                            // dans la vue: <div><mky:shortTest int="$var"/></div>
+                                            // devient <div>$var = 15 (10 + 5)</div>
+                                            // pour récuperer le nom de la variable passée en paramètres: $this->getRealVariable($int) => $var
+                                            return sprintf('%s = %s (%s + 5)', $this->getRealVariable($int), $int + 5, $int);  
+                                        }
+
+                                        // <mky:longTest cls="customClass">-- HTML --</mky:longTest>
+                                        // devient <div class="customClass">-- HTML --</div>
+                                        public function longTest($cls)  { return '<div class="'.$cls.'">'; }
+                                        public function endlongTest()   { return '</div>'; }
+                                    }
+                                </pre>
+
+                                <h3 id="line6_3">MkyFormatter</h3>
+
+                                <p>
+                                    Les formatters permettent de modifier les variables php dans la vues et s'ecrivent avec un # devant la variable 
+                                    <strong>{{ $var#euro }}</strong>,
+                                    si le formatter 'euro' permet de mettre un chiffre en format devise en euro alors si  $var = 5 alors $var#euro => 5,00 €.
+                                    Pour créer des formatters, déclarer une classe qui implémente MkyCore\Interfaces\MkyFormatterInterface.
+                                    La classe doit être inscrit dans le MkyServiceProvider.php
+                                </p>
+                                
+                                <pre class="brush: php">
+                                    class ArrayFormatter implements MkyFormatterInterface  
+                                    {  
+
+                                        public function getFormats()  
+                                        {  
+                                            // déclarer le fonctions dans le tableau
+                                            return [  
+                                                'join' => [$this, 'join'],  
+                                                'count' => [$this, 'count']  
+                                            ];  
+                                        }  
+
+                                        // implémenter les fonctions
+                                        public function join(array $array, string $glue = ', ')  
+                                        {  
+                                            // $var = [1,5,3]; {{ $var#join('!') }} => 1!5!3
+                                            return join($glue, $array);  
+                                        }  
+
+                                        public function count(array $array)  
+                                        {  
+                                            // $var = [1,5,3]; {{ $var#count }} => 3
+                                            return count($array);  
+                                        }  
+                                    }
+                                </pre>
+
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </section>
+                    <!-- end section -->
+
+                    <section id="line7" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">MkyCommand CLI
+                                    <hr>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    Les commandes CLI permettent de générer de fichiers en ligne de commande ex: 
+                                    <pre class="brush: powershell">
+                                        php micky --create=controller --name=TodoController
+                                    </pre> 
+                                    Le fichier TodoController.php est créé dans le dossier app/Http/Controllers
+                                    La liste des commandes est disponible en faisant la commande:
+                                    <pre class="brush: powershell">
+                                        php micky --help
+                                    </pre>
+                                </p>
+
+                                <h3 id="line7_1">Liste des commandes</h3>
+                                
+                                <div>
+                                    <pre class="core">
+create:
+    module: 
+        name: required  		# nom du module
+
+    controller: 
+        name: required		# nom du controller (suffixer par Controller)
+        crud: optional		# (pas de value : --crud) implémentation des 7 methodes CRUD
+        path: optional		# sous-dossier du controller (App/Http/Controllers/Sous_dossier/TestController.php)
+        module: optional	# (pour HMVC) nom du module du controller (App/Nom_du_Module/Http/Controllers/TestController.php)
+
+    model:
+        name: required		# nom du model
+        pk: optional		# clé primaire (pour base de données MYSQL)
+        table: optional		# nom de la table (pour base de données MYSQL)
+        path: optional		# sous-dossier du model (App/Models/Sous_dossier/Test.php)			
+        module: optional	# (pour HMVC) nom du module du model (App/Nom_du_Module/Models/Test.php)
+
+    middleware: 
+        name: required		# nom du middleware (suffixer par Middleware)
+        path: optional		# sous-dossier du middleware (App/Http/Middlewares/Sous_dossier/TestMiddleware.php)
+        route: optional		# (pas de value : --route) si saisie, le middleware devient une RouteMiddleware et est enregistré dans le MiddlewareServiceProdiver avec un alias (test => TestMiddleware)
+        module: optional	# (pour HMVC) nom du module du middleware (App/Nom_du_Module/Http/Middlewares/TestMiddleware.php)
+
+    voter: 
+        name: required		# nom du voter (suffixer par Voter)
+        model: required		# nom du model sujet (namespace\\model)
+        path: optional		# sous-dossier du middleware (App/Voters/Sous_dossier/TestVoter.php)
+        action: optional	# implémente une méthode avec le nom de l'action (private function nom_action(...){})
+        module: optional	# (pour HMVC) nom du module du middleware (App/Nom_du_Module/Http/Middlewares/TestMiddleware.php)
+
+    notification: 
+        name: required		# nom de la classe notification (suffixer par Notification)
+        via: required		# implémente, avec le nom du paramètre, une méthode de connexion entre la classe et le système de notification
+        path: optional		# sous-dossier de la notification (App/Notifications/Sous_dossier/TestVoter.php)
+
+    event: 
+        name: required		# nom de l'event (suffixer par Event)
+        path: optional		# sous-dossier de l'event (App/Voters/Sous_dossier/TestEvent.php)
+        module: optional	# (pour HMVC) nom du module de l'event (App/Nom_du_Module/Events/TestEvent.php)
+
+    listener: 
+        name: required		# nom du listener (suffixer par Listener)
+        path: optional		# sous-dossier du listener (App/Listeners/Sous_dossier/TestListener.php)
+        module: optional	# (pour HMVC) nom du module de l'event (App/Nom_du_Module/Listeners/TestListener.php)
+
+    formatter:
+        name: required		# nom du voter (suffixer par Formatter)
+        format: required	# implémente une méthode avec le nom du format pour les views .mky
+        path: optional		# sous-dossier du formatter (App/MkyFormatters/Sous_dossier/TestFormatter.php)
+
+    directive: 
+        name: required		# nom de la directive (suffixer par Directive)
+        fn: required		# implémente deux méthodes avec le nom du format pour les views .mky ([[$this, 'test'],[$this, 'endtest]])
+        path: optional		# sous-dossier de la directive (App/MkyDirectives/Sous_dossier/TestDirective.php)
+
+show: 
+    routes: # affiche toutes les routes
+        request: optional		# filtre les routes selon la request saisie (get, post,...)
+        controller: optional    # filtre les routes selon le controller saisie
+
+cache: 
+    clear: 
+        path: optional		# nettoie tout le cache ou le sous-dossier saisie
+
+    create: 
+        path: required		# crée un sous-dossier dans le cache
+                                    </pre>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </section>
+                    <!-- end section -->
+
+                    <section id="line8" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Mode HMVC
+                                    <hr>
+                                </h2>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    La structure HMVC permet d'organiser l'application en module de MVC ou chaque module (dossier) a sa propre architecture MVC. 
+                                    Pour créer un module en ligne de commande
+                                    <pre class="brush: powershell">
+                                        php micky --create=module --name=Todo
+                                    </pre>
+                                    La commande créera les dossiers et les fichiers directement est inscrira le module dans le ModuleServiceProvider.php: 
+                                    <pre class="brush: php">
+                                        // config/ModuleServiceProvider.php
+                                        [  
+                                            \App\Todo\TodoModule::class  
+                                        ];
+                                    </pre>
+                                </p>
+
+                                <h3 id="line8_1">Organisation des dossiers</h3>
+                                <div>
+                                    <pre class="core">
+Events
+Http:
+    - Controllers
+        - Admin:
+            - TodoController.php
+        - TodoController.php
+    - Middlewares
+Listeners
+Models
+Notifications
+Providers:
+    - MiddlewareServiceProvider.php
+    - EventServiceProvider.php
+routes:
+    - web.yaml
+    - admin.yaml
+    - functions.php
+views:
+    - admin:
+        - index.mky
+    - index.mky
+Voters
+config.php
+TodoModule.php
+</pre>
+                                    <p>
+                                        Pour active le mode HMVC, dans le point de config config/app.php mettre 'structure' => 'HMVC'.
+                                    </p>
+
+                                    <h3 id="line8_2">Configuration</h3>
+
+                                    <p>
+                                        La configuration du module se trouve dans le fichier app/Nom_du_Module/config.php
+                                        <pre class="brush: php">
+                                            // app/Todo/config.php
+                                            return [
+                                                'views' => __DIR__ . '/views',
+                                                'layouts' => __DIR__. '/views/layouts'
+                                                'url_prefix' => '/products'
+                                            ];
+                                        </pre>
+                                        La config surchargera le config/module.php en remplaçant les paramètres si celle-ci sont définie, 
+                                        en retirant le paramètre 'layouts' du app/Module/config.php alors les layouts devrons se trouver 
+                                        dans le layouts par défaut saisie dans la config/module.php.
+                                    </p>
+
+                                    <h3 id="line8_3">Application HMVC</h3>
+
+                                    <p>
+                                        Les events et les listeners doivent être inscrit dans le app/Module/Providers/EventServiceProvider.php 
+                                        et les routeMiddlewares et les voters doivent être inscrit dans le app/Module/Providers/MiddlewareServiceProvider.php
+                                    </p>
+
+                                </div>
+                                
+
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </section>
+                    <!-- end section -->
+
+                    <section id="line9" class="section">
+
+                        <div class="row">
+                            <div class="col-md-12 left-align">
+                                <h2 class="dark-text">Copyright and license
+                                    <hr>
+                                </h2>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <p>Code released under the <span class="text-primary">MIT</span> License.</p>
+                                <p>For more information about copyright and license <a href="https://github.com/Micky-N/mky/blob/master/LICENSE" target="_blank">click here</a>.
+                                </p>
+
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </section>
+                    <!-- end section -->
+                </div>
+                <!-- // end .col -->
+
+            </div>
+            <!-- // end .row -->
+
+        </div>
+        <!-- // end container -->
+
+    </div>
+    <!-- end wrapper -->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.fitvids.js"></script>
+    <script src="js/wow.js"></script>
+    <script src="js/jquery.prettyPhoto.js"></script>
+
+    <!-- CUSTOM PLUGINS -->
+    <script src="js/custom.js"></script>
+    <script src="js/main.js"></script>
+
+    <script src="js/syntax-highlighter/scripts/shCore.js"></script>
+    <script src="js/syntax-highlighter/scripts/shBrushXml.js"></script>
+    <script src="js/syntax-highlighter/scripts/shBrushCss.js"></script>
+    <script src="js/syntax-highlighter/scripts/shBrushJScript.js"></script>
+    <script src="js/syntax-highlighter/scripts/shBrushPhp.js"></script>
+    <script src="js/syntax-highlighter/scripts/shBrushPowerShell.js"></script>
+
+</body>
+
+</html>

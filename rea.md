@@ -1,5 +1,13 @@
+
+
+
+# MickyFramework    
   
-Framework PHP, modulable en architecture MVC ou HMVC et utilise un moteur de Template Mky.
+> *Framework MVC et HMVC par Micky_N* 
+
+[![Generic badge](https://img.shields.io/badge/mky-master-orange.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/version-0.1.0-green.svg)](https://shields.io/)
+  
+Framework inspirée de Laravel, modulable en architecture MVC ou HMVC et utilise un moteur de Template Mky.
 
 ## Sommaire
 
@@ -7,30 +15,34 @@ Framework PHP, modulable en architecture MVC ou HMVC et utilise un moteur de Tem
 	<summary>Afficher le sommaire</summary>
 	<br>
 	
-- [Structure](#structure)
+- [MickyFramework](#mickyframework)
+  - [Sommaire](#sommaire)
+  - [Structure](#structure)
     - [Dossiers](#dossiers)
     - [Point de configuration](#point-de-configuration)
     - [Routes](#routes)
     - [Providers](#providers)
- - [Application](#application)
-   - [Model](#model)
-   - [Middleware](#middleware)
-   - [Voter](#voter)
-   - [Event](#event)
-   - [Listener](#listener)
-   - [Notification](#notification)
-   - [Router](#router)
- - [Vue](#vue)
-   - [MkyDirective](#mkydirective)
-   - [Liste des directives](#liste-des-directives)
-   - [MkyFormatter](#mkyformatter)
- - [MkyCommand CLI](#mkycommand-cli)
+  - [Application](#application)
+    - [Model](#model)
+      - [Liste des méthodes:](#liste-des-méthodes)
+    - [Middleware](#middleware)
+    - [Voter](#voter)
+    - [Event](#event)
+    - [Listener](#listener)
+    - [Notification](#notification)
+    - [Router](#router)
+  - [Vue (Mky Template Engine)](#vue-mky-template-engine)
+    - [MkyDirective](#mkydirective)
+    - [Liste des directives](#liste-des-directives)
+    - [MkyFormatter](#mkyformatter)
+  - [MkyCommand CLI](#mkycommand-cli)
+  - [HMVC](#hmvc)
 
 </details>
 
 ## Structure  
   
-### Dossiers  
+ ### Dossiers  
 - app  
    - Events : contient  les évènements à déclencher  
    - Listeners : contient  les écouteurs d'évènement  
@@ -159,7 +171,7 @@ Ce provider sert à stocker les middleware de route avec un alias, et les voters
 
 - MkyServiceProvider
 
-Ce provider sert à stocker les fonctions et les formats personnalisés pour le moteur de template Mky : 
+Ce provider sert à stocker les fonctions et les formats personnalisés pour le moteur de template Mky :
 ```php
 [  
     'formatters' => [ 
