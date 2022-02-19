@@ -21,6 +21,21 @@ html.dark .docs-sidebar .nav>li>a {
     color: #eee;
 }
 
+html.dark .docs-sidebar .nav>.active>a {
+    color: #cc8548;
+    border-left: 2px solid #cc8548;
+}
+
+html.dark .docs-sidebar .nav>li:not(.active)>a:hover {
+    color: #cc8548;
+    border-left: 1px solid #cc8548;
+}
+
+html.dark .docs-sidebar .nav>li>a:hover {
+    color: #cc8548;
+    border-left: 2px solid #cc8548;
+}
+
 html.dark .dark-text hr {
     border-color: #fcfcfc;
 }

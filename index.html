@@ -499,66 +499,58 @@
                             <div class="col-md-12">
                                 <p>Les providers sont des enregistrements de classes dans un but définie.
                                 </p>
-                                <li>
-                                    <span style="font-size: 1.2em; color: black;">EventServiceProvider</span>
-                                    <div style="margin-left: 25px">
-                                        <p>Ce provider sert à stocker les events et leurs listeners selon leur actions sont forme de tableau :</p>
-                                        <pre class="brush: js">
-                                            [
-                                                \App\Events\TodoEvent::class => [  
-                                                'update' => \App\Listeners\UpdateTodoListener::class,
-                                                    'otherAction' => \App\Listeners\OtherListener::class,  
-                                                ]
-                                            ];
-                                        </pre>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span style="font-size: 1.2em; color: black;">MiddlewareServiceProvider</span>
-                                    <div style="margin-left: 25px">
-                                        <p>Ce provider sert à stocker les middleware de route avec un alias, et les voters :</p>
-                                        <pre class="brush: js">
-                                            [  
-                                                'routeMiddlewares' => [  
-                                                    'todo' => \App\Http\Middlewares\TodoMiddleware::class  
-                                                ],  
-                                            
-                                                'voters' => [  
-                                                \App\Voters\TodoVoter::class,  
-                                                ],  
-                                            ];
-                                        </pre>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span style="font-size: 1.2em; color: black;">MkyServiceProvider</span>
-                                    <div style="margin-left: 25px">
-                                        <p>Ce provider sert à stocker les fonctions et les formats personnalisés pour le moteur de template Mky :</p>
-                                        <pre class="brush: js">
-                                            [  
-                                                'formatters' => [ 
-                                                App\MkyFormatters\TestFormatters::class
-                                                ],  
-                                                'directives' => [
-                                                    App\MkyDirectives\TestDirective::class  
-                                                ]
-                                            ];
-                                        </pre>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span style="font-size: 1.2em; color: black;">Provider</span>
-                                    <div style="margin-left: 25px">
-                                        <p>Ce provider sert à stocker des classes pour des utilisations spéciaux, comme des systèmes de notification, les classes sont stockées avec des alias :</p>
-                                        <pre class="brush: js">
-                                            [  
-                                                'alias' => [  
-                                                    'webPush' => \App\Utils\WebPushNotification::class  
-                                                ]
-                                            ];
-                                        </pre>
-                                    </div>
-                                </li>
+                                <h4>EventServiceProvider</h4>
+                                <div style="margin-left: 25px">
+                                    <p>Ce provider sert à stocker les events et leurs listeners selon leur actions sont forme de tableau :</p>
+                                    <pre class="brush: js">
+                                        [
+                                            \App\Events\TodoEvent::class => [  
+                                            'update' => \App\Listeners\UpdateTodoListener::class,
+                                                'otherAction' => \App\Listeners\OtherListener::class,  
+                                            ]
+                                        ];
+                                    </pre>
+                                </div>
+                                <h4>MiddlewareServiceProvider</h4>
+                                <div style="margin-left: 25px">
+                                    <p>Ce provider sert à stocker les middleware de route avec un alias, et les voters :</p>
+                                    <pre class="brush: js">
+                                        [  
+                                            'routeMiddlewares' => [  
+                                                'todo' => \App\Http\Middlewares\TodoMiddleware::class  
+                                            ],  
+                                        
+                                            'voters' => [  
+                                            \App\Voters\TodoVoter::class,  
+                                            ],  
+                                        ];
+                                    </pre>
+                                </div>
+                                <h4>MkyServiceProvider</h4>
+                                <div style="margin-left: 25px">
+                                    <p>Ce provider sert à stocker les fonctions et les formats personnalisés pour le moteur de template Mky :</p>
+                                    <pre class="brush: js">
+                                        [  
+                                            'formatters' => [ 
+                                            App\MkyFormatters\TestFormatters::class
+                                            ],  
+                                            'directives' => [
+                                                App\MkyDirectives\TestDirective::class  
+                                            ]
+                                        ];
+                                    </pre>
+                                </div>
+                                <h4>Provider</h4>
+                                <div style="margin-left: 25px">
+                                    <p>Ce provider sert à stocker des classes pour des utilisations spéciaux, comme des systèmes de notification, les classes sont stockées avec des alias :</p>
+                                    <pre class="brush: js">
+                                        [  
+                                            'alias' => [  
+                                                'webPush' => \App\Utils\WebPushNotification::class  
+                                            ]
+                                        ];
+                                    </pre>
+                                </div>
                             </div>
 
                         </div>
