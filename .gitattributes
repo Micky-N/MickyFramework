@@ -1,6 +1,6 @@
 * text=auto
 
-*.mky diff=html
+*.mky diff=php
 *.html diff=html
 *.md diff=markdown
 *.php diff=php
