@@ -1,0 +1,9 @@
+* text=auto
+
+*.mky diff=html
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+*.css linguist-detectable=false
+*.js linguist-detectable=false
