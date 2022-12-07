@@ -1,15 +1,22 @@
 <?php
 
-/*
- * -------------------------------------------------------------
- *  EventServiceProvider
- * -------------------------------------------------------------
- *
- * This provider records all events with their listeners, which
- * each listener has an alias is an array ['alias' => listener class]
- *
- */
+namespace App\Providers;
 
-return [
+use MkyCore\Abstracts\ServiceProvider;
+
+class EventServiceProvider extends ServiceProvider
+{
     
-];
+    /**
+     * Register events and their listeners
+     * @example app->addEvent(Event::class, ['action' => Listener::class]);
+     * and register notification systems
+     * @example app->addNotificationSystem('example', ExampleNotificationSystem::class);
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        //
+    }
+}

@@ -8,8 +8,16 @@
  * Database configuration for app
  *
  */
-
 return [
+    /*
+     * -------------------------------------------------------------
+     *  Default
+     * -------------------------------------------------------------
+     *
+     * return the default database system
+     *
+     */
+    'default' => 'mysql',
 
     /*
      * -------------------------------------------------------------
@@ -20,7 +28,6 @@ return [
      *
      */
     'connections' => [
-
         /*
          * -------------------------------------------------------------
          *  Mysql
@@ -30,12 +37,11 @@ return [
          * .env file
          *
          */
-
         'mysql' => [
-            'user' => _env('DB_USER', 'root'),
-            'password' => _env('DB_PASSWORD', ''),
-            'name' => _env('DB_NAME', 'mkyframework'),
-            'host' => _env('DB_HOST', 'localhost')
+            'user' => env('DB_USER', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'name' => env('DB_NAME', 'mkyframework'),
+            'host' => env('DB_HOST', 'localhost')
         ]
     ]
 ];

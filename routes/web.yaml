@@ -1,5 +1,0 @@
-home:
-    index:
-        path: /
-        action: App\Http\Controllers\HomeController::index
-        method: GET
