@@ -9,3 +9,4 @@ tests/report/
 .phpunit.result.cache
 composer.lock
 phpunit.xml
+package.lock

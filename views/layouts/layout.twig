@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href=<mky:asset path="img/favicon.ico"/> type="image/x-icon">
-    <title>
-        <mky:yield name="title" default="New App"/>
-    </title>
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
+    <title>{{ config('app.app_name', 'MkyFramework') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 <div class="min-h-screen flex flex-col justify-between">
-    <mky:include name="includes.nav"/>
+    {{ include('includes/nav.twig') }}
     <div class="grow flex">
-        <mky:yield name="content"/>
+        {% block content %}{% endblock %}
     </div>
-    <mky:include name="includes.footer"/>
+    {{ include('includes/footer.twig') }}
 </div>
 </body>
 </html>

@@ -1,8 +1,8 @@
 {
     "name": "micky/mky",
-    "description": "PHP Framework MVC/HMVC",
+    "description": "PHP Framework (H)MVC",
     "type": "project",
-    "keywords": ["framework", "php", "hmvc","micky", "mky"],
+    "keywords": ["framework", "php", "mvc", "hmvc","micky", "mky"],
     "license": "MIT",
     "authors": [
         {
@@ -10,26 +10,6 @@
             "email": "ndingamickael@gmail.com"
         }
     ],
-    "require": {
-        "php": "^7.4",
-        "guzzlehttp/guzzle": "^7.3",
-        "symfony/dotenv": "^5.3",
-        "nesbot/carbon": "^2.54",
-        "ext-json": "*",
-        "ext-pdo": "*",
-        "symfony/yaml": "^5.4",
-        "ext-simplexml": "*",
-        "micky/mkyengine": "^1.0",
-        "micky/mkycore": "^1.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "9.5.9",
-        "phpunit/php-code-coverage": "^9.2",
-        "symfony/var-dumper": "^5.3",
-        "robmorgan/phinx": "^0.12.7",
-        "fakerphp/faker": "^1.15",
-        "mbezhanov/faker-provider-collection": "^2.0"
-    },
     "autoload": {
         "psr-4": {
             "App\\": "app/"
@@ -38,8 +18,25 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
-            "Mky\\Database\\" : "database/"
+            "Database\\" : "database/"
         }
+    },
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.5",
+        "ext-pdo": "*",
+        "nesbot/carbon": "^2.63",
+        "psr/http-message": "^1.0",
+        "psr/container": "^2.0",
+        "http-interop/response-sender": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "middlewares/whoops": "^2.0",
+        "ext-readline": "*",
+        "micky/mkycore": "^2.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.1",
+        "phpunit/phpunit": "^9.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -50,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.x-dev"
+            "dev-master": "2.x-dev"
         }
     },
     "config": {
