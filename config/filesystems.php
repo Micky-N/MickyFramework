@@ -29,8 +29,8 @@ return [
     'spaces' => [
         'local' => [
             'driver' => 'local',
-            'root' => path('public') . '/local/',
-            'url' => env('APP_URL') . '/local/',
+            'root' => path('tmp/public/'),
+            'url' => env('APP_URL'),
             'visibility' => 'public',
         ],
 
