@@ -57,7 +57,7 @@ return [
     |
     */
     'links' => [
-        path('public') => path('sl/public'),
+        path('public') => path('tmp/public'),
     ],
 
 ];
