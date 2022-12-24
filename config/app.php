@@ -18,10 +18,24 @@ return [
 
     /*
      * -------------------------------------------------------------
-     *  Home url
+     *  Timezone default value for date
+     * -------------------------------------------------------------
+     */
+    'timezone' => 'Europe/Paris',
+
+    /*
+     * -------------------------------------------------------------
+     *  Locale default setting
+     * -------------------------------------------------------------
+     */
+    'locale' => 'fr_FR',
+
+    /*
+     * -------------------------------------------------------------
+     *  Application structure
      * -------------------------------------------------------------
      *
-     * Homepage url for redirection
+     * MVC by default, in your .env file you can change choosing between MVC or HMVC
      *
      */
     'home' => '/',
@@ -59,7 +73,7 @@ return [
      * controller meant save routes in controller/method with annotation @Router(...)
      *
      */
-    'route_mode' => 'both',
+    'route_mode' => 'controller',
 
     /*
      * -------------------------------------------------------------
@@ -69,7 +83,7 @@ return [
      * Affirmative by default, this value determines which strategy
      * you want to use for auth permission. you can change it choosing
      * between [affirmative,unanimous, consensus].
-     * 2 others parameter can be set [allow_if_all_abstain, allow_if_equal_granted_denied]
+     * 2 others parametre can be set [allow_if_all_abstain, allow_if_equal_granted_denied]
      * allow_if_all_abstain is false by default
      * allow_if_equal_granted_denied is true by default
      *

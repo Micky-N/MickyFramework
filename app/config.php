@@ -1,36 +1,36 @@
 <?php
 
+
+
 return [
     /*
      * -------------------------------------------------------------
-     *  Global Middlewares
+     *  Prefix config
      * -------------------------------------------------------------
      *
-     * List of middlewares that will be called before each route of all modules
+     * url prefix
      *
      */
-    'globalMiddlewares' => [
-    ],
+    'prefix' => '/',
 
     /*
      * -------------------------------------------------------------
-     *  Module Middlewares
+     *  Views options
      * -------------------------------------------------------------
      *
-     * List of middlewares that will be called before each route in the module
+     * Views mode directory for Twig (base by default, module, parent or both)
+     * module mode must be an array with modules name
      *
      */
-    'middlewares' => [
-    ],
+    'views_mode' => 'base',
 
     /*
      * -------------------------------------------------------------
-     *  Route Middlewares
+     *  Route mode config
      * -------------------------------------------------------------
      *
-     * List of middlewares that will be defined in the routes by alias
+     * Merge config in app file, replace route_mode config
      *
      */
-    'routeMiddlewares' => [
-    ],
+    'app::route_mode' => 'controller'
 ];

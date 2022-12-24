@@ -14,11 +14,11 @@ return [
      *  Default auth config
      * -------------------------------------------------------------
      *
-     *
+     * Provider that be called by default for authentication
      *
      */
     'default' => [
-        'provider' => ''
+        'provider' => 'user'
     ],
 
     /*
@@ -26,10 +26,13 @@ return [
      *  Providers
      * -------------------------------------------------------------
      *
-     *
+     * List of providers
      *
      */
     'providers' => [
-
+        'user' => [
+            'manager' => 'UserManager',
+            'properties' => ['email', 'password']
+        ]
     ],
 ];
