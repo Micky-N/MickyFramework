@@ -3,8 +3,8 @@
 namespace App\Controllers;
 
 use MkyCore\Abstracts\Controller;
-use MkyCore\RedirectResponse;
 use MkyCore\View;
+
 
 /**
  * @Router('/', as: 'home')

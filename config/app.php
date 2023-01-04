@@ -32,45 +32,21 @@ return [
 
     /*
      * -------------------------------------------------------------
-     *  Application structure
+     *  Home Url
      * -------------------------------------------------------------
-     *
-     * MVC by default, in your .env file you can change choosing between MVC or HMVC
-     *
      */
     'home' => '/',
 
     /*
      * -------------------------------------------------------------
-     *  Cache
-     * -------------------------------------------------------------
-     *
-     * Root folder for cache, for compile views, logs or what you need
-     *
-     */
-    'cache' => [
-        'base' => dirname(__DIR__) . '/cache',
-    ],
-
-    /*
-     * -------------------------------------------------------------
-     *  Environment
-     * -------------------------------------------------------------
-     *
-     * Local by default, this value determines the environment of your
-     * application. Set this in your .env file
-     *
-     */
-    'env' => env('ENV', 'local'),
-
-    /*
-     * -------------------------------------------------------------
-     *  Route mode
+     *  Route default mode
      * -------------------------------------------------------------
      *
      * System of route collection, value must be file, controller or both
      * file means save routes in start/routes.php file
      * controller meant save routes in controller/method with annotation @Router(...)
+     * can be overwrite in module by setting value in config file
+     * Ex: app:route_mode => 'file'
      *
      */
     'route_mode' => 'controller',
@@ -79,16 +55,11 @@ return [
      * -------------------------------------------------------------
      *  Security
      * -------------------------------------------------------------
-     *
-     * Affirmative by default, this value determines which strategy
-     * you want to use for auth permission. you can change it choosing
-     * between [affirmative,unanimous, consensus].
-     * 2 others parametre can be set [allow_if_all_abstain, allow_if_equal_granted_denied]
-     * allow_if_all_abstain is false by default
-     * allow_if_equal_granted_denied is true by default
-     *
      */
     'security' => [
+        /*
+         * CSRF security system
+         */
         'csrf' => false
     ],
 

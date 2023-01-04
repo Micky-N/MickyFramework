@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Providers;
+namespace App\UIModule\Providers;
 
-use App\Events\LogEvent;
+use App\UIModule\Events\ForgotPasswordEvent;
+use App\UIModule\Listeners\SaveResetPasswordTokenListener;
+use App\UIModule\Listeners\SendResetPasswordLinkListener;
 use MkyCore\Abstracts\ServiceProvider;
-use MkyCore\EventNotification\DatabaseNotificationListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->addEvent(ForgotPasswordEvent::class, [
+            'send_link' => SendResetPasswordLinkListener::class,
+            'save_token' => SaveResetPasswordTokenListener::class
+        ]);
     }
 }

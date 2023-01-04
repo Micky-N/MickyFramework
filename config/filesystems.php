@@ -1,39 +1,41 @@
 <?php
-
+/*
+ * -------------------------------------------------------------
+ *  Filesystems config
+ * -------------------------------------------------------------
+ *
+ * Filesystems configuration for app
+ *
+ */
 return [
-
     /*
     |--------------------------------------------------------------------------
-    | Default Filesystem Disk
+    | Default Filesystem space
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default filesystem disk that should be used
-    | by the framework. The "local" disk, as well as a variety of cloud
-    | based disks are available to your application. Just store away!
+    | You can specify the default filesystem space that should be used
+    | by the framework.
     |
     */
     'default' => env('FILESYSTEM_DRIVER', 'local'),
 
     /*
     |--------------------------------------------------------------------------
-    | Filesystem Disks
+    | Filesystem Spaces
     |--------------------------------------------------------------------------
     |
-    | Here you may configure as many filesystem "disks" as you wish, and you
-    | may even configure multiple disks of the same driver. Defaults have
-    | been set up for each driver as an example of the required options.
+    | You can configure as many filesystem spaces as you wish, and you
+    | may even configure multiple spaces of the same driver.
     |
-    | Supported Drivers: "local", "ftp", "sftp", "s3"
+    | Supported Drivers: "local"
     |
     */
     'spaces' => [
         'local' => [
             'driver' => 'local',
-            'root' => path('tmp/public/'),
-            'url' => env('APP_URL'),
+            'root' => tmp_path('tmp'),
             'visibility' => 'public',
         ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -51,13 +53,12 @@ return [
     | Symbolic Links
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the symbolic links that will be created when the
-    | `storage:link` Artisan command is executed. The array keys should be
-    | the locations of the links and the values should be their targets.
+    | You can configure the symbolic links. use php mky tmp:link to create them.
+    | The array form is [link => target].
     |
     */
     'links' => [
-        path('public') => path('tmp/public'),
+        public_path('tmp') => tmp_path('public'),
     ],
 
 ];
