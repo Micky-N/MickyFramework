@@ -46,7 +46,7 @@ return [
      * file means save routes in start/routes.php file
      * controller meant save routes in controller/method with annotation @Router(...)
      * can be overwrite in module by setting value in config file
-     * Ex: app:route_mode => 'file'
+     * Ex: app::route_mode => 'file'
      *
      */
     'route_mode' => 'controller',
@@ -67,12 +67,6 @@ return [
      * -------------------------------------------------------------
      *  DebugMode
      * -------------------------------------------------------------
-     *
-     * true if the environment of your application is local, allow you
-     * to run debugBar in the bottom in web browser. In which you can see
-     * HTTP request, route, database MYSQL request and voter you passed
-     * if exist
-     *
      */
     'debug_mode' => env('APP_ENV', 'local') == 'local',
 ];

@@ -41,7 +41,7 @@ class UIController extends Controller
             'email' => ['required', 'email'],
             'password' => 'required'
         ]);
-        if (!($user = $authManager->attempt($this->request->post(), $this->request->boolean('remember_me') ?? false))) {
+        if (!$authManager->attempt($this->request->post())) {
             return redirect()->back()->session('error', 'Wrong credentials');
         }
         return redirect()->route($this->kernel::REDIRECT_LOGIN)->session('success_login', 'You are login');

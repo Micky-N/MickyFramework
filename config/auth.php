@@ -61,7 +61,7 @@ return [
      */
     'password_reset' => [
         'user' => [
-            'lifetime' => 1
+            'lifetime' => 15
         ]
     ]
 ];
