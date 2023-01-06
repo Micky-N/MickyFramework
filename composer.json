@@ -42,7 +42,10 @@
     "prefer-stable": true,
     "scripts": {
         "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "php -r \"copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "php artisan generate:key"
         ]
     },
     "extra": {
