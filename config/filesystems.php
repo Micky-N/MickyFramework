@@ -7,6 +7,9 @@
  * Filesystems configuration for app
  *
  */
+
+use MkyCore\FileSystems\DropboxSystem;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -42,6 +45,10 @@ return [
             "client_secret" => 'test',
             "access_token" => 'test'
         ]
+    ],
+
+    'drivers' => [
+        'dropbox' => DropboxSystem::class
     ],
 
     /*
