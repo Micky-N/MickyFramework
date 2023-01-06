@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\UserModule\Managers\UserManager;
 use MkyCore\Abstracts\Controller;
+use MkyCore\Cache;
 use MkyCore\Cookie;
 use MkyCore\Crypt;
 use MkyCore\Str;
@@ -29,8 +31,7 @@ class HomeController extends Controller
 
     public function test()
     {
-        $plaintext = "message to be encrypted";
-        return \MkyCore\Facades\Cookie::get('test');
+        dd(\MkyCore\Facades\Cache::isExpired('test'));
         return null;
     }
 }

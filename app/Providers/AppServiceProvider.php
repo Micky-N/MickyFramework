@@ -14,9 +14,9 @@ class AppServiceProvider extends ServiceProvider
      * @var array<string, string>
      */
     private array $modules = [
+        'root' => RootKernel::class,
 	    'ui' => \App\UIModule\UIKernel::class,
 	    'user' => \App\UserModule\UserKernel::class,
-        'root' => RootKernel::class,
     ];
 
     /**
