@@ -14,9 +14,9 @@ class UserPopulator extends Populator
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name('female'),
-            'email' => 'ndingamickael@gmail.com',
-            'password' => 'password'
+            'name' => $this->faker->firstNameFemale(),
+            'email' => $this->faker->email(),
+            'password' => password_hash('password', PASSWORD_BCRYPT)
         ];
     }
 
