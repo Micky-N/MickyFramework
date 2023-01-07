@@ -13,7 +13,7 @@ function getCurrentPage() {
 function changePage(page = 'home') {
     const url = new URL(window.location.href);
     let newUrl = url.origin
-    window.location.href = newUrl + `?p=${page}`
+    window.location.href = newUrl + (page === 'home' ? '' : `?p=${page}`)
 }
 
 
