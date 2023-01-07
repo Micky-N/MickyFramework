@@ -7,6 +7,7 @@ use MkyCore\Abstracts\Controller;
 use MkyCore\Cache;
 use MkyCore\Cookie;
 use MkyCore\Crypt;
+use MkyCore\Facades\FileManager;
 use MkyCore\Str;
 use MkyCore\View;
 
@@ -24,14 +25,6 @@ class HomeController extends Controller
      */
     public function index(): View
     {
-        dd($this->test());
-
         return view('welcome.twig');
-    }
-
-    public function test()
-    {
-        dd(\MkyCore\Facades\Cache::isExpired('test'));
-        return null;
     }
 }

@@ -7,9 +7,6 @@
  * Filesystems configuration for app
  *
  */
-
-use MkyCore\FileSystems\DropboxSystem;
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +27,6 @@ return [
     | You can configure as many filesystem spaces as you wish, and you
     | may even configure multiple spaces of the same driver.
     |
-    | Supported Drivers: "local"
     |
     */
     'spaces' => [
@@ -41,14 +37,24 @@ return [
         ],
         'dropbox' => [
             'driver' => 'dropbox',
-            "client_id" => 'test',
-            "client_secret" => 'test',
-            "access_token" => 'test'
+            "access_token" => 'test_access_token',
         ]
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Filesystem Drivers
+    |--------------------------------------------------------------------------
+    |
+    | You can register your custom drivers, they will be called if the driver
+    | name is bound to the current space in the driver value
+    | Ex: dropbox => 'Class\DropboxSystem',
+    | the class must extend from League\Flysystem\Filesystem.
+    |
+    |
+    */
     'drivers' => [
-        'dropbox' => DropboxSystem::class
+
     ],
 
     /*
