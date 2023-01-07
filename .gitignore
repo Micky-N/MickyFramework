@@ -2,8 +2,8 @@ node_modules
 vendor
 .idea
 .vscode/
-cache/*
 tests/report/
+public/tmp
 .env
 *.cache.php
 .phpunit.result.cache

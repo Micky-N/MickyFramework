@@ -6,10 +6,16 @@ return [
      *  Global Middlewares
      * -------------------------------------------------------------
      *
-     * List of middlewares that will be called before each route
+     * List of middlewares that will be called before each route of all modules
      *
      */
     'globalMiddlewares' => [
+        \MkyCore\Middlewares\WhoopsHandlerMiddleware::class,
+        \MkyCore\Middlewares\TrailingSlashMiddleware::class,
+        \MkyCore\Middlewares\MethodMiddleware::class,
+        \MkyCore\Middlewares\SessionStartMiddleware::class,
+        \MkyCore\Middlewares\CsrfMiddleware::class,
+	    \App\Middlewares\RememberTokenMiddleware::class,
     ],
 
     /*

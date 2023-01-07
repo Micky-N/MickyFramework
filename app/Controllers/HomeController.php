@@ -2,9 +2,15 @@
 
 namespace App\Controllers;
 
+use App\UserModule\Managers\UserManager;
 use MkyCore\Abstracts\Controller;
-use MkyCore\RedirectResponse;
+use MkyCore\Cache;
+use MkyCore\Cookie;
+use MkyCore\Crypt;
+use MkyCore\Facades\FileManager;
+use MkyCore\Str;
 use MkyCore\View;
+
 
 /**
  * @Router('/', as: 'home')

@@ -2,19 +2,20 @@
 
 /*
  * -------------------------------------------------------------
- *  Views config
+ *  Session config
  * -------------------------------------------------------------
  *
- * Main configuration for views
+ * Session configuration for app
  *
  */
 return [
     /*
      * -------------------------------------------------------------
-     *  Twig configuration
+     *  Options config
      * -------------------------------------------------------------
+     *
+     * Options config for session
+     *
      */
-    'twig' => [
-
-    ],
+    'options' => []
 ];
