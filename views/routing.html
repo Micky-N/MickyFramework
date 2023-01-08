@@ -1,0 +1,158 @@
+<section id="line3" class="section">
+
+  <div class="row">
+    <div class="col-md-12 left-align">
+      <h2 class="dark-text">Routing
+        <hr>
+      </h2>
+    </div>
+    <!-- end col -->
+  </div>
+  <!-- end row -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>All routes are fetched in the routes/*.yaml folder, route files are written in YAML format and custom route functions are registered as array in the functions.php file</p>
+
+      <h3 id="line3_1">YAML route format</h3>
+      <pre class="brush: php">
+                                    // web.yaml
+                                    todos:
+                                        index:
+                                            path: /todos
+                                            action: App\Http\Controllers\TodoController::index
+                                            method: GET
+                                            middleware: # Optional
+                                                - auth
+                                                - can: edit, todo
+                                </pre>
+      <table class="table table-responsive">
+        <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Route name</td>
+          <td>todos.index</td>
+        </tr>
+        <tr>
+          <td>Url path</td>
+          <td>/todos</td>
+        </tr>
+        <tr>
+          <td>Action (controller::method)</td>
+          <td>App\Http\Controllers\TodoController::index</td>
+        </tr>
+        <tr>
+          <td>HTTP request method</td>
+          <td>GET</td>
+        </tr>
+        <tr>
+          <td>Middleware (optional)</td>
+          <td>RouteMiddlewares and/or Voters</td>
+        </tr>
+        </tbody>
+      </table>
+      <p>Voters are written in the route as <b>can: permission, subject</b> format. Only the routes located in the admin.yaml file are prefixed (route name and url path) by 'admin' example: name = admin.todos.index and path = /admin/todos.</p>
+      <p>To use the route functions in the functions.php file, the route action must be written like <b>func::function_name</b> example: <b>func::getUser</b></p>
+
+      <pre class="brush: php">
+                                    // routes/functions.php
+                                    // path: test/Micky, action: func::getUser
+                                    [
+                                        'getUser' => function ($username) {
+                                            echo("user ".$username); // user Micky
+                                        },
+                                        'otherFunction' => function () {
+                                            echo("otherFunctionReturn");
+                                        },
+                                    ];
+                                </pre>
+
+      <b>To implement 7 CRUD methods</b>
+      <pre class="brush: php">
+                                    users:
+                                        path: crud
+                                        controller: App\Http\Controllers\UserController
+                                        middleware: auth
+                                        only: [index, create] // Optional, to implement index() and create() methods only
+                                </pre>
+
+      <table class="table table-responsive">
+        <thead>
+        <tr>
+          <th>HTTP request method</th>
+          <th>Url path</th>
+          <th>Controller</th>
+          <th>Method</th>
+          <th>Route name</th>
+          <th>Middleware</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/users</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>index</td>
+          <td>users.index</td>
+          <td>auth</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/users/:user</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>show</td>
+          <td>users.show</td>
+          <td>auth</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/users/new</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>new</td>
+          <td>users.new</td>
+          <td>auth</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/users/edit/:user</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>edit</td>
+          <td>users.edit</td>
+          <td>auth</td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/delete/:user</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>delete</td>
+          <td>users.delete</td>
+          <td>auth</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>create</td>
+          <td>users.create</td>
+          <td>auth</td>
+        </tr>
+        <tr>
+          <td>PUT</td>
+          <td>/users/update/:user</td>
+          <td>App\Http\Controllers\UserController</td>
+          <td>update</td>
+          <td>users.update</td>
+          <td>auth</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- end row -->
+
+</section>

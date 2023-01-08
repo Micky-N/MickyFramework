@@ -180,7 +180,6 @@ sub {
 }
 
 .section {
-    padding: 75px 0;
     position: relative;
     display: block;
 }
@@ -376,6 +375,15 @@ a:hover {
 .navbar-inverse li.btn a {
     color: #ffffff !important;
 }
+
+.docs-sidebar ul.nav li a.current {
+    color: #337ab7;
+}
+
+html.dark .docs-sidebar ul.nav li a.current {
+    color: #eee;
+}
+
 #myBtn {
   display: none;
   position: fixed;

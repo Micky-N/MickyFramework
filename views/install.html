@@ -1,0 +1,85 @@
+<section class="section">
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">How to Install
+                <hr>
+            </h2>
+        </div>
+    </div>
+
+    <h3>Composer</h3>
+
+    <p>To install MkyFramework with composer use the command</p>
+    <pre class="brush: html">
+      composer create-project micky/mky appname --prefer-dist
+    </pre>
+
+    <h3>Configuration</h3>
+
+    <p>This command will install the new app in your app name folder. After that you have to config your app in the
+        config folder</p>
+
+    <table class="table table-responsive">
+        <thead>
+        <tr>
+            <th>File</th>
+            <th>config point</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>app</td>
+            <td>app_name</td>
+            <td>Application name</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>cache</td>
+            <td>Cache folder</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>env</td>
+            <td>app environment</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>structure</td>
+            <td>App structure (MVC or HMVC)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>debugMode</td>
+            <td>Enable debur bar</td>
+        </tr>
+        <tr>
+            <td>database</td>
+            <td>connections.mysql</td>
+            <td>MYSQL connexion data</td>
+        </tr>
+        <tr>
+            <td>mkyEngine</td>
+            <td>cache</td>
+            <td>Sub-folder for compiled views cache</td>
+        </tr>
+        <tr>
+            <td>module</td>
+            <td>views</td>
+            <td>Root folder for .mky views</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>layouts</td>
+            <td>Root folder for .mky layouts</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>includes</td>
+            <td>Root folder for .mky included views</td>
+        </tr>
+        </tbody>
+    </table>
+    <h5>You can create your database migrations and fill it with data after it’s created with <a
+            href="https://book.cakephp.org/phinx" target="_blank" style="font-size:medium">Phinx Migration</a></h4>
+</section>

@@ -1,0 +1,169 @@
+<section id="line6" class="section">
+
+  <div class="row">
+    <div class="col-md-12 left-align">
+      <h2 class="dark-text">MkyEngine
+        <hr>
+      </h2>
+    </div>
+    <!-- end col -->
+  </div>
+  <!-- end row -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>Views are prefixed with .mky (index.mky) extension, view folder defaults to /views, this can be changed in config module.php and compiled view cache, defaults to /cache/views can be changed in mkyEngine.php config.
+        <br>
+        To display a view use the method <b>MkyCore\Facades\View::render(string $view, array $params = [])</b>,
+        the $view path is written with a dot todos.index: folder /views/todos/index.mky and the variables passed in the array ['todo' => $todo].
+      </p>
+
+      <h3 id="line6_1">MkyDirective</h3>
+
+      <div>
+        <p>Directives are written in the view with tags (of the html type):</p>
+
+        <pre class="brush:html">
+                                        &lt;mky:if cond="$todo->task == 'Coder'"&gt
+                                            <div>true</div>
+                                            &lt;mky:else /&gt
+                                            <div>false</div>
+                                        &lt;/mky:if&gt
+                                    </pre>
+        <p>If the condition is true then it will display the text true otherwise false, there are 2 types of directives: long range and short range. The long scopes include the html code to transform it, example : if, each, repeat... they are written
+        <pre class="brush: html">
+                                        <mky:directive params="">...html...</mky:directive>
+                                    </pre>
+        and the short ranges display a result, example : route, json, ... and are written
+        <pre class="brush:html">
+                                        &ltmky:params="" directive /&gt
+                                    </pre>
+        quotes are not required for parameters.</p>
+
+        <p>.mky views use the system of <b>extends</b>, <b>yield</b> and <b>sections</b>, with the <b>include</b> directive the view can embed other views, included views inherit parent variables and can receive custom variables.</p>
+        <pre class="brush:html">
+                                    // views/layouts/template.mky
+                                    -- HTML HEADER --
+                                        &ltmky:yield name="content"/&gt
+                                    -- HTML FOOTER --
+                                    </pre>
+        <pre class="brush:html">
+                                        // views/todos/index.mky
+                                        &ltmky:extends name="name of layouts, example : layouts.template" /&gt
+                                        <mky:section name="content">
+                                            -- HTML --
+                                            &ltmky:include name="includeView" data="['var' => 'variable1']"/&gt
+                                        </mky:section>
+                                    </pre>
+
+        <p>The yield directive can have a default value thanks to the value parameter</p>
+        <pre class="brush:html">
+                                        &ltmky:yield name="title" value="Home"/&gt
+                                    </pre>
+        <p>and section can become a short directive by adding the parameter value</p>
+        <pre class="brush:html">
+                                        &ltmky:section name="title" value="TodoPage"/&gt
+                                    </pre>
+      </div>
+
+      <h3 id="line6_2">List of directives</h3>
+
+      <div>
+                                    <pre class="brush: php">
+                                    assets: short
+                                    script: short if src, otherwise long
+                                    style: short if href, otherwise long
+                                    if: long
+                                    elseif: short
+                                    else: short
+                                    each: long
+                                    repeat: long
+                                    switch: long
+                                    box: short
+                                    break: short
+                                    default: short
+                                    dump: short
+                                    permission: long
+                                    notpermission: long
+                                    auth: long
+                                    json: short
+                                    currentRoute: long
+                                    road: short
+                                    </pre>
+      </div>
+      <p>
+        To create directives, declare a class that implements the MkyCore\Interfaces\MkyDirectiveInterface interface and extend from the MkyCore\MkyCompiler\MkyDirectives\Directive class. The class must be registered in the app/Providers/MkyServiceProvider.php
+      </p>
+      <pre class="brush: php">
+                                    class TestDirective extends Directive implements MkyDirectiveInterface
+                                    {
+
+                                        @method function getFunctions()
+                                        {
+                                            // declare the functions in the array
+                                            return [
+                                                'shortTest' => [[$this, 'shortTest']], // for short directives
+                                                'longTest' => [[$this, 'longTest'], [$this, 'endlongTest']] // for long directives
+                                            ];
+                                        }
+
+                                        // implement the functions
+                                        @method function shortTest($int)
+                                        {
+                                            // $var = 10;
+                                            // in view: <div><mky:shortTest int="$var"/></div>
+                                            // becomes <div>$var = 15 (10 + 5)</div>
+                                            // to retrieve the name of the variable passed as parameters: $this->getRealVariable($int) => $var
+                                            return sprintf('%s = %s (%s + 5)', $this->getRealVariable($int), $int + 5, $int);
+                                        }
+
+                                        // <mky:longTest cls="customClass">-- HTML --</mky:longTest>
+                                        // becomes <div class="customClass">-- HTML --</div>
+                                        @method function longTest($cls) { return '<div class="'.$cls.'">'; }
+                                        @method function endlongTest() { return '</div>'; }
+                                    }
+                                </pre>
+
+      <h3 id="line6_3">MkyFormatter</h3>
+
+      <p>
+        The formatters allow to modify the php variables in the views and are written with a # in front of the variable
+        <b>{{ $var#euro }}</b>,
+        if the formatter 'euro' allows to put a figure in currency format in euro then if <b>$var = 5</b> then <b>$var#euro => 5,00 €</b>.
+        To create formatters, declare a class that implements MkyCore\Interfaces\MkyFormatterInterface.
+        The class must be registered in the app/Providers/MkyServiceProvider.php
+      </p>
+
+      <pre class="brush: php">
+                                    class ArrayFormatter implements MkyFormatterInterface
+                                    {
+
+                                        @method function getFormats()
+                                        {
+                                            // declare the functions in the array
+                                            return [
+                                                'join' => [$this, 'join'],
+                                                'count' => [$this, 'count']
+                                            ];
+                                        }
+
+                                        // implement the functions
+                                        @method function join(array $array, string $glue = ', ')
+                                        {
+                                            // $var = [1,5,3]; {{ $var#join('!') }} => 1!5!3
+                                            return join($glue, $array);
+                                        }
+
+                                        @method function count(array $array)
+                                        {
+                                            // $var = [1,5,3]; {{ $var#count }} => 3
+                                            return count($array);
+                                        }
+                                    }
+                                </pre>
+      <h3>To see more about MkyEngine <a href="https://github.com/Micky-N/mkyengine" target="_blank">Micky-N/mkyengine</a></h3>
+    </div>
+  </div>
+  <!-- end row -->
+
+</section>

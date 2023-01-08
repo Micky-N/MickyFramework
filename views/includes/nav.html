@@ -1,0 +1,47 @@
+<nav class="docs-sidebar" data-spy="affix" data-offset-top="300" data-offset-bottom="200" role="navigation">
+    <ul class="nav">
+        <li id="home"><a href="?p=home">Introduction</a></li>
+        <li id="install"><a href="?p=install">How to Install</a></li>
+        <li id="routing"><a href="?p=routing">Routing</a>
+            <ul class="nav">
+                <li><a href="#routing_controller">YAML route format</a></li>
+                <li><a href="#routing_file">YAML route format</a></li>
+            </ul>
+        </li>
+        <li id="providers"><a href="?p=providers">Providers</a></li>
+        <li id="application"><a href="?p=application">Application</a>
+            <ul class="nav">
+                <li><a href="#application_entities">Entity</a></li>
+                <li><a href="#application_manager">Manager</a></li>
+                <li><a href="#application_middleware">Middleware</a></li>
+                <li><a href="#application_permission">Allows permission</a></li>
+                <li><a href="#application_event">Event</a></li>
+                <li><a href="#application_listener">Listener</a></li>
+            </ul>
+        </li>
+
+        <li id="command"><a href="?p=command">MkyCommand CLI</a>
+            <ul class="nav">
+                <li><a href="#command_list">List of commands</a></li>
+            </ul>
+        </li>
+        <li id="modules"><a href="?p=modules">Modules</a>
+            <ul class="nav">
+                <li><a href="#modules_1">folders organization</a></li>
+                <li><a href="#modules_2">Configuration</a></li>
+                <li><a href="#modules_3">HMVC Application</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    let current_page = getCurrentPage()
+    const lis = $('li[id]')
+    $.each(lis, () => {
+        if($(this).hasClass('active')){
+            $(this).removeClass('active')
+        }
+    })
+    $('li#'+current_page).addClass('active')
+</script>

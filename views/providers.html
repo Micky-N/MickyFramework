@@ -1,0 +1,71 @@
+<section id="line4" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Providers
+                <hr>
+            </h2>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <p>Providers register classes for a defined use.
+            </p>
+            <h4>EventServiceProvider</h4>
+            <p>This provider is used to store events and their listeners according to their actions as alias :</p>
+            <pre class="brush: php">
+                                        // app/Providers/EventServiceProvider.php
+                                        [
+                                            \App\Events\TodoEvent::class => [
+                                                'update' => \App\Listeners\UpdateTodoListener::class,
+                                                'otherAction' => \App\Listeners\OtherListener::class,
+                                            ]
+                                        ];
+                                    </pre>
+            <h4>MiddlewareServiceProvider</h4>
+            <p>This provider is used to store route middlewares with aliases, and voters :</p>
+            <pre class="brush:php">
+                                        // app/Providers/MiddlewareServiceProvider.php
+                                        [
+                                            'routeMiddlewares' => [
+                                                'todo' => \App\Http\Middlewares\TodoMiddleware::class
+                                            ],
+
+                                            'vote' => [
+                                                \App\Voters\TodoVoter::class,
+                                            ],
+                                        ];
+                                    </pre>
+            <h4>MkyServiceProvider</h4>
+            <p>This provider is used to store custom directives and formats for the Mky template engine :</p>
+            <pre class="brush: php">
+                                        // app/Providers/MkyServiceProvider.php
+                                        [
+                                            'formatters' => [
+                                                App\MkyFormatters\TestFormatters::class
+                                            ],
+                                            'directives' => [
+                                                App\MkyDirectives\TestDirective::class
+                                            ]
+                                        ];
+                                    </pre>
+            <h4>Provider</h4>
+            <p>This provider is used to store classes for special uses, such as notification systems, classes are stored with aliases :</p>
+            <pre class="brush: php">
+                                        // app/Providers/Provider.php
+                                        [
+                                            'alias' => [
+                                                'webPush' => \App\Utils\WebPushNotification::class
+                                            ]
+                                        ];
+                                    </pre>
+        </div>
+
+    </div>
+    <!-- end row -->
+
+</section>
