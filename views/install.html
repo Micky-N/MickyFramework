@@ -14,10 +14,9 @@
       composer create-project micky/mky appname --prefer-dist
     </pre>
 
+    <p>This command will install the new app in your app name folder. After that you have to config your app in the config folder</p>
     <h3>Configuration</h3>
 
-    <p>This command will install the new app in your app name folder. After that you have to config your app in the
-        config folder</p>
 
     <table class="table table-responsive">
         <thead>
@@ -35,23 +34,28 @@
         </tr>
         <tr>
             <td></td>
-            <td>cache</td>
-            <td>Cache folder</td>
+            <td>timezone</td>
+            <td>Default timezone value for datetime instance</td>
         </tr>
         <tr>
             <td></td>
-            <td>env</td>
-            <td>app environment</td>
+            <td>locale</td>
+            <td>Default location value (useful for translation)</td>
         </tr>
         <tr>
             <td></td>
-            <td>structure</td>
-            <td>App structure (MVC or HMVC)</td>
+            <td>route_mode</td>
+            <td>Default route mode for all application, (controller, file, both)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>security.csrf</td>
+            <td>Enable csrf security</td>
         </tr>
         <tr>
             <td></td>
             <td>debugMode</td>
-            <td>Enable debur bar</td>
+            <td>Enable debug mode</td>
         </tr>
         <tr>
             <td>database</td>
@@ -59,14 +63,24 @@
             <td>MYSQL connexion data</td>
         </tr>
         <tr>
-            <td>mkyEngine</td>
-            <td>cache</td>
-            <td>Sub-folder for compiled views cache</td>
+            <td>auth</td>
+            <td>providers</td>
+            <td>Set credentials and manager class for login</td>
         </tr>
         <tr>
-            <td>module</td>
-            <td>views</td>
-            <td>Root folder for .mky views</td>
+            <td></td>
+            <td>remember</td>
+            <td>Set provider remember token lifetime</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>password_reset</td>
+            <td>Set provider password_reset token lifetime</td>
+        </tr>
+        <tr>
+            <td>cache</td>
+            <td>spaces</td>
+            <td>Set file driver and path for cache</td>
         </tr>
         <tr>
             <td></td>
