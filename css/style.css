@@ -14,6 +14,7 @@
 ------------------------------------------------------- */
 
 @import url(https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic);
+
 /* ----------------------------------------------------
     SKELETON    
 ------------------------------------------------------- */
@@ -50,7 +51,7 @@ h2 {
     font-size: 24px;
 }
 
-h3::before{
+h3::before {
     content: "\27A2  ";
 }
 
@@ -96,7 +97,7 @@ img.aligncenter {
     background: none;
 }
 
-ul {
+ul, ol {
     padding: 0;
     list-style: none;
 }
@@ -251,10 +252,16 @@ h4 a {
     padding: 20px;
 }
 
-.intro1 {
-    margin-top: 22px;
-    padding: 30px 0px;
+.intro1, .requirements {
     background-color: #f5f5fa;
+}
+
+.requirements {
+    padding: 20px 0;
+}
+
+.intro1 {
+    padding: 30px 0;
 }
 
 .intro1 li {
@@ -335,8 +342,9 @@ a:hover {
     font-weight: bold;
 }
 
-.intro1 ul {
-    padding: 0 30px;
+.intro1 ul, .requirements ol {
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .btn-primary {
@@ -389,23 +397,23 @@ html.dark .docs-sidebar ul.nav li a.current {
 }
 
 #myBtn {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  height:40px;
-  width:40px;
-  bottom: 55px;
-  right: 20px;
-  font-size: 18px;
-  border: none;
-  outline: none;
-  background-color: grey;
-  color:#ffff;
-  cursor: pointer;
-  padding: 0px;
-  border-radius: 50%;
+    display: none;
+    position: fixed;
+    z-index: 1;
+    height: 40px;
+    width: 40px;
+    bottom: 55px;
+    right: 20px;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: grey;
+    color: #ffff;
+    cursor: pointer;
+    padding: 0px;
+    border-radius: 50%;
 }
 
 #myBtn:hover {
-  background-color: #404040;
+    background-color: #404040;
 }

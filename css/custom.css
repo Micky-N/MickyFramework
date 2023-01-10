@@ -4,6 +4,10 @@ html.dark body {
     color: #888888;
 }
 
+.main {
+    padding-bottom: 40px;
+}
+
 
 @media (min-width: 1280px) {
     .main {

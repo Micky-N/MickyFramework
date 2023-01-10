@@ -73,8 +73,7 @@
     <div class="col-md-12">
         <h3 id="routing_file">File</h3>
         <pre class="brush: php">
-            // start/routes.php
-            Router::get('/todos', [TodoController::class, 'index'], 'todo_module');
+            Router::get('/todos', ['TodoController', 'index'], 'todo_module');
         </pre>
         <p>The third parameter is the module's alias. Router::get method defines a GET HTTP request method route, all
             requests (get, post, put, delete, patch, options) can be set in same way.</p>
@@ -85,34 +84,11 @@
             name, and the second must be the method name, for string action, the value must be the controller name and
             the controller must implement the "__invoke" method.</p>
         <h4>Route Crud</h4>
-        <p>...</p>
-        <h4>Route Methods</h4>
-        <p>To use the route functions in the functions.php file, the route action must be written like <b>func::function_name</b>
-            example: <b>func::getUser</b></p>
-
         <pre class="brush: php">
-                // routes/functions.php
-                // path: test/Micky, action: func::getUser
-                [
-                    'getUser' => function ($username) {
-                        echo("user ".$username); // user Micky
-                    },
-                    'otherFunction' => function () {
-                        echo("otherFunctionReturn");
-                    },
-                ];
-            </pre>
+            Router::crud('todos', 'TodoController', 'todos');
+        </pre>
 
-        <b>To implement 7 CRUD methods</b>
-        <pre class="brush: php">
-                users:
-                    path: crud
-                    controller: App\Http\Controllers\UserController
-                    middleware: auth
-                    only: [index, create] // Optional, to implement index() and create() methods only
-            </pre>
-
-        <table class="table table-responsive">
+        <table class="table">
             <thead>
             <tr>
                 <th>HTTP request method</th>
@@ -120,68 +96,62 @@
                 <th>Controller</th>
                 <th>Method</th>
                 <th>Route name</th>
-                <th>Middleware</th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td>GET</td>
-                <td>/users</td>
-                <td>App\Http\Controllers\UserController</td>
+                <td>/todos</td>
+                <td>TodoController</td>
                 <td>index</td>
-                <td>users.index</td>
-                <td>auth</td>
+                <td>todos.index</td>
             </tr>
             <tr>
                 <td>GET</td>
-                <td>/users/:user</td>
-                <td>App\Http\Controllers\UserController</td>
+                <td>/todos/{todo}</td>
+                <td>TodoController</td>
                 <td>show</td>
-                <td>users.show</td>
-                <td>auth</td>
+                <td>todos.show</td>
             </tr>
             <tr>
                 <td>GET</td>
-                <td>/users/new</td>
-                <td>App\Http\Controllers\UserController</td>
-                <td>new</td>
-                <td>users.new</td>
-                <td>auth</td>
-            </tr>
-            <tr>
-                <td>GET</td>
-                <td>/users/edit/:user</td>
-                <td>App\Http\Controllers\UserController</td>
-                <td>edit</td>
-                <td>users.edit</td>
-                <td>auth</td>
-            </tr>
-            <tr>
-                <td>DELETE</td>
-                <td>/users/delete/:user</td>
-                <td>App\Http\Controllers\UserController</td>
-                <td>delete</td>
-                <td>users.delete</td>
-                <td>auth</td>
+                <td>/todos/create</td>
+                <td>TodoController</td>
+                <td>create</td>
+                <td>todos.create</td>
             </tr>
             <tr>
                 <td>POST</td>
-                <td>/users</td>
-                <td>App\Http\Controllers\UserController</td>
-                <td>create</td>
-                <td>users.create</td>
-                <td>auth</td>
+                <td>/todos</td>
+                <td>TodoController</td>
+                <td>store</td>
+                <td>todos.store</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/todos/{todo}/edit</td>
+                <td>TodoController</td>
+                <td>edit</td>
+                <td>todos.edit</td>
             </tr>
             <tr>
                 <td>PUT</td>
-                <td>/users/update/:user</td>
-                <td>App\Http\Controllers\UserController</td>
+                <td>/todos/{todo}/update</td>
+                <td>TodoController</td>
                 <td>update</td>
-                <td>users.update</td>
-                <td>auth</td>
+                <td>todos.update</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/todos/{todo}/destroy</td>
+                <td>TodoController</td>
+                <td>destroy</td>
+                <td>todos.destroy</td>
             </tr>
             </tbody>
         </table>
+        <p>The crud method returns a \Router\RouteCrud instance, so crud routes can be modified:</p>
+        <p>...</p>
     </div>
 
 </section>
