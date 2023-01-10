@@ -28,6 +28,7 @@ function mount(el) {
     })
 }
 
+
 $(function () {
     let includes = $('[data-include]')
     $.each(includes, function () {
@@ -36,7 +37,6 @@ $(function () {
         $(this).load(file)
     })
 })
-
 
 $(function () {
     let el = $('#app')
