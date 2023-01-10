@@ -87,6 +87,7 @@
         <pre class="brush: php">
             Router::crud('todos', 'TodoController', 'todos');
         </pre>
+        <p>Parameters: namespace (used for url and route name), controller and module alias</p>
 
         <table class="table">
             <thead>
@@ -151,7 +152,26 @@
             </tbody>
         </table>
         <p>The crud method returns a \Router\RouteCrud instance, so crud routes can be modified:</p>
-        <p>...</p>
+        <p>Routes in crud can be predefined with a middleware: </p>
+        <pre class="brush: php">
+            Router::crud('todos', 'TodoController', 'todos')->middlewares([
+                '*' => ['@:auth'],
+                'store' => ['@:admin']
+            ]);
+        </pre>
+        <p>Middlewares method has one association array parameter which key is the crud method and value is
+            another array of middlewares, the <b>'*'</b> means all crud methods, so every crud method route will
+        call the auth middleware and store method will call in a second times the admin middleware.</p>
+        <p>Routes in crud can be predefined with a name: </p>
+        <pre class="brush: php">
+            Router::crud('todos', 'TodoController', 'todos')->middlewares([
+                '*' => ['@:auth'],
+                'store' => ['@:admin']
+            ]);
+        </pre>
+        <p>Middlewares method has one association array parameter which key is the crud method and value is
+            another array of middlewares, the <b>'*'</b> means all crud methods, so every crud method route will
+        call the auth middleware and store method will call in a second times the admin middleware.</p>
     </div>
 
 </section>
