@@ -7,13 +7,8 @@ $(document).ready(function () {
 
 function getCurrentPage() {
     const url = new URL(window.location.href);
-    return url.searchParams.get('p') ?? 'home'
-}
-
-function changePage(page = 'home') {
-    const url = new URL(window.location.href);
-    let newUrl = url.origin
-    window.location.href = newUrl + (page === 'home' ? '' : `?p=${page}`)
+    const trim = url.pathname.replace(/\//, '');
+    return trim || 'home'
 }
 
 function template(view) {
