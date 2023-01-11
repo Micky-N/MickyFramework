@@ -1,0 +1,24 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Controller
+                <hr>
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <p>Inspired by Symfony, the Voter is a permission system that manages user access and possibilities
+            Voters implement the MkyCore\Interfaces\VoterInterface with the methods:
+        <pre class="brush: php">canVote(string $permission, $subject = null)</pre>
+        which checks if the Voter can vote
+        <pre class="brush: php">vote($user, string $permission, $subject = null)</pre>
+        which retrieves the Voter's vote. Voters must be registered in config/MiddlewareServiceProvider.php<br>
+        Voters can be used with routes like RouteMiddleware with a can suffix, example : <b>middleware: can:permission,
+        subject</b>, they can be used in the application with the method
+        <pre class="brush: php">MkyCore\Permission::authorize($user, string $permission, $subject = null)</pre>
+        or the $user can be any user, the return will be a boolean. can be used for views as a directive to display an
+        element according to user rights.</p>
+    </div>
+</section>

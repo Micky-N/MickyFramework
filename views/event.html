@@ -1,0 +1,48 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Event
+                <hr>
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <h3 id="event">Event</h3>
+
+        <p>Event class emits an event from a controller, it implements the MkyCore\Interfaces\EventInterface interface
+            and inherit from MkyCore\Event to use the method:</p>
+        <pre class="brush:php">
+        TodoEvent::dispatch($target = null, $actions = null, array $params = [])
+        </pre>
+        <p>Example :</p>
+        <pre class="brush:php">
+            App\Events\TodoEvent::dispatch($update_todo, ['update'], ['user' => $user])
+            $update_todo => modified Todo instance
+        </pre>
+        <p>The actions are what will make the link between the event and its listeners, so that the application knows
+            which listener to call, the event must be registered in the app/Providers/EventServiceProvider.php with the
+            associated listeners, example :</p>
+        <pre class="brush:php">
+            // [event => ['action' => listener]]
+            [
+                \App\Events\TodoEvent::class => [
+                    'update' => \App\Listeners\UpdateTodoListener::class,
+                    'otherAction' => \App\Listeners\OtherListener::class,
+                ]
+            ];
+        </pre>
+    </div>
+
+    <div class="col-md-12">
+        <h3 id="event_listener">Listener</h3>
+
+        <p>Listeners implement the MkyCore\Interfaces\ListenerInterface interface. The listener receives the instance of
+            the
+            event which emits the event (subject, action and parameters) in the method handle($event) processes and
+            executes
+            an action, example : sending mail.</p>
+    </div>
+
+</section>

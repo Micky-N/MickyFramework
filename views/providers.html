@@ -13,7 +13,8 @@
     <div class="row">
 
         <div class="col-md-12">
-            <p>Provider is a class use to make something at the beginning of the flux process, There are 3 main providers in app provider folder:
+            <p>Provider is a class use to make something at the beginning of the flux process, There are 3 main
+                providers in app provider folder:
             </p>
             <div class="requirements">
                 <ol>
@@ -31,7 +32,8 @@
                     $this->app->bind(TodoServiceInterface::class, TodoService::class);
                 }
             </pre>
-            <p>Only in app/Providers/AppServiceProvider.php, the property <b>$modules</b> is a list of all modules, don't remove the getter <b>getModules</b></p>
+            <p>Only in app/Providers/AppServiceProvider.php, the property <b>$modules</b> is a list of all modules,
+                don't remove the getter <b>getModules</b></p>
             <h4>AuthServiceProvider</h4>
             <p>This provider is used to define route permission :</p>
             <pre class="brush: php">
@@ -39,7 +41,7 @@
                 public function register()
                 {
                     Allows::define('view_todo', function(User $user, Todo $todo){
-                        return $user->id === $todo->userId();
+                        return $user->id() === $todo->userId();
                     });
                 }
             </pre>
@@ -55,6 +57,10 @@
                     ]);
                 }
             </pre>
+            <p>To create a new provider, use the command:</p>
+            <pre class="brush: php">php mky create:provider mailer</pre>
+            <p><b>MailerServiceProvider.php</b> file will be created in the "providers" folder, application will call the
+                "register" method</p>
         </div>
 
     </div>

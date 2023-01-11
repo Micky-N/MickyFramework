@@ -1,0 +1,34 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Middleware
+                <hr>
+            </h2>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 id="middleware">Middleware</h3>
+    </div>
+
+    <div class="col-md-12">
+        <h3 id="middleware_route">Route Middleware</h3>
+        <p>Middlewares implement the MkyCore\Interfaces\MiddlewareInterface interface with the method
+            <b>process(callable $next, ServerRequestInterface $request)</b> which checks the request passed by the user
+            and performs an action, usually a redirect or a resend of the request to another middleware or otherwise to
+            the controller. RouteMiddlewares must be registered in config/MiddlewareServiceProvider.php file and are to
+            be used in routes:</p>
+        <pre class="brush: php">
+                            # routes/web.yaml
+                            categories:
+                                index:
+                                    path: /categories
+                                    action: App\Http\Controllers\CategoryController::index
+                                    method: GET
+                                    middleware: auth
+                        </pre>
+        <p>It can also be used in the application with the static method <b>MkyCore\Middleware::run(App\Http\Middlewares\AuthMiddleware::class)</b>
+            or to use several middlewares: <b>MkyCore\Middleware::run([ Middleware1::class, Middleware2::class,...])</b>
+        </p>
+    </div>
+</section>

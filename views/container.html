@@ -1,0 +1,185 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">DI Container
+                <hr>
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <h3 id="container">Container</h3>
+        <p>The Dependency Injection Container is a class that made to record a structure with an alias, example of
+            use:</p>
+        <pre class="brush: php">
+            $this->app->bind('mailer', function () {
+                return new Mailer();
+            });
+        </pre>
+        <p>or we can use the Container facade:</p>
+        <pre class="brush: php">
+            use MkyCore\Facades\Container;
+
+            Container::bind('mailer', function () {
+                return new Mailer();
+            });
+        </pre>
+        <h4>Add a structure</h4>
+        <p>To add a structure, use <b>Container::bind</b> method, alias is the first parameter as string and structure
+            is
+            the value, there is no required type for value</p>
+        <pre class="brush: php">
+            Container::bind('mailer', function () {
+                return &#128231;;
+            });
+
+            Container::bind('euro', function (Container $container, int $number) {
+                return &#128182; x $number;
+            });
+        </pre>
+        <p>With bind method, the Mailer class will always be a different instance, to avoid this use the singleton
+            method</p>
+        <pre class="brush: php">
+            Container::singleton('mailer', function () {
+                return &#128231;;
+            });
+        </pre>
+        <p>With singleton method, the Mailer class will be instantiated once and will keep the same instance</p>
+        <h4>Get a structure</h4>
+        <p>To get a structure, use <b>Container::get</b> method, alias is the first parameter as string and others
+            variable can be set to help the Container to resolve the value</p>
+        <pre class="brush: php">
+            Container::get('mailer'); // &#128073 '&#128231';
+
+            Container::has('euro'); // &#128073 true;
+            Container::get('euro', 4); // &#128073 '&#128182;&#128182;&#128182;&#128182;';
+        </pre>
+        <h4>Remove and replace a Container alias</h4>
+        <p>To remove a alias, use <b>Container::removeInstance</b> method</p>
+        <pre class="brush: php">
+            Container::removeInstance('mailer');
+        </pre>
+        <p>If we use twice bind method with the same alias, the Container will replace the old value of the alias but
+            for a singleton structure use bind or singleton method to replace will not work, use forceSingleton to
+            replace singleton structure.</p>
+        <pre class="brush: php">
+            // Replace binding
+            Container::bind('mailer', '&#128231;');
+            Container::bind('mailer', '&#128236;');
+            Container::get('mailer'); // &#128073 '&#128236;'
+        </pre>
+        <pre class="brush: php">
+            // Wrong replacement singleton
+            Container::singleton('mailer', '&#128231;');
+            Container::singleton('mailer', '&#128236;');
+            Container::bind('mailer', '&#128233;');
+            Container::get('mailer'); // &#128073 '&#128231;'
+        </pre>
+        <pre class="brush: php">
+            // Replace singleton
+            Container::singleton('mailer', '&#128231;');
+            Container::forceSingleton('mailer', '&#128236;');
+            Container::get('mailer'); // &#128073 '&#128236;'
+        </pre>
+    </div>
+
+    <div class="col-md-12">
+        <h3 id="container_auto">Auto Wiring</h3>
+        <p>Thanks to the auto wiring, the container is very useful in MkyFramework Application, for <a
+                href="/controller">Controller</a>,
+            <a href="/middleware">Middleware</a>, <a href="/event">Event and Listener</a>. in the AppServiceProvider
+            class, we can define classes and instantiate them automatically in controllers, example with path
+            "/todos/5":</p>
+        <p>Without dependency injection:</p>
+        <pre class="brush: php">
+            use App\Managers\TodoManager;
+            use MkyCore\Facades\Container;
+            use MkyCore\Abstracts\Controller;
+
+            class TodoController extends Controller
+            {
+                /**
+                 * @param int $todo
+                 * @return View
+                 */
+                public function show(int $todo)
+                {
+                    $todoManager = Container::get(TodoManager::class);
+                    $todo = $todoManager->find($todo);
+
+                    return view('@/show.twig', ['todo' => $todo]);
+                }
+            }
+        </pre>
+
+        <p>With dependency injection:</p>
+        <pre class="brush: php">
+            use App\Entities\Todo;
+            use MkyCore\Abstracts\Controller;
+
+            class TodoController extends Controller
+            {
+                /**
+                 * @param Todo $todo
+                 * @return View
+                 */
+                public function show(Todo $todo)
+                {
+                    return view('@/show.twig', ['todo' => $todo]);
+                }
+            }
+        </pre>
+        <p><b>$todo</b> is the todo whose id is 5.</p>
+        <p>If a class depends on another class you can use <b>$this->app->get(...)</b> to instantiate a class without
+            having to instantiate the necessary class provided that the latter is registered in the container or simple
+            to instantiate</p>
+        <pre class="brush: php">
+            use App\Managers\TodoManager;
+            use App\Entities\Todo;
+
+            class TodoRepository
+            {
+                public function __construct(private TodoManager $todoManager)
+                {
+                }
+
+                public function find(int $id): Todo
+                {
+                    return $this->todoManager->find($id);
+                }
+            }
+        </pre>
+
+        <pre class="brush: php">
+            use App\Entities\Todo;
+            use MkyCore\Abstracts\Controller;
+
+            class TodoController extends Controller
+            {
+                /**
+                 * @param int $id
+                 * @param TodoRepository $todoRepository
+                 * @return View
+                 */
+                public function show(TodoRepository $todoRepository, int $id)
+                {
+                    $todo = $todoRepository->find($id);
+                    return view('@/show.twig', ['todo' => $todo]);
+                }
+
+                // OR
+
+                /**
+                 * @param int $id
+                 * @return View
+                 */
+                public function show(int $id)
+                {
+                    $todo = $this->app->get(TodoRepository::class)->find($id);
+                    return view('@/show.twig', ['todo' => $todo]);
+                }
+            }
+        </pre>
+    </div>
+</section>
