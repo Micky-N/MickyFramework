@@ -22,8 +22,30 @@ function topFunction() {
     })
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector('#mode').addEventListener('click', () => {
-        document.querySelector('html').classList.toggle('dark');
-    })
-});
+let isDarkMode = false
+
+
+function darkMode(){
+    isDarkMode = localStorage.getItem('isDarkMode') !== 'false';
+    if(isDarkMode){
+        $('html').addClass('dark')
+    }else{
+        $('html').removeClass('dark')
+    }
+}
+
+function toggleDarkMode(){
+    isDarkMode = !isDarkMode
+    localStorage.setItem('isDarkMode', isDarkMode);
+    if(isDarkMode){
+        $('html').addClass('dark')
+    }else{
+        $('html').removeClass('dark')
+    }
+}
+
+darkMode()
+
+$('#mode').on('click', () => {
+    toggleDarkMode()
+})
