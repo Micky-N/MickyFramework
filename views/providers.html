@@ -25,39 +25,35 @@
             <h4>AppServiceProvider</h4>
             <p>This provider is used to save classes in the dependency injection container with an alias :</p>
             <pre class="brush: php">
-                // app/Providers/Provider.php
+                // app/Providers/AppServiceProvider.php
                 public function register()
                 {
                     $this->app->bind(TodoServiceInterface::class, TodoService::class);
-                    $this->app->singleton(TodoMailer, function(Container $container){
-                });
-                    $this->app->forceSingleton(Request::class, fn() => Request::fromGlobals());
                 }
             </pre>
+            <p>Only in app/Providers/AppServiceProvider.php, the property <b>$modules</b> is a list of all modules, don't remove the getter <b>getModules</b></p>
             <h4>AuthServiceProvider</h4>
-            <p>This provider is used to store route middlewares with aliases, and voters :</p>
-            <pre class="brush:php">
-                // app/Providers/MiddlewareServiceProvider.php
-                [
-                    'routeMiddlewares' => [
-                        'todo' => \App\Http\Middlewares\TodoMiddleware::class
-                    ],
-
-                    'vote' => [
-                        \App\Voters\TodoVoter::class,
-                    ],
-                ];
+            <p>This provider is used to define route permission :</p>
+            <pre class="brush: php">
+                // app/Providers/AuthServiceProvider.php
+                public function register()
+                {
+                    Allows::define('view_todo', function(User $user, Todo $todo){
+                        return $user->id === $todo->userId();
+                    });
+                }
             </pre>
             <h4>EventServiceProvider</h4>
             <p>This provider is used to store events and their listeners according to their actions as alias :</p>
             <pre class="brush: php">
                 // app/Providers/EventServiceProvider.php
-                [
-                    \App\Events\TodoEvent::class => [
-                        'update' => \App\Listeners\UpdateTodoListener::class,
-                        'otherAction' => \App\Listeners\OtherListener::class,
-                    ]
-                ];
+                public function register()
+                {
+                    $this->app->addEvent(NewTodoEvent::class, [
+                        'send_mail' => NewTodoMailListener::class,
+                        'newsletter' => NewsLetterListener::class,
+                    ]);
+                }
             </pre>
         </div>
 
