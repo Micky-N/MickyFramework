@@ -53,62 +53,20 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>HTTP request method</th>
-                    <th>Url path</th>
-                    <th>Controller</th>
                     <th>Method</th>
-                    <th>Route name</th>
+                    <th>Params</th>
+                    <th>Description</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>GET</td>
-                    <td>/users/{user}/todos</td>
-                    <td>TodoController</td>
-                    <td>index</td>
-                    <td>users.todos.index</td>
-                </tr>
-                <tr>
-                    <td>GET</td>
-                    <td>/users/{user}/todos/{todo}</td>
-                    <td>TodoController</td>
-                    <td>show</td>
-                    <td>users.todos.show</td>
-                </tr>
-                <tr>
-                    <td>GET</td>
-                    <td>/users/{user}/todos/create</td>
-                    <td>TodoController</td>
-                    <td>create</td>
-                    <td>users.todos.create</td>
-                </tr>
-                <tr>
-                    <td>POST</td>
-                    <td>/users/{user}/todos</td>
-                    <td>TodoController</td>
-                    <td>store</td>
-                    <td>users.todos.store</td>
-                </tr>
-                <tr>
-                    <td>GET</td>
-                    <td>/users/{user}/todos/{todo}/edit</td>
-                    <td>TodoController</td>
-                    <td>edit</td>
-                    <td>users.todos.edit</td>
-                </tr>
-                <tr>
-                    <td>PUT</td>
-                    <td>/users/{user}/todos/{todo}/update</td>
-                    <td>TodoController</td>
-                    <td>update</td>
-                    <td>users.todos.update</td>
-                </tr>
-                <tr>
-                    <td>DELETE</td>
-                    <td>/users/{user}/todos/{todo}/destroy</td>
-                    <td>TodoController</td>
-                    <td>destroy</td>
-                    <td>users.todos.destroy</td>
+                    <td>id</td>
+                    <td>primaryKey, isInteger</td>
+                    <td>Add a primary key column as an unsigned and not null type, default primary column name is "id",
+                        you can override it by change
+                        "primaryKey" param, primary column type is integer, you can override it by change "isInteger"
+                        param.
+                    </td>
                 </tr>
                 </tbody>
             </table>

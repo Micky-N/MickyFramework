@@ -190,8 +190,8 @@ sub {
 }
 
 .code {
-    color: #020d38;
-    background: #cbcbcb;
+    color: #c0c5ce;
+    background: #2b303b;
     padding: 5px 20px;
     border-radius: 2px;
     margin: 0 5px;
