@@ -50,6 +50,68 @@
             <p>Schema have two methods: "up" for <span class="code">php mky migration:run</span> command and "down" for
                 <span class="code">php mky migration:reset</span> command, MigrationTable $table is the representation
                 of your table, each $table method used is a new column, list of methods:</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>HTTP request method</th>
+                    <th>Url path</th>
+                    <th>Controller</th>
+                    <th>Method</th>
+                    <th>Route name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>GET</td>
+                    <td>/users/{user}/todos</td>
+                    <td>TodoController</td>
+                    <td>index</td>
+                    <td>users.todos.index</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/users/{user}/todos/{todo}</td>
+                    <td>TodoController</td>
+                    <td>show</td>
+                    <td>users.todos.show</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/users/{user}/todos/create</td>
+                    <td>TodoController</td>
+                    <td>create</td>
+                    <td>users.todos.create</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/users/{user}/todos</td>
+                    <td>TodoController</td>
+                    <td>store</td>
+                    <td>users.todos.store</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/users/{user}/todos/{todo}/edit</td>
+                    <td>TodoController</td>
+                    <td>edit</td>
+                    <td>users.todos.edit</td>
+                </tr>
+                <tr>
+                    <td>PUT</td>
+                    <td>/users/{user}/todos/{todo}/update</td>
+                    <td>TodoController</td>
+                    <td>update</td>
+                    <td>users.todos.update</td>
+                </tr>
+                <tr>
+                    <td>DELETE</td>
+                    <td>/users/{user}/todos/{todo}/destroy</td>
+                    <td>TodoController</td>
+                    <td>destroy</td>
+                    <td>users.todos.destroy</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="col-md-12">
