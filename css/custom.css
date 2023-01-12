@@ -20,9 +20,12 @@ html.dark h1,
 html.dark h2,
 html.dark h3,
 html.dark h4,
-html.dark h5,
 html.dark h6 {
     color: #dbdbdb;
+}
+
+html.dark h5 {
+    color: #cc8548;
 }
 
 html.dark hr {
