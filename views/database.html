@@ -96,6 +96,11 @@
                     <td>Add a tiny integer column for boolean value (true = 1, false = 0)</td>
                 </tr>
                 <tr>
+                    <td>float</td>
+                    <td>column: <span class="type">string</span>, precision: <span class="type">array</span></td>
+                    <td>Add a float column, you can set precision as array [2,6] => FLOAT (2,6)</td>
+                </tr>
+                <tr>
                     <td>string</td>
                     <td>column: <span class="type">string</span>, limit: <span class="type">int</span> = 255</td>
                     <td>Add a varchar column, with 255 characters limited by default</td>
@@ -152,78 +157,45 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>id</td>
-                    <td>primaryKey: <span class="type">string</span>, isInteger: <span class="type">bool</span></td>
-                    <td>Add a primary key column as an unsigned and not null type, default primary column name is "id",
-                        you can override it by change
-                        "primaryKey" param, primary column type is integer, you can override it by change "isInteger"
-                        param.
-                    </td>
-                </tr>
-                <tr>
-                    <td>integer</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add an integer column</td>
-                </tr>
-                <tr>
-                    <td>binInt</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a big integer column</td>
-                </tr>
-                <tr>
-                    <td>smallInt</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a small integer column</td>
-                </tr>
-                <tr>
-                    <td>tinyInt</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a tiny integer column</td>
-                </tr>
-                <tr>
-                    <td>boolean</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a tiny integer column for boolean value (true = 1, false = 0)</td>
-                </tr>
-                <tr>
-                    <td>string</td>
-                    <td>column: <span class="type">string</span>, limit: <span class="type">int</span> = 255</td>
-                    <td>Add a varchar column, with 255 characters limited by default</td>
-                </tr>
-                <tr>
-                    <td>text</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a text column</td>
-                </tr>
-                <tr>
-                    <td>datetime</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a datetime column</td>
-                </tr>
-                <tr>
-                    <td>timestamp</td>
-                    <td>column: <span class="type">string</span></td>
-                    <td>Add a timestamp column</td>
-                </tr>
-                <tr>
-                    <td>dates</td>
+                    <td>primaryKey</td>
                     <td></td>
-                    <td>Add an updated_at and created_at timestamp columns</td>
+                    <td>Make the column a primary key</td>
                 </tr>
                 <tr>
-                    <td>created_at</td>
-                    <td>column: <span class="type">string</span> = "created_at"</td>
-                    <td>Add a created_at column, the column name can be changed by set a value to the "column" param
-                    </td>
+                    <td>notNull</td>
+                    <td></td>
+                    <td>Make the column a not nullable column</td>
                 </tr>
                 <tr>
-                    <td>updated_at</td>
-                    <td>column: <span class="type">string</span> = "updated_at"</td>
-                    <td>Add an updated_at column, the column name can be changed by set a value to the "column" param
-                    </td>
+                    <td>unsigned</td>
+                    <td></td>
+                    <td>Make the column a unsigned column</td>
+                </tr>
+                <tr>
+                    <td>default</td>
+                    <td>value: <span class="type">mixed</span></td>
+                    <td>Add a default value to the column</td>
+                </tr>
+                <tr>
+                    <td>unique</td>
+                    <td></td>
+                    <td>Make the column a unique type</td>
+                </tr>
+                <tr>
+                    <td>autoIncrement</td>
+                    <td></td>
+                    <td>Make the column an auto increment</td>
                 </tr>
                 </tbody>
             </table>
+
+            <h5>Add Foreign Key</h5>
+            <p>Each add column methods return a ColumnType instance, you can add ColumnType method to add more structure
+                to a column like:</p>
+            <pre class="brush: php">
+                $table->string('email')->unique()->notNull();
+            </pre>
+            <p>The column "email" is a unique and not nullable column, others methods:</p>
         </div>
     </div>
     <div class="col-md-12">
