@@ -45,9 +45,11 @@
                     {
                         Schema::dropTable('users');
                     }
-
                 }
             </pre>
+            <p>Schema have two methods: "up" for <span class="code">php mky migration:run</span> command and "down" for
+                <span class="code">php mky migration:reset</span> command, MigrationTable $table is the representation
+                of your table, each $table method used is a new column, list of methods:</p>
         </div>
     </div>
     <div class="col-md-12">
