@@ -50,6 +50,10 @@
             <p>Schema have two methods: "up" for <span class="code">php mky migration:run</span> command and "down" for
                 <span class="code">php mky migration:reset</span> command, MigrationTable $table is the representation
                 of your table, each $table method used is a new column, list of methods:</p>
+            <h4>Migration Run</h4>
+            <h4>Migration Rollback</h4>
+            <h4>Migration Refresh</h4>
+            <h4>Migration Reset</h4>
             <h4>Create table</h4>
             <h5>MigrationTable</h5>
             <table class="table">
@@ -190,12 +194,14 @@
             </table>
 
             <h5>Add Foreign Key</h5>
-            <p>Each add column methods return a ColumnType instance, you can add ColumnType method to add more structure
-                to a column like:</p>
+            <p>You can add a foreign key constrains to link a table with another:</p>
             <pre class="brush: php">
-                $table->string('email')->unique()->notNull();
+                $table->integer('user_id');
+                $table->foreignKey('user_id')->references('users', 'id')->cascade();
             </pre>
-            <p>The column "email" is a unique and not nullable column, others methods:</p>
+            <p>The column "user_id" is a foreign integer key link to the "users" table by the key "id", you can set
+                cascadeUpdate(), cascadeDelete(), cascade() (call the update and delete cascade method),
+                noActionUpdate(), noActionDelete(), noAction() (call the update and delete noAction method)</p>
         </div>
     </div>
     <div class="col-md-12">
