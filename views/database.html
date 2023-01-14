@@ -313,42 +313,140 @@
 
             <h4>Populate Command</h4>
             <p>To run populator, use <span class="code">php mky populator:run</span> you can specify whose file to use
-                with the <span class="type">-f=&lt;file&gt;</span> flag, file value may be just the suffix like "user"
+                with the <span class="type">-f=&lt;file&gt;</span> flag, file value may be just the prefix like "user"
                 for running UserPopulate class, by default file is \Database\Populators\RunnerPopulator class.</p>
             <p>By default populator:run will use the definition to fill database, to fill the database with more complex
                 data, implement the populate method in the RunnerPopulator class:</p>
+            <h4>Populate basic functions</h4>
             <pre class="brush:php">
                 class RunnerPopulator extends \MkyCore\Abstracts\Populator
                 {
-
                     public function populate(): void
                     {
-                        $users = new UserPopulator();
-                        $users->count(10)->populate();
+                        $userPopulator = new UserPopulator();
+                        $userPopulator->count(10)->populate();
                     }
                 }
             </pre>
-            <p><span class="type">$users->count(10)</span> will create 10 users in database</p>
+            <p><span class="type">$userPopulator->count(10)</span> will create 10 users in database</p>
             <p>You may need to add dynamic data that cannot be defined in the definition but could be blocking for the
                 population, example for the type of user man or woman, you want to set "Y" or "X" for all so use "merge"
                 method:</p>
             <pre class="brush:php">
-                $users->count(10)->merge(new LoopMerging([
+                $userPopulator->count(10)->merge(new LoopMerging([
                     "Y" // or "X"
                 ]))->populate(); // types: YYYYYYYYYY
             </pre>
             <p>You may want to switch between "Y" and "X" or more value :</p>
             <pre class="brush:php">
-                $users->count(10)->merge(new LoopMerging(["type" => "X"], ["type" => "Y"]))->populate();// types: XYXYXYXYXY
+                $userPopulator->count(10)->merge(new LoopMerging(["type" => "X"], ["type" => "Y"]))->populate();// types: XYXYXYXYXY
             </pre>
             <p>If you want to define a specific looping value, you can implement a closure in LoopMerging
                 constructor:</p>
             <pre class="brush:php">
-                $users->count(10)->merge(new LoopMerging(function($loopMerging){
+                $userPopulator->count(10)->merge(new LoopMerging(function($loopMerging){
                     $type = $loopMerging->index() % 3 == 0 ? "X" : "Y";
                     return ["type" => $type];
                 }))->populate(); // types: XYYXYYXYYX
             </pre>
+            <p>LoopMerging have two used method, count() to get number of elements and index() to get the current index
+                element.</p>
+            <h4>Populate with relation table</h4>
+            <p>Thanks to populator system, you can create data in database and use this data to create another data in
+                another table. It's possible with the relation table system</p>
+            <pre class="brush:php">
+                $userPopulator->count(10)->addOn(function(AddRelation $user){
+                    $user->add(new CarPopulator());
+                })->populate();
+            </pre>
+            <p>The implementation of <span class="type">$user->add(new CarPopulator());</span> will work if in the User
+                entity class there is a method called <span class="type">car()</span> or <span
+                        class="type">cars()</span>, those methods have to return a HasOne or HasMany class:</p>
+            <pre class="brush: php">
+                class User extends \MkyCore\Abstracts\Entity
+                {
+                    public function cars(): HasMany
+                    {
+                        return $this->hasMany(Car::class);
+                    }
+
+                    // OR
+
+                    public function car(): HasOne
+                    {
+                        return $this->hasOne(Car::class);
+                    }
+                }
+            </pre>
+            <p>There are 3 relationship methods: <span class="type">addOn()</span>, <span
+                    class="type">addOnPivot()</span>
+                and <span class="type">attach()</span>. Each method need a closure with Relation class as closure's
+                parameter.</p>
+            <h5>AddOn Relation</h5>
+            <div class="col-md-12">
+                <pre class="brush:php">
+                    $userPopulator->count(10)->addOn(function(AddRelation $user){
+                        $user->add(new CarPopulator());
+                    })->populate();
+                </pre>
+                <p>This method will create one new car for each user, it's a One-to-One relationship. AddRelation class
+                    has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
+                    optional, the first one is Populator class you will link to, and the second one is the name of
+                    relationship, in the example above the relationship name is "car" or "cars" so the second parameter
+                    is not required, if the relationship
+                    name is not the prefix or pluralized prefix of the Populator class, you must specify the second
+                    parameter. For a one-to-many
+                    relationship, you will have to create several cars to
+                    link to a user. To do that use count method
+                    with CarPopulator instance</p>
+                <pre class="brush:php">
+                    $userPopulator->count(10)->addOn(function(AddRelation $user){
+                        $carPopulator = new CarPopulator();
+                        $user->add($carPopulator->count(4));
+                    })->populate();
+                </pre>
+                <p>In this way, 4 cars will be created for each user and linked to the user.</p>
+            </div>
+            <h5>Attach Relation</h5>
+            <div class="col-md-12">
+                <pre class="brush:php">
+                    $carPopulation = new CarPopulator();
+                    $carPopulation->count(4)->attach(function(AttachRelation $car){
+                        $car->attach(new UserPopulator());
+                    })->populate();
+                </pre>
+                <p>This method will create one new car for each user, it's a One-to-One relationship. AddRelation class
+                    has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
+                    optional, the first one is Populator class you will link to, and the second one is the name of
+                    relationship, in the example above the relationship name is "car" or "cars" so the second parameter
+                    is not required, if the relationship
+                    name is not the prefix or pluralized prefix of the Populator class, you must specify the second
+                    parameter. For a one-to-many
+                    relationship, you will have to create several cars to
+                    link to a user. To do that use count method
+                    with CarPopulator instance</p>
+                <p>In this way, 4 cars will be created for each user and linked to the user.</p>
+            </div>
+            <h5>AddOnPivot Relation</h5>
+            <div class="col-md-12">
+                <pre class="brush:php">
+                    $userPopulator->count(10)->addOnPivot(function(AddRelation $user){
+                        $user->add(new CarPopulator(), [
+                            'invoice_date' => now()->format('Y-m-d: H:i:s')
+                        ]);
+                    })->populate();
+                </pre>
+                <p>This method will create one new car for each user, it's a One-to-One relationship. AddRelation class
+                    has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
+                    optional, the first one is Populator class you will link to, and the second one is the name of
+                    relationship, in the example above the relationship name is "car" or "cars" so the second parameter
+                    is not required, if the relationship
+                    name is not the prefix or pluralized prefix of the Populator class, you must specify the second
+                    parameter. For a one-to-many
+                    relationship, you will have to create several cars to
+                    link to a user. To do that use count method
+                    with CarPopulator instance</p>
+            </div>
         </div>
     </div>
 </section>
