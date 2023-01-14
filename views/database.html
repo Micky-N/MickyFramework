@@ -407,11 +407,11 @@
                 </pre>
                 <p>In this way, 4 cars will be created for each user and linked to the user.</p>
             </div>
-            <h5>Attach Relation</h5>
+            <h5>AttachOn Relation</h5>
             <div class="col-md-12">
                 <pre class="brush:php">
                     $carPopulation = new CarPopulator();
-                    $carPopulation->count(4)->attach(function(AttachRelation $car){
+                    $carPopulation->count(4)->attachOn(function(AttachOnRelation $car){
                         $car->attach(new UserPopulator());
                     })->populate();
                 </pre>
