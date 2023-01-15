@@ -385,22 +385,22 @@
             <h5>AddOn Relation</h5>
             <div class="col-md-12">
                 <pre class="brush:php">
-                    $userPopulator->count(10)->addOn(function(AddRelation $user){
+                    $userPopulator->count(10)->addOn(function(AddOnRelation $user){
                         $user->add(new CarPopulator());
                     })->populate();
                 </pre>
-                <p>This method will create one new car for each user, it's a One-to-One relationship. AddRelation class
+                <p>This method will create one new car for each user, it's a One-to-One relationship where the foreign
+                    key is carried by the cars table. AddOnRelation class
                     has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
                     optional, the first one is Populator class you will link to, and the second one is the name of
-                    relationship, in the example above the relationship name is "car" or "cars" so the second parameter
-                    is not required, if the relationship
-                    name is not the prefix or pluralized prefix of the Populator class, you must specify the second
-                    parameter. For a one-to-many
-                    relationship, you will have to create several cars to
-                    link to a user. To do that use count method
-                    with CarPopulator instance</p>
+                    relationship. In the User class declaration, the relationship function name is "car" or "cars" so
+                    the second
+                    parameter is not required, if the relationship name is not the prefix or pluralized prefix of the
+                    Populator class, you must specify the second parameter. For a One-to-Many relationship, you will
+                    have to create several cars to link to a user. To do that use count method with CarPopulator
+                    instance</p>
                 <pre class="brush:php">
-                    $userPopulator->count(10)->addOn(function(AddRelation $user){
+                    $userPopulator->count(10)->addOn(function(AddOnRelation $user){
                         $carPopulator = new CarPopulator();
                         $user->add($carPopulator->count(4));
                     })->populate();
@@ -409,43 +409,55 @@
             </div>
             <h5>AttachOn Relation</h5>
             <div class="col-md-12">
+                <pre class="brush: php">
+                    class Car extends \MkyCore\Abstracts\Entity
+                    {
+                        public function user(): HasOne
+                        {
+                            return $this->hasOne(User::class);
+                        }
+                    }
+                </pre>
                 <pre class="brush:php">
                     $carPopulation = new CarPopulator();
                     $carPopulation->count(4)->attachOn(function(AttachOnRelation $car){
                         $car->attach(new UserPopulator());
                     })->populate();
                 </pre>
-                <p>This method will create one new car for each user, it's a One-to-One relationship. AddRelation class
-                    has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
-                    optional, the first one is Populator class you will link to, and the second one is the name of
-                    relationship, in the example above the relationship name is "car" or "cars" so the second parameter
-                    is not required, if the relationship
-                    name is not the prefix or pluralized prefix of the Populator class, you must specify the second
-                    parameter. For a one-to-many
-                    relationship, you will have to create several cars to
-                    link to a user. To do that use count method
-                    with CarPopulator instance</p>
-                <p>In this way, 4 cars will be created for each user and linked to the user.</p>
+                <p>This method will create four cars for one user, it's a Many(or One)-To-One relationship where the
+                    foreign key is carried by the cars table. AttachOnRelation class
+                    has one method called <span class="type">attach</span>, this method needs 2 parameters, one of which
+                    is optional, the first one is Populator class you will link to, and the second one is the name of
+                    relationship. In the Car class declaration, the relationship function name is "user" so the second
+                    parameter is not required, if the relationship name is not the prefix or pluralized prefix of the
+                    Populator class, you must specify the second parameter.</p>
             </div>
             <h5>AddOnPivot Relation</h5>
             <div class="col-md-12">
+                <pre class="brush: php">
+                    class User extends \MkyCore\Abstracts\Entity
+                    {
+                        public function cars(): ManyToMany
+                        {
+                            return $this->manyToMany(Car::class);
+                        }
+                    }
+                </pre>
                 <pre class="brush:php">
-                    $userPopulator->count(10)->addOnPivot(function(AddRelation $user){
+                    $userPopulator->count(10)->addOnPivot(function(AddOnPivotRelation $user){
                         $user->add(new CarPopulator(), [
                             'invoice_date' => now()->format('Y-m-d: H:i:s')
                         ]);
                     })->populate();
                 </pre>
-                <p>This method will create one new car for each user, it's a One-to-One relationship. AddRelation class
-                    has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
-                    optional, the first one is Populator class you will link to, and the second one is the name of
-                    relationship, in the example above the relationship name is "car" or "cars" so the second parameter
-                    is not required, if the relationship
-                    name is not the prefix or pluralized prefix of the Populator class, you must specify the second
-                    parameter. For a one-to-many
-                    relationship, you will have to create several cars to
-                    link to a user. To do that use count method
-                    with CarPopulator instance</p>
+                <p>This method will create one new car for each user and get the two foreign keys to add a row to the
+                    pivot table, it's a Many-to-Many relationship. AddOnPivotRelation class has one method called
+                    <span class="type">add</span>, this method needs 3 parameters, two of which is optional, the first
+                    one is Populator class you will link to, the second is optional and is the declaration of the pivot
+                    table without the foreign keys, this data will be merged in the new row in the pivot table and the
+                    third one is the name of relationship, in the example above the relationship name is "car" or "cars"
+                    so the third parameter is not required, if the relationship name is not the prefix or pluralized
+                    prefix of the Populator class you must specify the third parameter.</p>
             </div>
         </div>
     </div>
