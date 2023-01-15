@@ -4,57 +4,57 @@
         <li id="install"><a href="/install">How to Install</a></li>
         <li id="routing"><a href="/routing">Routing</a>
             <ul class="nav">
-                <li><a to="#routing_controller">Controller</a></li>
-                <li><a to="#routing_file">File</a></li>
+                <li><a href="#routing_controller">Controller</a></li>
+                <li><a href="#routing_file">File</a></li>
             </ul>
         </li>
         <li id="providers"><a href="/providers">Providers</a></li>
         <li id="container"><a href="/container">DI Container</a>
             <ul class="nav">
-                <li><a to="#container">Container</a></li>
-                <li><a to="#container_auto">Auto Wiring</a></li>
+                <li><a href="#container">Container</a></li>
+                <li><a href="#container_auto">Auto Wiring</a></li>
             </ul>
         </li>
         <li id="database"><a href="/database">Database</a>
             <ul class="nav">
-                <li><a to="#database_migration">Migration</a></li>
-                <li><a to="#database_populator">Populator</a></li>
+                <li><a href="#database_migration">Migration</a></li>
+                <li><a href="#database_populator">Populator</a></li>
             </ul>
         </li>
         <li id="orm"><a href="/orm">ORM</a>
             <ul class="nav">
-                <li><a to="#orm_manager">Manager</a></li>
-                <li><a to="#orm_entity">Entity</a></li>
-                <li><a to="#orm_query_builder">QueryBuilder</a></li>
-                <li><a to="#orm_relationship">Relationship</a></li>
+                <li><a href="#orm_manager">Manager</a></li>
+                <li><a href="#orm_entity">Entity</a></li>
+                <li><a href="#orm_query_builder">QueryBuilder</a></li>
+                <li><a href="#orm_relationship">Relationship</a></li>
             </ul>
         </li>
         <li id="controller"><a href="/controller">Controller</a></li>
         <li id="view"><a href="/view">View</a></li>
         <li id="middleware"><a href="/middleware">Middleware</a>
             <ul class="nav">
-                <li><a to="#middleware">Middleware</a></li>
-                <li><a to="#middleware_route">Route Middleware</a></li>
+                <li><a href="#middleware">Middleware</a></li>
+                <li><a href="#middleware_route">Route Middleware</a></li>
             </ul>
         </li>
         <li id="permission"><a href="/permission">Permission</a></li>
         <li id="event"><a href="/event">Event</a>
             <ul class="nav">
-                <li><a to="#event">Event</a></li>
-                <li><a to="#event_listener">Listener</a></li>
+                <li><a href="#event">Event</a></li>
+                <li><a href="#event_listener">Listener</a></li>
             </ul>
         </li>
 
         <li id="command"><a href="/command">MkyCommand CLI</a>
             <ul class="nav">
-                <li><a to="#command_list">List of commands</a></li>
+                <li><a href="#command_list">List of commands</a></li>
             </ul>
         </li>
         <li id="modules"><a href="/modules">Modules</a>
             <ul class="nav">
-                <li><a to="#modules_1">folders organization</a></li>
-                <li><a to="#modules_2">Configuration</a></li>
-                <li><a to="#modules_3">HMVC Application</a></li>
+                <li><a href="#folders_organization">folders organization</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#hmvc">HMVC Application</a></li>
             </ul>
         </li>
     </ul>
@@ -69,30 +69,4 @@
         }
     })
     $('li#' + current_page).addClass('active')
-
-    $('a[to]').click(function () {
-        $('html, body').animate({
-            scrollTop: $($(this).attr('to')).offset().top - 20
-        }, 'smooth');
-    });
-
-    $(document).scroll(function () {
-        $("a[to]").each(function () {
-
-            let container = $(this).attr('to');
-            const parent = $(container).parent()
-            if (parent.offset()) {
-                let containerOffset = parent.offset().top;
-                let containerHeight = parent.outerHeight();
-                let containerBottom = containerOffset + containerHeight;
-                let scrollPosition = $(document).scrollTop();
-
-                if (scrollPosition < containerBottom - 20 && scrollPosition >= containerOffset - 20) {
-                    $(this).parent().addClass('active');
-                } else {
-                    $(this).parent().removeClass('active');
-                }
-            }
-        });
-    });
 </script>
