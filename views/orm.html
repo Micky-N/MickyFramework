@@ -20,7 +20,7 @@
                  * @Table('users')
                  * @Entity('App\Entities\User')
                  */
-                class UserManager extends \MkyCore\Abstracts\Manager
+                class UserManager extends Manager
                 {
 
                 }
@@ -49,7 +49,7 @@
                     <td>Get the database's table name</td>
                 </tr>
                 <tr>
-                    <td>getEntity: <span class="return">string|\MkyCore\Abstracts\Entity|null</span></td>
+                    <td>getEntity: <span class="return">string|Entity|null</span></td>
                     <td>data: <span class="type">array</span> = []</td>
                     <td>Get the entity name link to this manager, if data is set this method will return an instance
                         of this entity.
@@ -61,23 +61,23 @@
                     <td>Get the number of rows in the database table</td>
                 </tr>
                 <tr>
-                    <td>create: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                    <td>create: <span class="return">Entity|false</span></td>
                     <td>data: <span class="type">array</span></td>
                     <td>Add a new row to database table from array data</td>
                 </tr>
                 <tr>
-                    <td>save: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
-                    <td>entity: <span class="type">\MkyCore\Abstract\Entity</span></td>
+                    <td>save: <span class="return">Entity|false</span></td>
+                    <td>entity: <span class="type">Entity</span></td>
                     <td>Add or update a row (if primary key has value so is an updating) in the database table</td>
                 </tr>
                 <tr>
-                    <td>find: <span class="return">\MkyCore\Abstracts\Entity</span></td>
+                    <td>find: <span class="return">Entity</span></td>
                     <td>id: <span class="type">string|int</span></td>
                     <td>Get a record from primary key value</td>
                 </tr>
                 <tr>
-                    <td>delete: <span class="return">\MkyCore\Abstracts\Entity|null</span></td>
-                    <td>entity: <span class="type">\MkyCore\Abstract\Entity</span></td>
+                    <td>delete: <span class="return">Entity|null</span></td>
+                    <td>entity: <span class="type">Entity</span></td>
                     <td>Delete a row in the database table, return the deleted entity</td>
                 </tr>
                 <tr>
@@ -110,7 +110,7 @@
                 /**
                  * @Manager('App\Managers\UserManager')
                  */
-                class User extends \MkyCore\Abstracts\Entity
+                class User extends Entity
                 {
                     private ?int $id = null;
                     private string $email;
@@ -176,7 +176,7 @@
                 <p>Maybe you want to cast column to an object or other type, for that, use <span class="code">/** @Cast(type) */</span>
                 </p>
                 <pre class="brush:php">
-                    class User extends \MkyCore\Abstracts\Entity
+                    class User extends Entity
                     {
                         //
 
@@ -193,7 +193,7 @@
                     instance and if value is serialized use @Cast('serialize') to unserialize value</p>
                 <p>You can implement your own cast method by set @Cast('toDateTime')</p>
                 <pre class="brush:php">
-                    class User extends \MkyCore\Abstracts\Entity
+                    class User extends Entity
                     {
                         //
                         /** @Cast('toDateTime') */
@@ -227,17 +227,17 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>delete: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td>delete: <span class="return">Entity</span></td>
                         <td></td>
                         <td>Delete the entity row in the database table, return the deleted entity</td>
                     </tr>
                     <tr>
-                        <td>update: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td>update: <span class="return">Entity|false</span></td>
                         <td></td>
                         <td>Update a row in the database table</td>
                     </tr>
                     <tr>
-                        <td>getManager: <span class="return">\MkyCore\Abstracts\Manager|null</span></td>
+                        <td>getManager: <span class="return">Manager|null</span></td>
                         <td></td>
                         <td>Get the manager instance link to this entity</td>
                     </tr>
@@ -533,13 +533,13 @@
         <h3 id="orm_relationship">Relationship</h3>
 
         <div class="col-md-12">
-            <p>Relationship class allow you to link two entities with a One-to-One, One-to-Many, Many-to-One or
+            <p>Relationship class allow you to link two entities with a One-to-One, One-to-Many or
                 Many-to-Many relation</p>
             <pre class="brush: php">
                 /**
                  * @Manager('App\Managers\UserManager')
                  */
-                class User extends \MkyCore\Abstracts\Entity
+                class User extends Entity
                 {
                     //
 
@@ -574,22 +574,22 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>clear: <span class="return">\MkyCore\Abstracts\Entity[]</span></td>
+                        <td>clear: <span class="return">Entity[]</span></td>
                         <td></td>
                         <td>Delete the linked rows in the database table and return deleted entities</td>
                     </tr>
                     <tr>
-                        <td>update: <span class="return">\MkyCore\Abstracts\Entity[]|false</span></td>
+                        <td>update: <span class="return">Entity[]|false</span></td>
                         <td>data: <span class="type">array</span></td>
                         <td>Update all linked rows in the database table and return updated rows</td>
                     </tr>
                     <tr>
-                        <td>get: <span class="return">\MkyCore\Abstracts\Entity[]|false</span></td>
+                        <td>get: <span class="return">Entity[]|false</span></td>
                         <td></td>
                         <td>Get the manager instance link to this entity</td>
                     </tr>
                     <tr>
-                        <td>delete: <span class="return">\MkyCore\Abstracts\Entity|false|null</span></td>
+                        <td>delete: <span class="return">Entity|false|null</span></td>
                         <td>id: <span class="type">int|string</span></td>
                         <td>Delete the linked entity from primary key</td>
                     </tr>
@@ -608,20 +608,20 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>attach: <span class="return">\MkyCore\Abstracts\Entity</span></td>
-                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>attach: <span class="return">Entity</span></td>
+                        <td>entity: <span class="type">Entity</span></td>
                         <td>Create a new row in relation table and set primary key to the current table foreign key,
                             return the new foreign entity
                         </td>
                     </tr>
                     <tr>
-                        <td>delete: <span class="return">\MkyCore\Abstracts\Entity</span></td>
-                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>delete: <span class="return">Entity</span></td>
+                        <td>entity: <span class="type">Entity</span></td>
                         <td>Delete the entity row in the database table and return the deleted entity</td>
                     </tr>
                     <tr>
-                        <td>update: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
-                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>update: <span class="return">Entity|false</span></td>
+                        <td>entity: <span class="type">Entity</span></td>
                         <td>Update the linked row in the database table and return the updated entity</td>
                     </tr>
                     </tbody>
@@ -639,39 +639,34 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>delete: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td>delete: <span class="return">Entity</span></td>
                         <td>id: <span class="type">string|int</span></td>
                         <td>Delete a pivot row in the database table and return the entity linked with all infos from
                             deleted row
                         </td>
                     </tr>
                     <tr>
-                        <td>deleteFromEntity: <span class="return">\MkyCore\Absracts\Entity</span></td>
-                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>deleteFromEntity: <span class="return">Entity</span></td>
+                        <td>entity: <span class="type">Entity</span></td>
                         <td>Delete all pivot rows in the database table linked, delete related entity and return the
                             deleted entity
                         </td>
                     </tr>
                     <tr>
-                        <td>clear: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td>clear: <span class="return">Entity</span></td>
                         <td></td>
                         <td>Delete all pivot rows in the database table linked and all related entities, return deleted
                             entities
                         </td>
                     </tr>
                     <tr>
-                        <td>update: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td>update: <span class="return">Entity|false</span></td>
                         <td>id: <span class="type">string|int</span>, data: <span class="type">array</span></td>
                         <td>Update a row in the pivot table</td>
                     </tr>
                     <tr>
-                        <td>updateEntity: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
-                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
-                        <td>Update the entity row in the database</td>
-                    </tr>
-                    <tr>
-                        <td>add: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
-                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span>, options: <span class="type">array</span>
+                        <td>add: <span class="return">Entity|false</span></td>
+                        <td>entity: <span class="type">Entity</span>, options: <span class="type">array</span>
                             = []
                         </td>
                         <td>Add a new row in the pivot table with options data and return the linked entity with pivot row infos</td>
