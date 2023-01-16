@@ -13,6 +13,7 @@
         <div class="col-md-12">
             <p>The Manager class is the heart of this ORM system, it interacts with the database to fetch, create,
                 update or delete a row to the database table</p>
+            <p>To create a new manager with command-line: <span class="code">php mky create:manager &lt;name&gt;</span></p>
             <pre class="brush: php">
                 /**
                  * @Table('users')
@@ -96,10 +97,142 @@
         <h3 id="orm_entity">Entity</h3>
 
         <div class="col-md-12">
+            <p>The Entity class is a class whose will be a representation of a row in database.</p>
+            <p>To create a new entity with command-line: <span class="code">php mky create:entity &lt;name&gt;</span></p>
+            <p>First of all, you have to implement all table columns as private properties (whose property name must be in camelCase if in database is a snake_case), getters (whose getter name is the property name in camelCase) and setters (whose setter name is "set"+ property name is PascalCase). All columns whose can be automatically set like created_at or primary key auto increment must be a null property by default</p>
+            <pre class="brush: php">
+                class User extends \MkyCore\Abstracts\Entity
+                {
+                    private ?int $id = null;
+                    private string $email;
+                    private ?string $createdAt = null;
+                    private bool isAdmin = false;
 
+                    public function id(): ?int
+                    {
+                        return $this->id;
+                    }
+
+                    public function setId(int $id): void
+                    {
+                        $this->id = $id;
+                    }
+
+                    public function email(): string
+                    {
+                        return $this->email;
+                    }
+
+                    public function setEmail(string $email): void
+                    {
+                        $this->email = $email;
+                    }
+
+                    public function createdAt(): ?string
+                    {
+                        return $this->email;
+                    }
+
+                    public function setCreatedAt(string $created_at): void
+                    {
+                        $this->createdAt = $created_at;
+                    }
+
+                    public function isAdmin(): bool
+                    {
+                        return $this->isAdmin;
+                    }
+
+                    public function setIsAdmin(bool $isAdmin): void
+                    {
+                        $this->isAdmin = $isAdmin;
+                    }
+                }
+            </pre>
+            <h5>Instantiation</h5>
+            <div class="col-md-12">
+                <p>To instantiate entity there are 2 ways:</p>
+                <pre class="brush:php">
+                    $user = new User(['email' => 'example@gmail.com']);
+
+                    // OR
+                    $user = new User();
+                    $user->hydrate(['email' => 'example@gmail.com']);
+                </pre>
+            </div>
+            <h5>Cast</h5>
+            <div class="col-md-12">
+                <p>Maybe you want to cast column to a object or other type, for that, use <spen class="code">/** @Cast(type) */</spen></p>
+                <pre class="brush:php">
+                    class User extends \MkyCore\Abstracts\Entity
+                    {
+                        //
+
+                        /** @Cast('boolean') */
+                        private bool isAdmin = false;
+
+                        //
+                    }
+                </pre>
+                <p>Without this the property will return a tinyInt 0 or 1, thanks to casting it will return true for 1 or false for 0.</p>
+                <p>Built-in types you can use are: 'string', 'int', 'integer', 'float', 'boolean', 'bool'. If column value is json you can use @Cast('array') to turn it to associative array or @Cast('object') stdClass instance and if value is serialized use @Cast('serialize') to unserialize value</p>
+                <p>You can implement your own cast method by set @Cast('toDateTime')</p>
+                <pre class="brush:php">
+                    class User extends \MkyCore\Abstracts\Entity
+                    {
+                        //
+
+                        public function toDateTime(string $value): DateTime
+                        {
+                            // $value format is Y-m-d H:i:s in my example
+                            return new DateTime($value); 
+                        }
+
+                        //
+                    }
+                </pre>
+            </div>
+            <h5>Hidden properties</h5>
+            <div class="col-md-12">
+                <p>Used for api and sending entity object to the client side for js script for example, you may want to hidden some sensible properties like password, to do that you can set <span class="code">@Hidden()</span> in the annotation of property</p>
+            </div>
+            <h5>Other Methods</h5>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>delete: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td></td>
+                        <td>Delete the entity row in the database table, return the deleted entity</td>
+                    </tr>
+                    <tr>
+                        <td>update: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td></td>
+                        <td>Update a row in the database table</td>
+                    </tr>
+                    <tr>
+                        <td>getManager: <span class="return">\MkyCore\Abstracts\Manager|null</span></td>
+                        <td></td>
+                        <td>Get the manager instance link to this entity</td>
+                    </tr>
+                    <tr>
+                        <td>getPrimaryKey: <span class="return">string|null</span></td>
+                        <td></td>
+                        <td>Get the entity primary key</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    </div>
+
     <div class="col-md-12">
         <h3 id="orm_query_builder">QueryBuilder</h3>
 
