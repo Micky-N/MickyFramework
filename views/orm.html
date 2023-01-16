@@ -533,7 +533,152 @@
         <h3 id="orm_relationship">Relationship</h3>
 
         <div class="col-md-12">
+            <p>Relationship class allow you to link two entities with a One-to-One, One-to-Many, Many-to-One or
+                Many-to-Many relation</p>
+            <pre class="brush: php">
+                /**
+                 * @Manager('App\Managers\UserManager')
+                 */
+                class User extends \MkyCore\Abstracts\Entity
+                {
+                    //
 
+                    public function cars(): HasMany
+                    {
+                        return $this->hasMany(\App\Entities\Car::class);
+                    }
+
+                    public function address(): HasOne
+                    {
+                        return $this->hasOne(\App\Entities\Address::class);
+                    }
+
+                    public function jobs(): ManyToMany
+                    {
+                        return $this->manyToMany(\App\Entities\Job::class);
+                    }
+                }
+            </pre>
+            <p>In this example, the user has many cars, one address and many jobs linked to the pivot table "user_job"
+                whose has a float column "salary".</p>
+            <p>In each relationship mode, methods are available to handle them:</p>
+            <h5>HasMany</h5>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>clear: <span class="return">\MkyCore\Abstracts\Entity[]</span></td>
+                        <td></td>
+                        <td>Delete the linked rows in the database table and return deleted entities</td>
+                    </tr>
+                    <tr>
+                        <td>update: <span class="return">\MkyCore\Abstracts\Entity[]|false</span></td>
+                        <td>data: <span class="type">array</span></td>
+                        <td>Update all linked rows in the database table and return updated rows</td>
+                    </tr>
+                    <tr>
+                        <td>get: <span class="return">\MkyCore\Abstracts\Entity[]|false</span></td>
+                        <td></td>
+                        <td>Get the manager instance link to this entity</td>
+                    </tr>
+                    <tr>
+                        <td>delete: <span class="return">\MkyCore\Abstracts\Entity|false|null</span></td>
+                        <td>id: <span class="type">int|string</span></td>
+                        <td>Delete the linked entity from primary key</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h5>HasOne</h5>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>attach: <span class="return">\MkyCore\Abstracts\Entity</span></td>
+                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>Create a new row in relation table and set primary key to the current table foreign key,
+                            return the new foreign entity
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>delete: <span class="return">\MkyCore\Abstracts\Entity</span></td>
+                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>Delete the entity row in the database table and return the deleted entity</td>
+                    </tr>
+                    <tr>
+                        <td>update: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>Update the linked row in the database table and return the updated entity</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h5>ManyToMany</h5>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>delete: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td>id: <span class="type">string|int</span></td>
+                        <td>Delete a pivot row in the database table and return the entity linked with all infos from
+                            deleted row
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>deleteFromEntity: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>Delete all pivot rows in the database table linked, delete related entity and return the
+                            deleted entity
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>clear: <span class="return">\MkyCore\Absracts\Entity</span></td>
+                        <td></td>
+                        <td>Delete all pivot rows in the database table linked and all related entities, return deleted
+                            entities
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>update: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td>id: <span class="type">string|int</span>, data: <span class="type">array</span></td>
+                        <td>Update a row in the pivot table</td>
+                    </tr>
+                    <tr>
+                        <td>updateEntity: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span></td>
+                        <td>Update the entity row in the database</td>
+                    </tr>
+                    <tr>
+                        <td>add: <span class="return">\MkyCore\Abstracts\Entity|false</span></td>
+                        <td>entity: <span class="type">\MkyCore\Abstracts\Entity</span>, options: <span class="type">array</span>
+                            = []
+                        </td>
+                        <td>Add a new row in the pivot table with options data and return the linked entity with pivot row infos</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>
