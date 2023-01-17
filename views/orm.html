@@ -123,64 +123,57 @@
             <pre class="brush:php">
                 @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
             </pre>
-            <span class="code">$userManager->from('todolist', 'tdl') // FROM todolist (if $alias not null: AS tdl)</span>
-            <p>useful if the desired table is different from the current model table, otherwise do not use from()
-                because it is implied</p>
+            <p><span class="code">$userManager->from('todolist', 'tdl')</span> FROM todolist (if $alias not null: AS tdl)</p>
+            <p>useful if the desired table is different from the current manager table, otherwise do not use from() because it is implied</p>
             <pre class="brush: php">
                 @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
             </pre>
-            <span class="code">$userManager->join('users', 'user_id', '=', 'id', 'usr') // JOIN users (if $alias not null: AS usr)
-            ON
-            todo.user_id = users.id ( or with alias usr.id)</span>
-
+            <p><span class="code">$userManager->join('users', 'user_id', '=', 'id', 'usr')</span> JOIN users (if $alias not null: AS usr)
+                ON todo.user_id = users.id ( or with alias usr.id)</p>
             <pre class="brush:php">
                 @static method \Core\QueryBuilderMysql first()
             </pre>
-            <b>$userManager->first()</b> => ORDER BY id ASC LIMIT 1, get the first record from the model table
+            <p><span class="code">$userManager->first()</span> ORDER BY id ASC LIMIT 1, get the first record from the table</p>
 
             <pre class="brush:php">
                 @method static query \Core\QueryBuilderMysql (string $instruction)
             </pre>
-            <b>$userManager->query('SELECT ....')</b> => execute a query
+            <p><span class="code">$userManager->query('SELECT ....')</span> execute a query</p>
 
             <pre class="brush:php">
                 @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
             </pre>
-            <b>$userManager->prepare('INSERT INTO ....', [...])</b> => executes a prepared statement with the parameter
+            <p><span class="code">$userManager->prepare('INSERT INTO ....', [...])</span> executes a prepared statement with the parameter</p>
 
             <pre class="brush: php">
                 @method static \Core\QueryBuilderMysql orderBy($args)
             </pre>
-            <b>$userManager->orderBy('id')</b> => ORDER BY id, if orderBy('id', 'DESC') => ORDER BY id DESC
+            <p><span class="code">$userManager->orderBy('id')</span> ORDER BY id, if orderBy('id', 'DESC') => ORDER BY id DESC</p>
 
             <pre class="brush:php">
                 @method static \Core\QueryBuilderMysql limit($args)
             </pre>
-            <b>$userManager->limit(1)</b> => LIMIT 1 or <b>$userManager->limit(1,2)</b> => LIMIT 1 OFFSET 2
-
+            <p><span class="code">$userManager->limit(1)</span> LIMIT 1 or 
+                <span class="code">$userManager->limit(1,2)</span> LIMIT 1 OFFSET 2
+            </p>
             <pre class="brush:php">
                 @method static \Core\QueryBuilderMysql groupBy($args)
             </pre>
-            <b>$userManager->groupBy('completed')</b> => GROUP BY completed
+            <p><span class="code">$userManager->groupBy('completed')</span> GROUP BY completed</p>
 
             <pre class="brush:php">
                 @method static array map(string $key, $value = null)
             </pre>
-            <b>$userManager->map('task', $value)</b> => reorganizes all the records in an array with the value $key
-            ('task')
-            as key<br>
-            if $value == null then $value = all fields in the record<br>
-            if $value == type string, example : 'user_id' then the array will be like <b>'task' => user_id ('Coder'
-            => 'USR001')</b><br>
-            if $value == type array, example : [user_id, completed] then <b>'Coder' => ['USR001', true]</b>
+            <p><span class="code">$userManager->map('email', $value)</span> reorganizes all the records in an array with the value $key
+                ('email') as key <br> if $value == null then $value = all fields in records<br>
+                if $value == type string, example : 'user_id' then the array will be like <span class="code">'email' => id ('example@gmail.com'
+                => 1)</span><br>
+                if $value == type array, example : [id, name] then <span class="code">'example@gmail.com' => ['1', 'Micky']</span></p>
 
             <pre class="brush: php">
                 @method static array get()
             </pre>
-            retrieves the records following the query passed, by default <b>$userManager->get() => SELECT * FROM
-            todolist</b> possible to chain the methods to finish with get(), example :<br>
-            <b>$userManager->select('task', 'username')->join('users', 'user_id', 'id')->where('completed',
-                true)->get()</b>
+            <p>Send the statement for querying</p>
 
             <pre class="brush:php">
                 @method static array toArray()
@@ -190,13 +183,13 @@
             <pre class="brush:php">
                 @method static \Core\Model|bool last()
             </pre>
-            <b>$userManager->last()</b> => Get the last record from the current table
+            <b>$userManager->last()</b> => Get the last record from the current manager table
 
             <pre class="brush:php">
                 @method static string stringify()
             </pre>
-            <b>$userManager->select('task', 'created_todo_at')->where('completed', true)->stringify()</b><br>
-            returns the query in string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
+            <p><span class="code">$userManager->select('name')->where('email', 'LIKE', '%@gmail.com')->limit(2)->stringify()</span><br>
+                returns the query in string 'SELECT name FROM users WHERE email LIKE "%@gmail.com" LIMIT 2'</p>
         </div>
     </div>
     <div class="col-md-12">
@@ -502,6 +495,23 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <h5>QueryBuilder Relation</h5>
+            <div class="col-md-12">
+                <p>Sometimes, you may want to, get specific records in database linked to a table, example only the user's electric car, the method "queryBuilder" allows you to add query to the relation:</p>
+                <pre class="brush:php">
+                    class User extends \MkyCore\Abstracts\Entity
+                    {
+                        //
+
+                        public function cars(): HasMany
+                        {
+                            return $this->hasMany(Car::class)->queryBuilder(function(QueryBuilderMysql $queryBuilder){
+                                return $queryBuilder->where('energy', 'electric');
+                            });
+                        }
+                    }
+                </pre>
             </div>
         </div>
     </div>
