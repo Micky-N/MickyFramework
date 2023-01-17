@@ -74,19 +74,47 @@
     <div class="col-md-12">
         <h3 id="routing_file">File</h3>
         <pre class="brush: php">
-            Router::get('/todos', ['TodoController', 'index'], 'todo_module');
+            Router::get('/todos', [TodoController::class, 'index'], 'todo_module');
         </pre>
         <p>The third parameter is the module's alias. Router::get method defines a GET HTTP request method route, all
             requests (get, post, put, delete, patch, options) can be set in same way.</p>
         <p><b>Router::method</b> allows to put several request methods by entering the methods in an array on the second
             parameter</p>
+        <pre class="brush: php">
+            Router::method(['GET', 'POST'], '/todos', [TodoController::class, 'index'], 'todo_module');
+        </pre>
         <p><b>Router::all</b> allow to send all request methods to one end point.</p>
+        <pre class="brush: php">
+            Router::all('/todos', [TodoController::class, 'index'], 'todo_module');
+        </pre>
         <p>Route action can be a callable, array or string. For array action, the first index must be the controller
             name, and the second must be the method name, for string action, the value must be the controller name and
             the controller must implement the "__invoke" method.</p>
+        <pre class="brush: php">
+            // callable
+            Router::index('/todos', function(Request $request){
+                //
+            });
+        </pre>
+        <pre class="brush: php">
+            // string
+            Router::index('/todos', TodoController::class, 'todo_module');
+        </pre>
+        <p>You can add some properties to route:</p>
+        <ul class="list">
+            <li>as(<span class="type">name: string</span>): set route name</li>
+            <li>middlewares(<span class="type">middlewares: array</span>): set route middlewares</li>
+            <li>allows(<span class="type">allows: array</span>): set route permissions</li>
+        </ul>
+        <pre class="brush: php">
+            Router::index('/todos', [TodoController::class, 'index'], 'todo_module')
+                ->as('todos.index')
+                ->middlewares(['@:auth'])
+                ->allows(['view-todos']);
+        </pre>
         <h4>Route Crud</h4>
         <pre class="brush: php">
-            Router::crud('todos', 'TodoController', 'todos');
+            Router::crud('todos', TodoController::class, 'todos');
         </pre>
         <p>Parameters: namespace (used for url and route name), controller and module alias</p>
 
@@ -155,7 +183,7 @@
         <p>The crud method returns a \Router\RouteCrud instance, so crud routes can be modified:</p>
         <h4>Routes crud middleware: </h4>
         <pre class="brush: php">
-            Router::crud('todos', 'TodoController', 'todos')->middlewares([
+            Router::crud('todos', TodoController::class, 'todos')->middlewares([
                 '*' => ['@:auth'],
                 'store' => ['@:admin']
             ]);
@@ -165,7 +193,7 @@
             call the auth middleware and store method will call in a second times the admin middleware.</p>
         <h4>Route crud name: </h4>
         <pre class="brush: php">
-            Router::crud('todos', 'TodoController', 'todos')->as([
+            Router::crud('todos', TodoController::class, 'todos')->as([
                 'index' => ['*.foo'],
                 'store' => ['foo.*'],
                 'update' => ['foo']
@@ -177,7 +205,7 @@
             "foo".</p>
         <h4>Routes crud permission: </h4>
         <pre class="brush: php">
-            Router::crud('todos', 'TodoController', 'todos')->allows([
+            Router::crud('todos', TodoController::class, 'todos')->allows([
                 '*' => ['view-todos'],
                 'show' => ['owner-todo:todo']
             ]);
@@ -188,13 +216,13 @@
             permission.</p>
         <h4>Routes crud url params: </h4>
         <pre class="brush: php">
-            Router::crud('todos', 'TodoController', 'todos')->paramFor('todos', 'td');
+            Router::crud('todos', TodoController::class, 'todos')->paramFor('todos', 'td');
         </pre>
         <p>"ParamFor" method needs two parameters, the first one is the namespace and the second one is the url param.
             In this example, "show" method url will become "todos/{td}" instead of "todos/{todo}".</p>
         <h4>Filtering routes</h4>
         <pre class="brush: php">
-            Router::crud('todos', 'TodoController', 'todos')->only(['index', 'show']);
+            Router::crud('todos', TodoController::class, 'todos')->only(['index', 'show']);
         </pre>
         <p>Routes crud can be filtered by two methods: only and except. "Only" method keep only methods in the
             array ("index" and "show" methods) contrary to "except" method which remove methods in the array. To keep
@@ -202,7 +230,7 @@
 
         <h4>Route crud multi namespace</h4>
         <pre class="brush: php">
-            Router::crud('users.todos', 'TodoController', 'users_todos');
+            Router::crud('users.todos', TodoController::class, 'users_todos');
         </pre>
 
         <table class="table">
@@ -268,7 +296,7 @@
             </tbody>
         </table>
         <pre class="brush: php">
-            Router::crud('users.todos', 'TodoController', 'users_todos')->paramFor('todos', 'td')->paramFor('users', 'us');
+            Router::crud('users.todos', TodoController::class, 'users_todos')->paramFor('todos', 'td')->paramFor('users', 'us');
         </pre>
         <p>In case of multi namespaces, "paramFor" can be called twice by chaining. In this example, "show" method url
             will become "/users/{us}/todos/{td}" instead of "/users/{user}/todos/{todo}".</p>
