@@ -95,6 +95,107 @@
         </div>
     </div>
     <div class="col-md-12">
+        <h3 id="orm_query_builder">QueryBuilder</h3>
+
+        <div class="col-md-12">
+            <p>Manager classes use the PDO class to perform queries in the MYSQL database, it also uses a QueryMysql
+                trait which serves as a Query Builder to simplify the writing of SQL queries.</p>
+            <p>Example :</p>
+            <pre class="brush: php">
+                // SELECT name FROM users WHERE email LIKE "%@gmail.com" LIMIT 2
+
+                $userManager->select('name')->where('email', 'LIKE', '%@gmail.com')->limit(2)->get();
+            </pre>
+            <h4 id="methods">List of methods</h4>
+
+            <pre class="brush:php">
+                @method static \Core\QueryBuilderMysql where($args)
+            </pre>
+            if 3 arguments are defined, <span class="code">$userManager->where('task', '!=', 'Coder') // WHERE task != 'Coder'</span><br>
+            if 2 arguments are defined, <span class="code">$userManager->where('task', 'Coder') // WHERE task = 'Coder'</span>
+
+            <pre class="brush:php">
+                @method static \Core\QueryBuilderMysql select($args)
+            </pre>
+            <span class="code">$userManager->select('id', 'task') // SELECT id, task...</span>
+
+            <pre class="brush:php">
+                @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
+            </pre>
+            <b>$userManager->from('todolist', 'tdl')</b> => FROM todolist (if $alias not null: AS tdl), useful if the
+            desired table is different from the current model table, otherwise do not use from() because it is
+            implied
+            <pre class="brush: php">
+                @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
+            </pre>
+            <b>$userManager->join('users', 'user_id', '=', 'id', 'usr')</b> => JOIN users (if $alias not null: AS usr) ON
+            todo.user_id = users.id ( or with alias usr.id)
+
+            <pre class="brush:php">
+                @static method \Core\QueryBuilderMysql first()
+            </pre>
+            <b>$userManager->first()</b> => ORDER BY id ASC LIMIT 1, get the first record from the model table
+
+            <pre class="brush:php">
+                @method static query \Core\QueryBuilderMysql (string $instruction)
+            </pre>
+            <b>$userManager->query('SELECT ....')</b> => execute a query
+
+            <pre class="brush:php">
+                @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
+            </pre>
+            <b>$userManager->prepare('INSERT INTO ....', [...])</b> => executes a prepared statement with the parameter
+
+            <pre class="brush: php">
+                @method static \Core\QueryBuilderMysql orderBy($args)
+            </pre>
+            <b>$userManager->orderBy('id')</b> => ORDER BY id, if orderBy('id', 'DESC') => ORDER BY id DESC
+
+            <pre class="brush:php">
+                @method static \Core\QueryBuilderMysql limit($args)
+            </pre>
+            <b>$userManager->limit(1)</b> => LIMIT 1 or <b>$userManager->limit(1,2)</b> => LIMIT 1 OFFSET 2
+
+            <pre class="brush:php">
+                @method static \Core\QueryBuilderMysql groupBy($args)
+            </pre>
+            <b>$userManager->groupBy('completed')</b> => GROUP BY completed
+
+            <pre class="brush:php">
+                @method static array map(string $key, $value = null)
+            </pre>
+            <b>$userManager->map('task', $value)</b> => reorganizes all the records in an array with the value $key ('task')
+            as key<br>
+            if $value == null then $value = all fields in the record<br>
+            if $value == type string, example : 'user_id' then the array will be like <b>'task' => user_id ('Coder'
+            => 'USR001')</b><br>
+            if $value == type array, example : [user_id, completed] then <b>'Coder' => ['USR001', true]</b>
+
+            <pre class="brush: php">
+                @method static array get()
+            </pre>
+            retrieves the records following the query passed, by default <b>$userManager->get() => SELECT * FROM
+            todolist</b> possible to chain the methods to finish with get(), example :<br>
+            <b>$userManager->select('task', 'username')->join('users', 'user_id', 'id')->where('completed', true)->get()</b>
+
+            <pre class="brush:php">
+                @method static array toArray()
+            </pre>
+            Transform the instance into an associative array
+
+            <pre class="brush:php">
+                @method static \Core\Model|bool last()
+            </pre>
+            <b>$userManager->last()</b> => Get the last record from the current table
+
+            <pre class="brush:php">
+                @method static string stringify()
+            </pre>
+            <b>$userManager->select('task', 'created_todo_at')->where('completed', true)->stringify()</b><br>
+            returns the query in string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
+        </div>
+    </div>
+    <div class="col-md-12">
         <h3 id="orm_entity">Entity</h3>
 
         <div class="col-md-12">
@@ -251,284 +352,6 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-12">
-        <h3 id="orm_query_builder">QueryBuilder</h3>
-
-        <div class="col-md-12">
-            <p>Model classes use the PDO class to perform queries in the MYSQL database, it also uses a QueryMysql
-                trait which serves as a Query Builder to simplify the writing of SQL queries.
-                They must enter:
-            <li>Table name: <b>protected string $table</b></li>
-            <p>If the name of the table is the plural of the name of the class model then defining the name of the
-                table is optional, example : model Todo => table todos, otherwise you must enter the name of the
-                table.</p>
-
-            <li>Primary key: <b>protected string $primaryKey (if primary key != 'id')</b></li>
-            <li style="margin-top: 25px;"> Optional record creation time and update time fields <b>protected array
-                $dateTimes</b>. Enterable fields <b>protected array $settable</b> to handle fields
-            </li>
-            </p>
-            <h4 id="line5_1_1">List of model methods</h4>
-
-            Example :
-            <pre class="brush: php">
-                                    // Class declaration
-                                    Todo extends MkyCore\Model;
-                                    protected string $table= 'todolist';
-                                    protected string $primairKey = 'id';
-                                    protected array $dateTimes = ['CREATED_AT' => 'created_todo_at', 'UPDATED_AT' => 'updated_todo_at'];
-                                    protected array $settable = ['task', 'completed', 'created_todo_at', 'updated_todo_at'];
-                                    // Class instantiation
-                                    $todo = new Todo();
-                                </pre>
-
-            <pre class="brush:php">
-                                    @method function getTable();
-                                </pre>
-            <p>Returns the name of the database table</p>
-
-            <pre class="brush:php">
-                                    @method function getPrimaryKey();
-                                </pre>
-
-            Returns the name of the primary key
-
-            <pre class="brush:php">
-                                    @method static function getCurrentModel();
-                                </pre>
-
-            Returns the currently instantiated model
-
-            <pre class="brush:php">
-                                    @method static function find($id);
-                                </pre>
-
-            Returns the record using the value of its primary key
-
-            <pre class="brush: php">
-                                    @method static function all();
-                                </pre>
-
-            Returns all records
-
-            <pre class="brush:php">
-                                    @method static function count();
-                                </pre>
-
-            Returns the number of records
-
-            <pre class="brush:php">
-                                    @method static function create(array $data, string $table = '');
-                                </pre>
-
-            create a new record
-
-            <pre class="brush:php">
-                                    @method function save();
-                                </pre>
-
-            Saves the created object from the model instance
-            <br>
-            <b>
-                $todo = new Todo();<br>
-                $todo->task = 'Code'; $todo->completed = 1;...<br>
-                $todo->save();
-            </b>
-
-            <pre class="brush:php">
-                                    @method static function update($id, array $data);
-                                </pre>
-
-            Modify a record
-
-            <pre class="brush:php">
-                                    @method function modify(array $data = []);
-                                </pre>
-
-            Modifies a record from the object
-            <br>
-            <b>
-                $todo = Todo::find(1);<br>
-                $todo->task = 'Coder_Modified'; $todo->completed = 0;...<br>
-                $todo->modify();
-            </b>
-
-            <pre class="brush:php">
-                                    @method static function delete($id);
-                                </pre>
-
-            Delete a record
-
-            <pre class="brush:php">
-                                    @method function destroy();
-                                </pre>
-
-            Deletes the record from its instance
-            <br>
-            <b>
-                $todo = Todo:find(1); // $todo = instance of Todo<br>
-                $todo->destroy()<br>
-                Todo::find(1) => null
-            </b>
-
-            <pre class="brush:php">
-                                    @method static function shuffleId();
-                                </pre>
-
-            Randomly returns a primary key value from the table
-
-            <pre class="brush: php">
-                                    protected function hasMany(string $model, string $foreignKey = '');
-                                </pre>
-
-            Returns all records of the table in relation OneToMany
-            <br>
-            To be used in the class of the current model:
-            <br>
-            <b>@method function todos(){ return $this->hasMany(Todo::class, $fk); } => $user->todos</b><br>
-            if foreign key == table name (singular English) suffixed by '_id' then $fk is optional
-
-            <pre class="brush:php">
-                                    protected function belongsTo(string $model, string $foreignKey = '');
-                                </pre>
-
-            Returns table record by primary key
-            <br>
-            To be used in the class of the current model: <br>
-            <b>@method function user(){ return $this->belongsTo(User::class, $fk); } => $todo->user</b><br>
-            if foreign key == table name (singular English) suffixed by '_id' then $fk is optional
-
-            <pre class="brush: php">
-                                    protected function belongsToMany(string $model, string $pivot = '', string $primaryKeyOne = '', string $primaryKeyTwo = '');
-                                </pre>
-
-            Returns all records in table by primary key in relationship ManyToMany
-            <br>
-            To be used in the class of the current model:<br>
-            <b>@method function categories(){ return $this->belongsToMany(Category::class, $pivot, $pk1, $pk2); } =>
-                $todo->categories</b>
-            <br>
-            if the association table == todo_category or category_todo the argument $pivot is optional<br>
-            if primary key 1 == (current class name suffixed by _id), example :todo_id then $pk1 is optional<br>
-            if primary key 2 == (class name of 1st argument suffixed by _id), example :category_id then $pk2 is
-            optional
-
-            <pre class="brush:php">
-                                    protected function hasOne(string $model, string $foreignKey = '');
-                                </pre>
-
-            Returns table record by primary key relationship OneToOne <br>
-            To be used in the class of the current model, example :<br>
-            <b>@method function user(){ return $this->hasOne(User::class, $fk); } => $todo->user</b>
-            <br> if foreign key == table name (singular) suffixed by '_id' then $fk is optional
-
-            <pre class="brush:php">
-                                    @method function with(string $relation, array $properties = []);
-                                </pre>
-
-            <p>Returns related table records and selected fields</p>
-
-            <pre class="brush: php">
-                                    @method function modifyManyRelation(string $relation, string $id, array $data);
-                                </pre>
-
-            <p>Modify all table records in OneToMany relationship</p>
-
-            <pre class="brush:php">
-                                    @method function attach($table, array $data);
-                                </pre>
-
-            <p>Create new record in the relation table</p>
-
-            <h4 id="line5_1_2">QueryBuilder</h4>
-            <pre class="brush:php">
-                                    @method static \Core\QueryBuilderMysql where($args)
-                                </pre>
-            if 3 arguments are setted, <b>Todo::where('task', '!=', 'Coder') => WHERE task != 'Coder'</b><br>
-            if 2 arguments are setted, <b>Todo::where('task', 'Coder') => WHERE task = 'Coder'</b>
-
-            <pre class="brush:php">
-                                    @method static \Core\QueryBuilderMysql select($args)
-                                </pre>
-            <b>Todo::select('id', 'task')</b> => SELECT id, task...
-
-            <pre class="brush:php">
-                                    @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
-                                </pre>
-            <b>Todo::from('todolist', 'tdl')</b> => FROM todolist (if $alias not null: AS tdl), useful if the
-            desired table is different from the current model table, otherwise do not use from() because it is
-            implied
-            <pre class="brush: php">
-                                    @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
-                                </pre>
-            <b>Todo::join('users', 'user_id', '=', 'id', 'usr')</b> => JOIN users (if $alias not null: AS usr) ON
-            todo.user_id = users.id ( or with alias usr.id)
-
-            <pre class="brush:php">
-                                    @static method \Core\QueryBuilderMysql first()
-                                </pre>
-            <b>Todo::first()</b> => ORDER BY id ASC LIMIT 1, get the first record from the model table
-
-            <pre class="brush:php">
-                                    @method static query \Core\QueryBuilderMysql (string $instruction)
-                                </pre>
-            <b>Todo::query('SELECT ....')</b> => execute a query
-
-            <pre class="brush:php">
-                                    @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
-                                </pre>
-            <b>Todo::prepare('INSERT INTO ....', [...])</b> => executes a prepared statement with the parameter
-
-            <pre class="brush: php">
-                                    @method static \Core\QueryBuilderMysql orderBy($args)
-                                </pre>
-            <b>Todo::orderBy('id')</b> => ORDER BY id, if orderBy('id', 'DESC') => ORDER BY id DESC
-
-            <pre class="brush:php">
-                                    @method static \Core\QueryBuilderMysql limit($args)
-                                </pre>
-            <b>Todo::limit(1)</b> => LIMIT 1 or <b>Todo::limit(1,2)</b> => LIMIT 1 OFFSET 2
-
-            <pre class="brush:php">
-                                    @method static \Core\QueryBuilderMysql groupBy($args)
-                                </pre>
-            <b>Todo::groupBy('completed')</b> => GROUP BY completed
-
-            <pre class="brush:php">
-                                    @method static array map(string $key, $value = null)
-                                </pre>
-            <b>Todo::map('task', $value)</b> => reorganizes all the records in an array with the value $key ('task')
-            as key<br>
-            if $value == null then $value = all fields in the record<br>
-            if $value == type string, example : 'user_id' then the array will be like <b>'task' => user_id ('Coder'
-            => 'USR001')</b><br>
-            if $value == type array, example : [user_id, completed] then <b>'Coder' => ['USR001', true]</b>
-
-            <pre class="brush: php">
-                                    @method static array get()
-                                </pre>
-            retrieves the records following the query passed, by default <b>Todo::get() => SELECT * FROM
-            todolist</b> possible to chain the methods to finish with get(), example :<br>
-            <b>Todo::select('task', 'username')->join('users', 'user_id', 'id')->where('completed', true)->get()</b>
-
-            <pre class="brush:php">
-                                    @method static array toArray()
-                                </pre>
-            Transform the instance into an associative array
-
-            <pre class="brush:php">
-                                    @method static \Core\Model|bool last()
-                                </pre>
-            <b>Todo::last()</b> => Get the last record from the current table
-
-            <pre class="brush:php">
-                                @method static string stringify()
-                                </pre>
-            <b>Todo::select('task', 'created_todo_at')->where('completed', true)->stringify()</b><br>
-            returns the query in string 'SELECT task, created_todo_at FROM todolist WHERE completed = 1'
-        </div>
-    </div>
     <div class="col-md-12">
         <h3 id="orm_relationship">Relationship</h3>
 
@@ -669,7 +492,9 @@
                         <td>entity: <span class="type">Entity</span>, options: <span class="type">array</span>
                             = []
                         </td>
-                        <td>Add a new row in the pivot table with options data and return the linked entity with pivot row infos</td>
+                        <td>Add a new row in the pivot table with options data and return the linked entity with pivot
+                            row infos
+                        </td>
                     </tr>
                     </tbody>
                 </table>
