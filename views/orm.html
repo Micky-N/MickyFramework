@@ -112,7 +112,8 @@
                 @method static \Core\QueryBuilderMysql where($args)
             </pre>
             if 3 arguments are defined, <span class="code">$userManager->where('task', '!=', 'Coder') // WHERE task != 'Coder'</span><br>
-            if 2 arguments are defined, <span class="code">$userManager->where('task', 'Coder') // WHERE task = 'Coder'</span>
+            if 2 arguments are defined, <span
+                class="code">$userManager->where('task', 'Coder') // WHERE task = 'Coder'</span>
 
             <pre class="brush:php">
                 @method static \Core\QueryBuilderMysql select($args)
@@ -122,14 +123,15 @@
             <pre class="brush:php">
                 @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
             </pre>
-            <b>$userManager->from('todolist', 'tdl')</b> => FROM todolist (if $alias not null: AS tdl), useful if the
-            desired table is different from the current model table, otherwise do not use from() because it is
-            implied
+            <span class="code">$userManager->from('todolist', 'tdl') // FROM todolist (if $alias not null: AS tdl)</span>
+            <p>useful if the desired table is different from the current model table, otherwise do not use from()
+                because it is implied</p>
             <pre class="brush: php">
                 @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
             </pre>
-            <b>$userManager->join('users', 'user_id', '=', 'id', 'usr')</b> => JOIN users (if $alias not null: AS usr) ON
-            todo.user_id = users.id ( or with alias usr.id)
+            <span>$userManager->join('users', 'user_id', '=', 'id', 'usr') // JOIN users (if $alias not null: AS usr)
+            ON
+            todo.user_id = users.id ( or with alias usr.id)</span>
 
             <pre class="brush:php">
                 @static method \Core\QueryBuilderMysql first()
@@ -164,7 +166,8 @@
             <pre class="brush:php">
                 @method static array map(string $key, $value = null)
             </pre>
-            <b>$userManager->map('task', $value)</b> => reorganizes all the records in an array with the value $key ('task')
+            <b>$userManager->map('task', $value)</b> => reorganizes all the records in an array with the value $key
+            ('task')
             as key<br>
             if $value == null then $value = all fields in the record<br>
             if $value == type string, example : 'user_id' then the array will be like <b>'task' => user_id ('Coder'
@@ -176,7 +179,8 @@
             </pre>
             retrieves the records following the query passed, by default <b>$userManager->get() => SELECT * FROM
             todolist</b> possible to chain the methods to finish with get(), example :<br>
-            <b>$userManager->select('task', 'username')->join('users', 'user_id', 'id')->where('completed', true)->get()</b>
+            <b>$userManager->select('task', 'username')->join('users', 'user_id', 'id')->where('completed',
+                true)->get()</b>
 
             <pre class="brush:php">
                 @method static array toArray()
