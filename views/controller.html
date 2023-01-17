@@ -9,6 +9,59 @@
     </div>
 
     <div class="col-md-12">
-        <p>The Controller class, </p>
+        <p>In controller classes you can use $this->request to get request class, $this->moduleKernel to get current
+            module
+            Kernel class and $this->app for Application class.</p>
+        <p>There are 3 ways to implement controller in this framework: in the route.php file as a function, in a
+            controller class with methods targeted by routes or in a controller class with __invoke method whose will be
+            the entry point of the controller.</p>
+        <h5>Function</h5>
+        <div class="col-md-12">
+            <pre class="brush:php">
+                Router::get('/users', function(UserManager $userManager){
+                    return view('@/index.twig', ['users' => $userManager->all()]);
+                });
+            </pre>
+            <p>Even if the controller is a function, the container auto-wiring still works</p>
+        </div>
+        <h5>Controller methods</h5>
+        <div class="col-md-12">
+            <pre class="brush:php">
+                Router::get('/users', [UserController::class, 'index']);
+
+                //
+
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    public function index(UserManager $userManager)
+                    {
+                        return view('@/index.twig', ['users' => $userManager->all()]);
+                    }
+                }
+            </pre>
+        </div>
+        <h5>Controller Invoke</h5>
+        <div class="col-md-12">
+            <pre class="brush:php">
+                Router::get('/users', UserController::class);
+
+                //
+
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    public function __invoke(UserManager $userManager)
+                    {
+                        $routeUrl = $this->request->currentRoute()->getUrl();
+                        switch($routeUrl){
+                            case 'users':
+                                return view('@/index.twig', ['users' => $userManager->all()]);
+                                break;
+                        }
+                    }
+                }
+            </pre>
+        </div>
+        <p>Controller methods return \MkyCore\Interfaces\ResponseHandlerInterface like View instance or JsonResponse for
+            api, if not, controller methods will return the result as plain text.</p>
     </div>
 </section>

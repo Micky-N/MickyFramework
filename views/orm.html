@@ -109,55 +109,55 @@
             <h4 id="methods">List of methods</h4>
 
             <pre class="brush:php">
-                @method static \Core\QueryBuilderMysql where($args)
+                @method static \MkyCore\QueryBuilderMysql where($args)
             </pre>
             if 3 arguments are defined, <span class="code">$userManager->where('task', '!=', 'Coder') // WHERE task != 'Coder'</span><br>
             if 2 arguments are defined, <span
                 class="code">$userManager->where('task', 'Coder') // WHERE task = 'Coder'</span>
 
             <pre class="brush:php">
-                @method static \Core\QueryBuilderMysql select($args)
+                @method static \MkyCore\QueryBuilderMysql select($args)
             </pre>
             <span class="code">$userManager->select('id', 'task') // SELECT id, task...</span>
 
             <pre class="brush:php">
-                @method static \Core\QueryBuilderMysql from(string $table, $alias = null)
+                @method static \MkyCore\QueryBuilderMysql from(string $table, $alias = null)
             </pre>
             <p><span class="code">$userManager->from('todolist', 'tdl')</span> FROM todolist (if $alias not null: AS tdl)</p>
             <p>useful if the desired table is different from the current manager table, otherwise do not use from() because it is implied</p>
             <pre class="brush: php">
-                @method static \Core\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
+                @method static \MkyCore\QueryBuilderMysql join(string $join_table, string $on, string $operation, string $to, string $alias = '')
             </pre>
             <p><span class="code">$userManager->join('users', 'user_id', '=', 'id', 'usr')</span> JOIN users (if $alias not null: AS usr)
                 ON todo.user_id = users.id ( or with alias usr.id)</p>
             <pre class="brush:php">
-                @static method \Core\QueryBuilderMysql first()
+                @static method \MkyCore\QueryBuilderMysql first()
             </pre>
             <p><span class="code">$userManager->first()</span> ORDER BY id ASC LIMIT 1, get the first record from the table</p>
 
             <pre class="brush:php">
-                @method static query \Core\QueryBuilderMysql (string $instruction)
+                @method static query \MkyCore\QueryBuilderMysql (string $instruction)
             </pre>
             <p><span class="code">$userManager->query('SELECT ....')</span> execute a query</p>
 
             <pre class="brush:php">
-                @method static \Core\QueryBuilderMysql prepare(string $statement, array $attribute)
+                @method static \MkyCore\QueryBuilderMysql prepare(string $statement, array $attribute)
             </pre>
             <p><span class="code">$userManager->prepare('INSERT INTO ....', [...])</span> executes a prepared statement with the parameter</p>
 
             <pre class="brush: php">
-                @method static \Core\QueryBuilderMysql orderBy($args)
+                @method static \MkyCore\QueryBuilderMysql orderBy($args)
             </pre>
             <p><span class="code">$userManager->orderBy('id')</span> ORDER BY id, if orderBy('id', 'DESC') => ORDER BY id DESC</p>
 
             <pre class="brush:php">
-                @method static \Core\QueryBuilderMysql limit($args)
+                @method static \MkyCore\QueryBuilderMysql limit($args)
             </pre>
             <p><span class="code">$userManager->limit(1)</span> LIMIT 1 or 
                 <span class="code">$userManager->limit(1,2)</span> LIMIT 1 OFFSET 2
             </p>
             <pre class="brush:php">
-                @method static \Core\QueryBuilderMysql groupBy($args)
+                @method static \MkyCore\QueryBuilderMysql groupBy($args)
             </pre>
             <p><span class="code">$userManager->groupBy('completed')</span> GROUP BY completed</p>
 
@@ -181,7 +181,7 @@
             Transform the instance into an associative array
 
             <pre class="brush:php">
-                @method static \Core\Model|bool last()
+                @method static \MkyCore\Model|bool last()
             </pre>
             <b>$userManager->last()</b> => Get the last record from the current manager table
 
