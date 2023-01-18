@@ -18,8 +18,13 @@ function template(view) {
 function mount(el) {
     let view = getCurrentPage()
     let file = template(view)
-    $.each(el, function () {
-        $(this).load(file)
+    $.get(file)
+    .done(function(res) {
+        if(!res.includes('<div id="app"></div>')){
+            el.html(res)
+        }
+    }).fail(function() { 
+        console.error(`template ${view}.html not found`)
     })
 }
 

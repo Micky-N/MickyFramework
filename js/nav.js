@@ -207,7 +207,7 @@ $('main#content').click(function () {
 
 function getCurrentPage() {
     const url = new URL(window.location.href);
-    const trim = url.pathname.replace(/\//, '');
+    const trim = trimSlashes(url.pathname);
     return trim || 'home'
 }
 
@@ -217,19 +217,13 @@ $('.btn.nav_hamb').click(function () {
 });
 
 
-$('nav#sidebar ul#main_side li a').click(function () {
+$('nav#sidebar ul#main_side li a').each(function () {
     const id = $(this).attr('id');
-    $(`nav#sidebar ul#main_side li ul.item-show[data-show!=${id}]`).removeClass("show");
-    const currentLi = $(`nav#sidebar ul#main_side li ul.item-show[data-show=${id}]`)
-    if (!currentLi.hasClass("show")) {
-        currentLi.addClass("show");
-    } else {
-        currentLi.removeClass("show");
+    if(id && id == getCurrentPage()){
+        $(this).parent().addClass("active");
+        const currentLi = $(this).parent().find(`ul.item-show[data-show=${id}]`)
+        if(currentLi){
+            currentLi.addClass("show");
+        }
     }
-    $('nav ul li #' + id + ' span').toggleClass("rotate");
-
-});
-
-$('nav#sidebar ul#main_side li').click(function () {
-    $(this).addClass("active").siblings().removeClass("active");
 });

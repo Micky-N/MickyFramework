@@ -63,7 +63,7 @@ html.dark strong {
     color: #fcfcfc;
 }
 
-html.dark .intro1 {
+html.dark .intro1, html.dark .requirements {
     background-color: #0c0c0c;
 }
 

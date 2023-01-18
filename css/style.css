@@ -367,9 +367,17 @@ a:hover {
     padding-right: 30px;
 }
 
+html.dark .requirements ol {
+    color: white;
+}
+
 .requirements ol li::before {
     content: "\2666  ";
     margin-right: 5px;
+}
+
+html.dark .requirements ol li::before {
+    color: #F16811;
 }
 
 .btn-primary {
