@@ -219,7 +219,7 @@ $('.btn.nav_hamb').click(function () {
 
 $('nav#sidebar ul#main_side li a').each(function () {
     const id = $(this).attr('id');
-    if(id && id == getCurrentPage()){
+    if(id && id === getCurrentPage()){
         $(this).parent().addClass("active");
         const currentLi = $(this).parent().find(`ul.item-show[data-show=${id}]`)
         if(currentLi){

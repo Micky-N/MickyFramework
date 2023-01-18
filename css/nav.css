@@ -33,7 +33,7 @@
   border-radius: 3px;
   cursor: pointer;
   transition: left 0.4s ease;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
@@ -41,6 +41,8 @@
 @media (max-width: 768px) {
   .btn.nav_hamb {
     left: 16px;
+    display: flex;
+    z-index: 1;
   }
 }
 
@@ -67,11 +69,30 @@
   position: fixed;
   width: 250px;
   height: 100%;
-  left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
   font-family: "Poppins", sans-serif;
   padding-bottom: 120px;
+}
+
+html.dark #sidebar, html.dark #sidebar *{
+  background-color: #0f0f0f;
+}
+
+#content {
+  width: calc(100vw - 250px);
+  float: right;
+}
+
+@media (max-width: 768px){
+  #sidebar{
+    left: -250px;
+    z-index: 1;
+  }
+  #content{
+    float: none;
+    width: inherit;
+  }
 }
 
 #sidebar.show {
@@ -182,8 +203,4 @@ nav ul#main_side li a span {
 
 nav ul#main_side li a span.rotate {
   transform: translateY(-50%) rotate(-180deg);
-}
-
-#content {
-  z-index: -1;
 }
