@@ -172,31 +172,59 @@ const menus = [
         ]
     }
 ]
+const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
-$('main#content').click(function(){
+function createMenu() {
+    let res = ''
+    menus.forEach(menu => {
+        const {title, href} = menu
+        const id = trimSlashes(href)
+        const subMenus = menu.sub_menus || []
+
+        res += '<li>'
+        res += `<a href="${href}" id="${id || 'home'}">${title}`
+        if(subMenus.length){
+            res += '<span class="fas fa-caret-down"></span>'
+        }
+        res += '</a>'
+        if(subMenus.length){
+            res += `<ul class="item-show" data-show="${id}">`
+            subMenus.forEach(subMenu => {
+                res += `<li><a href="${subMenu.href}">${subMenu.title}</a></li>`
+            })
+            res += '</ul>'
+        }
+        res += '</li>'
+    })
+    return res
+}
+
+$('nav#sidebar ul#main_side').html(createMenu())
+
+$('main#content').click(function () {
     $('.btn.nav_hamb.click').click()
 })
 
 
 $('.btn.nav_hamb').click(function () {
     $(this).toggleClass("click");
-    $('.sidebar').toggleClass("show");
+    $('#sidebar').toggleClass("show");
 });
 
 
-$('.sidebar ul li a').click(function () {
+$('#sidebar ul li a').click(function () {
     const id = $(this).attr('id');
     $(`nav ul li ul.item-show[data-show!=${id}]`).removeClass("show");
     const currentLi = $(`nav ul li ul.item-show[data-show=${id}]`)
-    if(!currentLi.hasClass("show")){
+    if (!currentLi.hasClass("show")) {
         currentLi.addClass("show");
-    }else{
+    } else {
         currentLi.removeClass("show");
     }
     $('nav ul li #' + id + ' span').toggleClass("rotate");
 
 });
 
-$('nav ul li').click(function () {
+$('nav ul#main_side li').click(function () {
     $(this).addClass("active").siblings().removeClass("active");
 });
