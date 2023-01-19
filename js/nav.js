@@ -225,5 +225,8 @@ $('nav#sidebar ul#main_side li a').each(function () {
         if(currentLi){
             currentLi.addClass("show");
         }
+        $('nav#sidebar ul#main_side').animate({
+            scrollTop: $(this).parent().offset().top - 250
+        }, 0);
     }
 });

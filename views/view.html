@@ -9,6 +9,38 @@
     </div>
 
     <div class="col-md-12">
-        <p>MkyFramework uses Twig to render the views, to see documentation <a href="https://twig.symfony.com/doc/3.x/" target="_blank">click here</a></p>
+        <p>MkyFramework uses Twig to render the views, to see documentation <a href="https://twig.symfony.com/doc/3.x/"
+                                                                               target="_blank">click here</a></p>
+        <p>Thanks to Twig we can send data to view and make views dynamic, some functions and filters are available, but
+            you can add others functions, filters and global variables in the \App\RootKernel class</p>
+        <pre class="brush:php">
+            class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+            {
+
+                public function getTwigFunctions(): array
+                {
+                    return [
+                        //
+                    ];
+                }
+
+                public function getTwigFilters(): array
+                {
+                    return [
+                        //
+                    ];
+                }
+
+                /**
+                 * @return array
+                 */
+                public function getTwigGlobalVariables(): array
+                {
+                    return [
+                        //
+                    ];
+                }
+            }
+        </pre>
     </div>
 </section>
