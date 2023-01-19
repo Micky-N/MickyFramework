@@ -81,7 +81,25 @@ const menus = [
     },
     {
         title: 'View',
-        href: '/view'
+        href: '/view',
+        sub_menus: [
+            {
+                title: 'Functions',
+                href: '#functions'
+            },
+            {
+                title: 'Filters',
+                href: '#filters'
+            },
+            {
+                title: 'Global variables',
+                href: '#global_variables'
+            },
+            {
+                title: 'Rendering',
+                href: '#rendering'
+            }
+        ]
     },
     {
         title: 'Request',

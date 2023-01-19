@@ -42,5 +42,136 @@
                 }
             }
         </pre>
+        <h4 id="functions">Functions</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/3.x/advanced.html#functions">Twig function documentation</a>
+            <p>In the "getTwigFunctions" method, you can add all custom twig function classes you are creating. To
+                create a
+                function class, your class must implement \Twig\Extension\AbstractExtension class and implement
+                "getFunctions" method whose must return an array of \Twig\TwigFunction instance.</p>
+            <pre class="brush:php">
+                class CustomFunction extends AbstractExtension
+                {
+
+                    public function getFunctions(): array
+                    {
+                        return [
+                            new TwigFunction('json', [$this, 'json']),
+                        ];
+                    }
+
+                    public function json(mixed $value): string
+                    {
+                        return json_encode($value);
+                    }
+                }
+            </pre>
+            <p>In RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigFunctions(): array
+                    {
+                        return [
+                            new CustomFunction();
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ json(['name' => 'micky']) }}</div>
+                // <div>{"name": "micky"}</div>
+            </pre>
+        </div>
+        <h4 id="filters">Filters</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/3.x/advanced.html#filters">Twig filter documentation</a>
+            <p>In the "getTwigFilters" method, you can add all custom twig filter classes you are creating. To create a
+                filter class, your class must implement \Twig\Extension\AbstractExtension class and implement
+                "getFilters" method whose must return an array of \Twig\TwigFilter instance.</p>
+            <pre class="brush:php">
+                class CustomFilter extends AbstractExtension
+                {
+
+                    public function getFilters(): array
+                    {
+                        return [
+                            new TwigFilter('trim', [$this, 'trim']),
+                        ];
+                    }
+
+                    public function trim(string $value, string $char): string
+                    {
+                        return trim($value, $char);
+                    }
+                }
+            </pre>
+            <p>In RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigFilters(): array
+                    {
+                        return [
+                            new CustomFilter();
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ 'atesta' | trim('a') }}</div>
+                // <div>test</div>
+            </pre>
+        </div>
+        <h4 id="global_variables">Global Variables</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/3.x/advanced.html#globals">Twig global variable documentation</a>
+            <p>In the "getTwigGlobalVariables" method, you can add all global variable whose will be accessible to all
+                views. To add a global variable set this in RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigGlobalVariables(): array
+                    {
+                        return [
+                            'app_name' => 'New Application'
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ app_name }}</div>
+                // <div>New Application</div>
+            </pre>
+        </div>
+        <h4 id="rendering">Rendering</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/2.x/api.html#rendering-templates">Twig view rendering</a>
+            <p>In the "getTwigGlobalVariables" method, you can add all global variable whose will be accessible to all
+                views. To add a global variable set this in RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigGlobalVariables(): array
+                    {
+                        return [
+                            'app_name' => 'New Application'
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ app_name }}</div>
+                // <div>New Application</div>
+            </pre>
+        </div>
     </div>
 </section>
