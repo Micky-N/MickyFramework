@@ -82,7 +82,8 @@
             <p>In view</p>
             <pre class="brush:html">
                 <div>{{ json(['name' => 'micky']) }}</div>
-                // <div>{"name": "micky"}</div>
+                // will be
+                <div>{"name": "micky"}</div>
             </pre>
         </div>
         <h4 id="filters">Filters</h4>
@@ -124,7 +125,8 @@
             <p>In view</p>
             <pre class="brush:html">
                 <div>{{ 'atesta' | trim('a') }}</div>
-                // <div>test</div>
+                // will be
+                <div>test</div>
             </pre>
         </div>
         <h4 id="global_variables">Global Variables</h4>
@@ -147,7 +149,8 @@
             <p>In view</p>
             <pre class="brush:html">
                 <div>{{ app_name }}</div>
-                // <div>New Application</div>
+                // will be
+                <div>New Application</div>
             </pre>
         </div>
         <h4>Configuration</h4>
@@ -156,9 +159,9 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <td>Level</td>
-                    <td>Module views available</td>
-                    <td>Description</td>
+                    <th>Level</th>
+                    <th>Module views available</th>
+                    <th>Description</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -174,7 +177,7 @@
                 </tr>
                 <tr>
                     <td>module</td>
-                    <td>all module</td>
+                    <td>all modules</td>
                     <td>All modules views are available</td>
                 </tr>
                 </tbody>
@@ -195,7 +198,8 @@
                     }
                 }
             </pre>
-            <p>If you want to call a view whose inside the current module (UserModule for example) you can remove the module alias 'user' from the namespace:
+            <p>If you want to call a view whose inside the current module (UserModule for example) you can remove the
+                module alias 'user' from the namespace:
                 <span class="code">view('@/index.php')</span></p>
             <h5>View_mode configuration</h5>
             <pre class="brush:php">
@@ -268,8 +272,8 @@
         <h4 id="rendering">Rendering</h4>
         <div class="col-md-12">
             <a href="https://twig.symfony.com/doc/2.x/api.html#rendering-templates">Twig view rendering</a>
-            <p>In the "getTwigGlobalVariables" method, you can add all global variable whose will be accessible to all
-                views. To add a global variable set this in RootKernel.php</p>
+            <p>To send a view to navigate use <span class="code">View::render()</span>, or use the helper <span
+                    class="code">view()</span>. Render method return View class.</p>
             <pre class="brush:php">
                 class UserController extends \MkyCore\Abstracts\Controller
                 {
@@ -284,9 +288,144 @@
             </pre>
             <p>In view</p>
             <pre class="brush:html">
-                <div>{{ app_name }}</div>
-                // <div>New Application</div>
+                <div>
+                    {% for user in users %}
+                        <li>{{ user.name }}</li>
+                    {% endfor %}
+                </div>
+
+                // will be
+
+                <div>
+                    <li>username 1</li>
+                    <li>username 2</li>
+                    <li>username 3</li>
+                </div>
             </pre>
+        </div>
+        <h4 id="twig_request">Twig Request</h4>
+        <div class="col-md-12">
+            <p>In Twig view, there is the request global variable, thanks to that you can access to some request methods
+                in view to interact with session, cookies and others.</p>
+            <h5>List of methods</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>session: <span class="type">mixed</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>cookies: <span class="type">mixed</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>old: <span class="type">mixed</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>hasOld: <span class="type">bool</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>flash: <span class="type">mixed</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>hasFlash: <span class="type">bool</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>auth: <span class="type">mixed|\MkyCore\AuthManager</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>config: <span class="type">mixed</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>is: <span class="type">bool</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>isName: <span class="type">bool</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>query: <span class="type">mixed</span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 id="available_functions">Available functions</h4>
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <th>Methods</th>
+                <th>Params</th>
+                <th>Description</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>route: <span class="type">\MkyCore\Facades\Router|string</span></td>
+                    <td>name: <span class="type">string|null</span>, params: <span class="type">array|null</span></td>
+                    <td>If name is set return the route url with params, if not return Router class</td>
+                </tr>
+                <tr>
+                    <td>csrf: <span class="type">string</span></td>
+                    <td></td>
+                    <td>Return the csrf tag</td>
+                </tr>
+                <tr>
+                    <td>method: <span class="type">string</span></td>
+                    <td>method: <span class="type">string</span></td>
+                    <td>Return a method tag, useful for handling HTTP request methods other than POST and GET</td>
+                </tr>
+                <tr>
+                    <td>asset: <span class="type">string</span></td>
+                    <td>asset: <span class="type">string</span></td>
+                    <td>Return public assets link with asset name</td>
+                </tr>
+                <tr>
+                    <td>public_path: <span class="type">string</span></td>
+                    <td>path: <span class="type">string</span></td>
+                    <td>Return public path link</td>
+                </tr>
+                <tr>
+                    <td>dump: <span class="type">void</span></td>
+                    <td>var: <span class="type">mixed</span>, ...moreVars: <span class="type">mixed</span></td>
+                    <td>Run dump debug</td>
+                </tr>
+                <tr>
+                    <td>dd: <span class="type">void</span></td>
+                    <td>var: <span class="type">mixed</span>, ...moreVars: <span class="type">mixed</span></td>
+                    <td>Run dd debug</td>
+                </tr>
+                <tr>
+                    <td>json: <span class="type">string</span></td>
+                    <td>value: <span class="type">mixed</span></td>
+                    <td>Parse value with json_encode and send to view</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

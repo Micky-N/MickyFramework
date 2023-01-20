@@ -98,6 +98,14 @@ const menus = [
             {
                 title: 'Rendering',
                 href: '#rendering'
+            },
+            {
+                title: 'Twig Request',
+                href: '#twig_request'
+            },
+            {
+                title: 'Available functions',
+                href: '#available_functions'
             }
         ]
     },
