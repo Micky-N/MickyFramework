@@ -8,6 +8,24 @@ const menus = [
         href: '?p=install'
     },
     {
+        title: 'Module',
+        href: '?p=module',
+        sub_menus: [
+            {
+                title: 'Folders organization',
+                href: '#folders_organization'
+            },
+            {
+                title: 'Configuration',
+                href: '#configuration'
+            },
+            {
+                title: 'HMVC Application',
+                href: '#hmvc'
+            }
+        ]
+    },
+    {
         title: 'Routing',
         href: '?p=routing',
         sub_menus: [
@@ -176,24 +194,6 @@ const menus = [
             {
                 title: 'List of commands',
                 href: '#list'
-            }
-        ]
-    },
-    {
-        title: 'Module',
-        href: '?p=module',
-        sub_menus: [
-            {
-                title: 'Folders organization',
-                href: '#folders_organization'
-            },
-            {
-                title: 'Configuration',
-                href: '#configuration'
-            },
-            {
-                title: 'HMVC Application',
-                href: '#hmvc'
             }
         ]
     }
