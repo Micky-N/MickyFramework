@@ -6,9 +6,9 @@ $(document).ready(function () {
 });
 
 function getCurrentPage() {
-    const url = new URL(window.location.href);
-    const trim = url.pathname.replace(/\//, '');
-    return trim || 'home'
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('p');
+    return page || 'home'
 }
 
 function template(view) {

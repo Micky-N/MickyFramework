@@ -1,15 +1,15 @@
 const menus = [
     {
         title: 'Introduction',
-        href: '/'
+        href: '?p=home'
     },
     {
         title: 'How to Install',
-        href: '/install'
+        href: '?p=install'
     },
     {
         title: 'Routing',
-        href: '/routing',
+        href: '?p=routing',
         sub_menus: [
             {
                 title: 'Controller',
@@ -23,11 +23,11 @@ const menus = [
     },
     {
         title: 'Providers',
-        href: '/providers'
+        href: '?p=providers'
     },
     {
         title: 'DI Container',
-        href: '/container',
+        href: '?p=container',
         sub_menus: [
             {
                 title: 'Container',
@@ -41,7 +41,7 @@ const menus = [
     },
     {
         title: 'Database',
-        href: '/database',
+        href: '?p=database',
         sub_menus: [
             {
                 title: 'Migration',
@@ -55,7 +55,7 @@ const menus = [
     },
     {
         title: 'ORM',
-        href: '/orm',
+        href: '?p=orm',
         sub_menus: [
             {
                 title: 'Manager',
@@ -77,11 +77,11 @@ const menus = [
     },
     {
         title: 'Controller',
-        href: '/controller'
+        href: '?p=controller'
     },
     {
         title: 'View',
-        href: '/view',
+        href: '?p=view',
         sub_menus: [
             {
                 title: 'Functions',
@@ -111,43 +111,43 @@ const menus = [
     },
     {
         title: 'Request',
-        href: '/request'
+        href: '?p=request'
     },
     {
         title: 'Response',
-        href: '/response'
+        href: '?p=response'
     },
     {
         title: 'Filesystem',
-        href: '/filesystem'
+        href: '?p=filesystem'
     },
     {
         title: 'Mail',
-        href: '/mail'
+        href: '?p=mail'
     },
     {
         title: 'Log',
-        href: '/log'
+        href: '?p=log'
     },
     {
         title: 'Validator',
-        href: '/validator'
+        href: '?p=validator'
     },
     {
         title: 'Cache',
-        href: '/cache'
+        href: '?p=cache'
     },
     {
         title: 'Config',
-        href: '/config'
+        href: '?p=config'
     },
     {
         title: 'Cookies & Session',
-        href: '/cookies_session'
+        href: '?p=cookies_session'
     },
     {
         title: 'Middleware',
-        href: '/middleware',
+        href: '?p=middleware',
         sub_menus: [
             {
                 title: 'Route Middleware',
@@ -157,11 +157,11 @@ const menus = [
     },
     {
         title: 'Permission',
-        href: '/permission'
+        href: '?p=permission'
     },
     {
         title: 'Event',
-        href: '/event',
+        href: '?p=event',
         sub_menus: [
             {
                 title: 'Listener',
@@ -171,7 +171,7 @@ const menus = [
     },
     {
         title: 'MkyCommand CLI',
-        href: '/command',
+        href: '?p=command',
         sub_menus: [
             {
                 title: 'List of commands',
@@ -181,7 +181,7 @@ const menus = [
     },
     {
         title: 'Module',
-        href: '/module',
+        href: '?p=module',
         sub_menus: [
             {
                 title: 'Folders organization',
@@ -198,13 +198,13 @@ const menus = [
         ]
     }
 ]
-const trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+const trimQuery = str => str.replace('?p=', '');
 
 function createMenu() {
     let res = ''
     menus.forEach(menu => {
         const {title, href} = menu
-        const id = trimSlashes(href)
+        const id = trimQuery(href)
         const subMenus = menu.sub_menus || []
 
         res += '<li>'
@@ -232,9 +232,9 @@ $('main#content').click(function () {
 })
 
 function getCurrentPage() {
-    const url = new URL(window.location.href);
-    const trim = trimSlashes(url.pathname);
-    return trim || 'home'
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('p');
+    return page || 'home'
 }
 
 $('.btn.nav_hamb').click(function () {
@@ -244,7 +244,7 @@ $('.btn.nav_hamb').click(function () {
 
 
 $('nav#sidebar ul#main_side li a').each(function () {
-    const id = $(this).attr('id');
+    let id = $(this).attr('id');
     if(id && id === getCurrentPage()){
         $(this).parent().addClass("active");
         const currentLi = $(this).parent().find(`ul.item-show[data-show=${id}]`)
