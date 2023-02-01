@@ -1,9 +1,16 @@
 <?php
 
-use MkyCore\Application;
 
-define('ROOT_APP', trim(str_replace('public', '', getcwd()), '/\\'));
+$app = new \MkyCore\Application(dirname(__DIR__));
 
-$app = new Application(ROOT_APP);
+$app->singleton(
+    \MkyCore\Interfaces\NodeRequestHandlerInterface::class,
+    \MkyCore\NodeRequestHandler::class
+);
+
+$app->singleton(
+    \MkyCore\Interfaces\NodeConsoleHandlerInterface::class,
+    \MkyCore\Console\NodeConsoleHandler::class
+);
 
 return $app;

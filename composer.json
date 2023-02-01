@@ -28,7 +28,7 @@
         "guzzlehttp/guzzle": "^7.5",
         "http-interop/response-sender": "^1.0",
         "kunalvarma05/dropbox-php-sdk": "^0.4.1",
-        "micky/mkycore": "^2.2",
+        "micky/mkycore": "2.*-dev",
         "middlewares/whoops": "^2.0",
         "nesbot/carbon": "^2.63",
         "psr/container": "^2.0",

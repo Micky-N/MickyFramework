@@ -1,11 +1,14 @@
 <?php
 
+define('MKY_START', microtime(true));
+
+
 require_once __DIR__ . '/vendor/autoload.php';
+
 $app = require_once __DIR__ . '/bootstrap/start.php';
 
-use MkyCore\Console\Command;
+$nodeConsoleHandler = $app->get(\MkyCore\Interfaces\NodeConsoleHandlerInterface::class);
 
-if (php_sapi_name() === 'cli') {
-    $command = new Command($app);
-    $command->run($argv);
-}
+$nodeConsoleHandler->handle(
+    $input = new \MkyCommand\Input($argv)
+)->send();
