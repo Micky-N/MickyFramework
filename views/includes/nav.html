@@ -1,0 +1,82 @@
+<nav role="navigation">
+    <ul class="nav">
+        <li id="home"><a href="/">Introduction</a></li>
+        <li id="install"><a href="/install">How to Install</a></li>
+        <li id="routing"><a href="/routing">Routing</a>
+            <ul class="nav">
+                <li><a href="#routing_controller">Controller</a></li>
+                <li><a href="#routing_file">File</a></li>
+            </ul>
+        </li>
+        <li id="providers"><a href="/providers">Providers</a></li>
+        <li id="container"><a href="/container">DI Container</a>
+            <ul class="nav">
+                <li><a href="#container">Container</a></li>
+                <li><a href="#container_auto">Auto Wiring</a></li>
+            </ul>
+        </li>
+        <li id="database"><a href="/database">Database</a>
+            <ul class="nav">
+                <li><a href="#database_migration">Migration</a></li>
+                <li><a href="#database_populator">Populator</a></li>
+            </ul>
+        </li>
+        <li id="orm"><a href="/orm">ORM</a>
+            <ul class="nav">
+                <li><a href="#orm_manager">Manager</a></li>
+                <li><a href="#orm_query_builder">QueryBuilder</a></li>
+                <li><a href="#orm_entity">Entity</a></li>
+                <li><a href="#orm_relationship">Relationship</a></li>
+            </ul>
+        </li>
+        <li id="controller"><a href="/controller">Controller</a></li>
+        <li id="view"><a href="/view">View</a></li>
+        <li id="view"><a href="/view">Request</a></li>
+        <li id="view"><a href="/view">Response</a></li>
+        <li id="view"><a href="/view">FileSystem</a></li>
+        <li id="view"><a href="/view">Mail</a></li>
+        <li id="view"><a href="/view">Log</a></li>
+        <li id="view"><a href="/view">Validator</a></li>
+        <li id="view"><a href="/view">Cache</a></li>
+        <li id="view"><a href="/view">Config</a></li>
+        <li id="view"><a href="/view">Cookies & Session</a></li>
+
+        <li id="middleware"><a href="/middleware">Middleware</a>
+            <ul class="nav">
+                <li><a href="#middleware">Middleware</a></li>
+                <li><a href="#middleware_route">Route Middleware</a></li>
+            </ul>
+        </li>
+        <li id="permission"><a href="/permission">Permission</a></li>
+        <li id="event"><a href="/event">Event</a>
+            <ul class="nav">
+                <li><a href="#event">Event</a></li>
+                <li><a href="#event_listener">Listener</a></li>
+            </ul>
+        </li>
+
+        <li id="command"><a href="/command">MkyCommand CLI</a>
+            <ul class="nav">
+                <li><a href="#command_list">List of commands</a></li>
+            </ul>
+        </li>
+        <li id="modules"><a href="/modules">Modules</a>
+            <ul class="nav">
+                <li><a href="#folders_organization">folders organization</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#hmvc">HMVC Application</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    let current_page = getCurrentPage()
+    const lis = $('li[id]')
+    $.each(lis, () => {
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active')
+        }
+    })
+    $('li#' + current_page).addClass('active')
+</script>

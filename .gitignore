@@ -1,4 +1,6 @@
 vendor
 cache
 composer.lock
-tmp
+.idea
+.env
+.tmp

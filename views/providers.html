@@ -1,0 +1,69 @@
+<section id="line4" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Providers
+                <hr>
+            </h2>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <p>Provider is a class use to make something at the beginning of the flux process, There are 3 main
+                providers in app provider folder:
+            </p>
+            <div class="requirements">
+                <ol>
+                    <li><b>AppServiceProvider</b></li>
+                    <li><b>AuthServiceProvider</b></li>
+                    <li><b>EventServiceProvider</b></li>
+                </ol>
+            </div>
+            <h4>AppServiceProvider</h4>
+            <p>This provider is used to save classes in the dependency injection container with an alias :</p>
+            <pre class="brush: php">
+                // app/Providers/AppServiceProvider.php
+                public function register()
+                {
+                    $this->app->bind(TodoServiceInterface::class, TodoService::class);
+                }
+            </pre>
+            <p>Only in app/Providers/AppServiceProvider.php, the property <b>$modules</b> is a list of all modules,
+                don't remove the getter <b>getModules</b></p>
+            <h4>AuthServiceProvider</h4>
+            <p>This provider is used to define route permission :</p>
+            <pre class="brush: php">
+                // app/Providers/AuthServiceProvider.php
+                public function register()
+                {
+                    Allows::define('view_todo', function(User $user, Todo $todo){
+                        return $user->id() === $todo->userId();
+                    });
+                }
+            </pre>
+            <h4>EventServiceProvider</h4>
+            <p>This provider is used to store events and their listeners according to their actions as alias :</p>
+            <pre class="brush: php">
+                // app/Providers/EventServiceProvider.php
+                public function register()
+                {
+                    $this->app->addEvent(NewTodoEvent::class, [
+                        'send_mail' => NewTodoMailListener::class,
+                        'newsletter' => NewsLetterListener::class,
+                    ]);
+                }
+            </pre>
+            <p>To create a new provider, use the command:</p>
+            <pre class="brush: php">php mky create:provider mailer</pre>
+            <p><b>MailerServiceProvider.php</b> file will be created in the "providers" folder, application will call the
+                "register" method</p>
+        </div>
+
+    </div>
+    <!-- end row -->
+
+</section>

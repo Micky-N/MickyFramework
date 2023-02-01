@@ -1,0 +1,102 @@
+<section id="line7" class="section">
+
+  <div class="row">
+    <div class="col-md-12 left-align">
+      <h2 class="dark-text">MkyCommand CLI
+        <hr>
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        CLI commands allow to generate files from the command line, example :
+      <pre class="brush:powershell">
+                                        php micky --create=controller --name=TodoController
+                                    </pre>
+      The TodoController.php file is created in the app/Http/Controllers folder
+      The list of commands is available by issuing the command:
+      <pre class="brush:powershell">
+                                        php micky --help
+                                    </pre>
+      </p>
+
+      <h3 id="line7_1">List of commands</h3>
+
+      <div>
+                                    <pre class="brush: php">
+                                    create:
+                                        module:
+                                            name: required // module name
+
+                                        controller:
+                                            name: required // controller name (suffix by Controller)
+                                            crud: optional // (no value: --crud) to implementof the 7 CRUD methods
+                                            path: optional // controller subfolder (App/Http/Controllers/Subfolder/TestController.php)
+                                            module: optional // (for HMVC) controller module name (App/Module_Name/Http/Controllers/TestController.php)
+
+                                        model:
+                                            name: required // model name
+                                            pk: optional // primary key (for MYSQL database)
+                                            table: optional // table name (for MYSQL database)
+                                            path: optional // model subfolder (App/Models/Subfolder/Test.php)
+                                            module: optional // (for HMVC) model module name (App/Module_Name/Models/Test.php)
+
+                                        middleware:
+                                            name: required // middleware name (suffix by Middleware)
+                                            path: optional // middleware subfolder (App/Http/Middlewares/Subfolder/TestMiddleware.php)
+                                            route: optional // (no value: --route) if entered, the middleware becomes a RouteMiddleware and is registered in the MiddlewareServiceProdiver with an alias (test => TestMiddleware)
+                                            module: optional // (for HMVC) middleware module name (App/Module_Name/Http/Middlewares/TestMiddleware.php)
+
+                                        vote:
+                                            name: required // name of the voter (suffix by Voter)
+                                            model: required // subject model name (namespace\\model)
+                                            path: optional // middleware subfolder (App/Voters/Subfolder/TestVoter.php)
+                                            action: optional // implement a method with the name of the action (private function action_name(...){})
+                                            module: optional // (for HMVC) middleware module name (App/Module_Name/Http/Middlewares/TestMiddleware.php)
+
+                                        notification:
+                                            name: required // notification class name (suffix by Notification)
+                                            via: required // implements, with the name of the parameter, a connection method between the class and the notification system
+                                            path: optional // notification subfolder (App/Notifications/Subfolder/TestVoter.php)
+
+                                        event:
+                                            name: required // event name (suffix by Event)
+                                            path: optional // event subfolder (App/Voters/Subfolder/TestEvent.php)
+                                            module: optional // (for HMVC) event module name (App/Module_Name/Events/TestEvent.php)
+
+                                        listener:
+                                            name: required // listener name (suffix by Listener)
+                                            path: optional // listener subfolder (App/Listeners/Subfolder/TestListener.php)
+                                            module: optional // (for HMVC) event module name (App/Module_Name/Listeners/TestListener.php)
+
+                                        format:
+                                            name: required // voter name (suffix by Formatter)
+                                            format: required // implements a method with the format name for .mky views
+                                            path: optional // formatter subfolder (App/MkyFormatters/Subfolder/TestFormatter.php)
+
+                                        guideline:
+                                            name: required // directive name (suffix by Directive)
+                                            fn: required // implements two methods with format name for .mky views ([[$this, 'test'],[$this, 'endtest]])
+                                            path: optional // directive subfolder (App/MkyDirectives/Subfolder/TestDirective.php)
+
+                                    show:
+                                        routes: // show all routes
+                                            request: optional // filter routes according to the request entered (get, post,...)
+                                            controller: optional // filter routes according to the controller entered
+
+                                    hidden:
+                                        clear:
+                                            path: optional // clean all cache or subfolder entered
+
+                                        create:
+                                            path: required // create subfolder in cache
+                                    </pre>
+      </div>
+
+    </div>
+  </div>
+  <!-- end row -->
+
+</section>

@@ -1,0 +1,97 @@
+<section id="line8" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Modules
+                <hr>
+            </h2>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                The HMVC structure makes it possible to organize the application into MVC modules where each module
+                (folder) has its own MVC architecture.
+                To create a module from the command line
+            <pre class="brush:powershell">
+                                        php micky --create=module --name=Todo
+                                    </pre>
+            The command will create the folders and files directly and register the module in the
+            ModuleServiceProvider.php:
+            <pre class="brush:php">
+                                        // config/ModuleServiceProvider.php
+                                        [
+                                            \App\Todo\TodoModule::class
+                                        ];
+                                    </pre>
+            </p>
+
+            <h3 id="folders_organization">Folder organization</h3>
+            <div class="col-md-12">
+                <pre class="brush: php">
+                    Events
+                    Http:
+                        - Controllers
+                            - Admin:
+                                - TodoController.php
+                            - TodoController.php
+                        - Middleware
+                    Listeners
+                    Models
+                    Notifications
+                    Providers:
+                        - MiddlewareServiceProvider.php
+                        - EventServiceProvider.php
+                    roads:
+                        - web.yaml
+                        - admin.yaml
+                        - functions.php
+                    views:
+                        - admin:
+                            - index.mky
+                        - index.mky
+                    Voters
+                    config.php
+                    TodoModule.php
+                </pre>
+                <p>
+                    To activate the HMVC mode, in the config point config/app.php put 'structure' => 'HMVC'.
+                </p>
+            </div>
+
+            <h3 id="configuration">Configuration</h3>
+            <div class="col-md-12">
+                <p>
+                    The configuration of the module is in the file app/Name_of_Module/config.php
+                <pre class="brush:php">
+                                            // app/Todo/config.php
+                                            return [
+                                                'views' => __DIR__ . '/views',
+                                                'layouts' => __DIR__. '/views/layouts'
+                                                'url_prefix' => '/products'
+                                            ];
+                                        </pre>
+                The config will override the config/module.php by overriding the parameters if these are defined,
+                by removing the 'layouts' parameter from app/Module/config.php then the layouts should be
+                in the default layouts entered in config/module.php.
+                </p>
+            </div>
+            <h3 id="hmvc">HMVC App</h3>
+            <div class="col-md-12">
+                <p>
+                    Events and listeners must be registered in app/Module/Providers/EventServiceProvider.php
+                    and routeMiddlewares and voters must be registered in
+                    app/Module/Providers/MiddlewareServiceProvider.php
+                </p>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- end row -->
+
+</section>
