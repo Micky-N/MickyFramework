@@ -311,66 +311,66 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th>Method</th>
+                    <th>Parameters</th>
+                    <th>Description</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>session: <span class="type">mixed</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string|null</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return session value by key, if name and default are not set return Session class</td>
                 </tr>
                 <tr>
-                    <td>cookies: <span class="type">mixed</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>cookie: <span class="type">mixed</span></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return cookie value, if not isset return default param</td>
                 </tr>
                 <tr>
                     <td>old: <span class="type">mixed</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return old form input value and remove it in session, if not isset return default param</td>
                 </tr>
                 <tr>
                     <td>hasOld: <span class="type">bool</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string</span></td>
+                    <td>Check if form input name has value</td>
                 </tr>
                 <tr>
                     <td>flash: <span class="type">mixed</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return flash session value and remove it in session, if not isset return default param</td>
                 </tr>
                 <tr>
                     <td>hasFlash: <span class="type">bool</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string</span></td>
+                    <td>Check if key exists in session</td>
                 </tr>
                 <tr>
-                    <td>auth: <span class="type">mixed|\MkyCore\AuthManager</span></td>
+                    <td>auth: <span class="type">mixed|AuthManager</span></td>
                     <td></td>
-                    <td></td>
+                    <td>Return auth instance if user is logged</td>
                 </tr>
                 <tr>
                     <td>config: <span class="type">mixed</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>key: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return config value, if not isset return default param</td>
                 </tr>
                 <tr>
                     <td>is: <span class="type">bool</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>url: <span class="type">string</span></td>
+                    <td>Return if url param is the current route url</td>
                 </tr>
                 <tr>
                     <td>isName: <span class="type">bool</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string</span></td>
+                    <td>Return if name param is the current route name</td>
                 </tr>
                 <tr>
                     <td>query: <span class="type">mixed</span></td>
-                    <td></td>
-                    <td></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed</span></td>
+                    <td>Return query value, if not exists return default param</td>
                 </tr>
                 </tbody>
             </table>
@@ -385,7 +385,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>route: <span class="type">\MkyCore\Facades\Router|string</span></td>
+                    <td>route: <span class="type">Router|string</span></td>
                     <td>name: <span class="type">string|null</span>, params: <span class="type">array|null</span></td>
                     <td>If name is set return the route url with params, if not return Router class</td>
                 </tr>
