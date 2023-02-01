@@ -1,0 +1,464 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Database
+                <hr>
+            </h2>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 id="database_config">Configuration</h3>
+
+        <div class="col-md-12">
+            <p>By default, Database system is MySQL, you can it in <b>config/database.php</b> configuration, only MySQL,
+                SQLite and PostgreSQL is supported by this framework</p>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 id="database_migration">Migration</h3>
+
+        <div class="col-md-12">
+            <p>Thanks to migration system, database tables can be created very quickly:</p>
+            <pre class="brush: php">
+                use MkyCore\Abstracts\Migration;
+                use MkyCore\Migration\MigrationTable;
+                use MkyCore\Migration\Schema;
+
+                class CreateUsersTable extends Migration
+                {
+
+                    public function up()
+                    {
+                        Schema::create('users', function(MigrationTable $table){
+                            $table->id()->autoIncrement();
+                            $table->string('name', 12)->notNull();
+                            $table->string('email')->unique()->notNull();
+                            $table->string('password', 8)->notNull();
+                            $table->boolean('is_admin')->default(false);
+                            $table->datetime('birthday')->notNull();
+                            $table->dates();
+                        });
+                    }
+
+                    public function down()
+                    {
+                        Schema::dropTable('users');
+                    }
+                }
+            </pre>
+            <p>Migration table class have two methods: "up" for <span class="code">php mky migration:run</span> command
+                and "down" for <span class="code">php mky migration:rollback</span> command, MigrationTable
+                <span class="type">$table</span> is the representation of your table, each <span
+                        class="type">$table</span> method used is a new column.</p>
+            <h4>Migration Run</h4>
+            <div class="col-md-12">
+                <p>To run migration, use <span class="code">php mky migration:run</span>, you can specify the version
+                    file of migration you want to run with <span class="type">-v=&lt;version&gt;</span> flag ,you can
+                    migrate and populate
+                    database by use the <span class="type">--pop</span> flag.</p>
+            </div>
+            <h4>Migration Rollback</h4>
+            <div class="col-md-12">
+                <p>To rollback the last migration, use <span class="code">php mky migration:rollback</span>, you can
+                    specify until which version you want to rollback by use <span class="type">-v=&lt;version&gt;</span>
+                    flag, or the number of migration you want to rollback with <span
+                            class="type">-n=&lt;number&gt;</span> flag, if number = "all" so all migrations will be
+                    rollback.</p>
+            </div>
+            <h4>Migration Refresh</h4>
+            <div class="col-md-12">
+                <p>Refresh method is used to rollback and rerun migration with the <span class="code">php mky migration:refresh</span>
+                    command, same as the rollback method, you can specify
+                    until which version you want to rollback or the number of migration you want to rollback.</p>
+            </div>
+            <h4>Migration Reset</h4>
+            <div class="col-md-12">
+                <p>Reset method is used to rollback and rerun all migrations with the <span class="code">php mky migration:reset</span>
+                    command, you can populate database by use the <span class="type">--pop</span> flag.</p>
+            </div>
+            <h4>Create table</h4>
+            <p>To create table, use the <span class="code">Schema::create('table_name', function(MigrationTable $table){...})</span>
+                method, with the method you can implement your new table and set columns.</p>
+            <div class="col-md-12">
+                <h5>MigrationTable</h5>
+                <p>All MigrationTable method for creation:</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>primaryKey: <span class="type">string</span>, isInteger: <span class="type">bool</span></td>
+                        <td>Add a primary key column as an unsigned and not null type, default primary column name is
+                            "id",
+                            you can override it by change
+                            "primaryKey" param, primary column type is integer, you can override it by change
+                            "isInteger"
+                            param.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>integer</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add an integer column</td>
+                    </tr>
+                    <tr>
+                        <td>binInt</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a big integer column</td>
+                    </tr>
+                    <tr>
+                        <td>smallInt</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a small integer column</td>
+                    </tr>
+                    <tr>
+                        <td>tinyInt</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a tiny integer column</td>
+                    </tr>
+                    <tr>
+                        <td>boolean</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a tiny integer column for boolean value (true = 1, false = 0)</td>
+                    </tr>
+                    <tr>
+                        <td>float</td>
+                        <td>column: <span class="type">string</span>, precision: <span class="type">array</span></td>
+                        <td>Add a float column, you can set precision as array [2,6] => FLOAT (2,6)</td>
+                    </tr>
+                    <tr>
+                        <td>string</td>
+                        <td>column: <span class="type">string</span>, limit: <span class="type">int</span> = 255</td>
+                        <td>Add a varchar column, with 255 characters limited by default</td>
+                    </tr>
+                    <tr>
+                        <td>text</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a text column</td>
+                    </tr>
+                    <tr>
+                        <td>datetime</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a datetime column</td>
+                    </tr>
+                    <tr>
+                        <td>timestamp</td>
+                        <td>column: <span class="type">string</span></td>
+                        <td>Add a timestamp column</td>
+                    </tr>
+                    <tr>
+                        <td>dates</td>
+                        <td></td>
+                        <td>Add an updated_at and created_at timestamp columns</td>
+                    </tr>
+                    <tr>
+                        <td>created_at</td>
+                        <td>column: <span class="type">string</span> = "created_at"</td>
+                        <td>Add a created_at column, the column name can be changed by set a value to the "column" param
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>updated_at</td>
+                        <td>column: <span class="type">string</span> = "updated_at"</td>
+                        <td>Add an updated_at column, the column name can be changed by set a value to the "column"
+                            param
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h5>ColumnType</h5>
+                <p>Each add column methods return a ColumnType instance, you can add ColumnType method to add more
+                    structure
+                    to a column like:</p>
+                <pre class="brush: php">
+                    $table->string('email')->unique()->notNull();
+                </pre>
+                <p>The column "email" is a unique and not nullable column, others methods:</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>primaryKey</td>
+                        <td></td>
+                        <td>Make the column a primary key</td>
+                    </tr>
+                    <tr>
+                        <td>notNull</td>
+                        <td></td>
+                        <td>Make the column a not nullable column</td>
+                    </tr>
+                    <tr>
+                        <td>unsigned</td>
+                        <td></td>
+                        <td>Make the column a unsigned column</td>
+                    </tr>
+                    <tr>
+                        <td>default</td>
+                        <td>value: <span class="type">mixed</span></td>
+                        <td>Add a default value to the column</td>
+                    </tr>
+                    <tr>
+                        <td>unique</td>
+                        <td></td>
+                        <td>Make the column a unique type</td>
+                    </tr>
+                    <tr>
+                        <td>autoIncrement</td>
+                        <td></td>
+                        <td>Make the column an auto increment</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h5>Add Foreign Key</h5>
+                <p>You can add a foreign key constrains to link a table with another:</p>
+                <pre class="brush: php">
+                    $table->integer('user_id');
+                    $table->foreignKey('user_id')->references('users', 'id')->cascade();
+                </pre>
+                <p>The column "user_id" is a foreign integer key link to the "users" table by the primary key "id", if
+                    you want to specify the constraint name you can set <span class="code">$table->foreignKey('user_id', 'FK_users_jobs')</span>,
+                    you can set
+                    cascadeUpdate(), cascadeDelete(), cascade() (call the update and delete cascade method),
+                    noActionUpdate(), noActionDelete(), noAction() (call the update and delete noAction method)</p>
+            </div>
+            <h4>Update table</h4>
+            <p>To update table, use the <span class="code">Schema::alter('table_name', function(MigrationTable $table){...})</span>
+                method, with this method you can implement some change to your table.</p>
+            <div class="col-md-12">
+                <h5>MigrationTable</h5>
+                <p>All methods for updating:</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Params</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>modify</td>
+                        <td>column: <span class="type">string</span>, type: <span class="type">string</span>,
+                            ...options: <span class="type">mixed</span></td>
+                        <td>Modify a column type ex: <span class="code">$table->modify('id', 'string', 10)</span> will
+                            transform integer "id" column to varchar(10)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>rename</td>
+                        <td>column: <span class="type">string</span>, name: <span class="type">string</span>, newType:
+                            <span class="type">string</span> = null, ...options: <span class="type">mixed</span></td>
+                        <td>Rename a column, you can change the column type like "modify" method.</td>
+                    </tr>
+                    <tr>
+                        <td>all create table method</td>
+                        <td></td>
+                        <td>All create methods are available in updating mode, it will add a new column.</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h5>Remove Foreign Key</h5>
+                <p>You can remove a foreign key constraint in multiple methods:</p>
+                <pre class="brush: php">
+                    $table->dropForeignKey('FK_users_jobs');
+                    $table->dropColumn('user_id');
+                    or
+                    $table->dropColumnAndForeignKey('user_id', 'FK_users_jobs');
+                </pre>
+                <p>The "dropForeignKey" method need the constraint name for delete foreign key constraint, if the
+                    constraint name is starts with "<span class="type">FK_user_id...</span>", so the
+                    "dropColumnAndForeignKey" method will not need a second parameter</p>
+            </div>
+            <h4>Delete table</h4>
+            <p>To drop table, use the <span class="code">Schema::dropTable('table_name')</span> method.</p>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 id="database_populator">Populator</h3>
+
+        <div class="col-md-12">
+            <p>Populator is a system made for help you populate database with fake data:</p>
+            <pre class="brush:php">
+                class UserPopulator extends Populator
+                {
+
+                    protected string $manager = UserManager::class;
+
+                    public function definition(): array
+                    {
+                        return [
+                            'name' => $this->faker->name(),
+                            'email' => $this->faker->email(),
+                            'password' => password_hash('password', PASSWORD_BCRYPT)
+                        ];
+                    }
+                }
+            </pre>
+
+            <h4>Populate Command</h4>
+            <p>To run populator, use <span class="code">php mky populator:run</span> you can specify whose file to use
+                with the <span class="type">-f=&lt;file&gt;</span> flag, file value may be just the prefix like "user"
+                for running UserPopulate class, by default file is \Database\Populators\RunnerPopulator class.</p>
+            <p>By default populator:run will use the definition to fill database, to fill the database with more complex
+                data, implement the populate method in the RunnerPopulator class:</p>
+            <h4>Populate basic functions</h4>
+            <pre class="brush:php">
+                class RunnerPopulator extends \MkyCore\Abstracts\Populator
+                {
+                    public function populate(): void
+                    {
+                        $userPopulator = new UserPopulator();
+                        $userPopulator->count(10)->populate();
+                    }
+                }
+            </pre>
+            <p><span class="type">$userPopulator->count(10)</span> will create 10 users in database</p>
+            <p>You may need to add dynamic data that cannot be defined in the definition but could be blocking for the
+                population, example for the type of user man or woman, you want to set "Y" or "X" for all so use "merge"
+                method:</p>
+            <pre class="brush:php">
+                $userPopulator->count(10)->merge(new LoopMerging([
+                    "Y" // or "X"
+                ]))->populate(); // types: YYYYYYYYYY
+            </pre>
+            <p>You may want to switch between "Y" and "X" or more value :</p>
+            <pre class="brush:php">
+                $userPopulator->count(10)->merge(new LoopMerging(["type" => "X"], ["type" => "Y"]))->populate();// types: XYXYXYXYXY
+            </pre>
+            <p>If you want to define a specific looping value, you can implement a closure in LoopMerging
+                constructor:</p>
+            <pre class="brush:php">
+                $userPopulator->count(10)->merge(new LoopMerging(function($loopMerging){
+                    $type = $loopMerging->index() % 3 == 0 ? "X" : "Y";
+                    return ["type" => $type];
+                }))->populate(); // types: XYYXYYXYYX
+            </pre>
+            <p>LoopMerging have two used method, count() to get number of elements and index() to get the current index
+                element.</p>
+            <h4>Populate with relation table</h4>
+            <p>Thanks to populator system, you can create data in database and use this data to create another data in
+                another table. It's possible with the relation table system</p>
+            <pre class="brush:php">
+                $userPopulator->count(10)->addOn(function(AddRelation $user){
+                    $user->add(new CarPopulator());
+                })->populate();
+            </pre>
+            <p>The implementation of <span class="type">$user->add(new CarPopulator());</span> will work if in the User
+                entity class there is a method called <span class="type">car()</span> or <span
+                        class="type">cars()</span>, those methods have to return a HasOne or HasMany class:</p>
+            <pre class="brush: php">
+                class User extends \MkyCore\Abstracts\Entity
+                {
+                    public function cars(): HasMany
+                    {
+                        return $this->hasMany(Car::class);
+                    }
+
+                    // OR
+
+                    public function car(): HasOne
+                    {
+                        return $this->hasOne(Car::class);
+                    }
+                }
+            </pre>
+            <p>There are 3 relationship methods: <span class="type">addOn()</span>, <span
+                    class="type">addOnPivot()</span>
+                and <span class="type">attach()</span>. Each method need a closure with Relation class as closure's
+                parameter.</p>
+            <h5>AddOn Relation</h5>
+            <div class="col-md-12">
+                <pre class="brush:php">
+                    $userPopulator->count(10)->addOn(function(AddOnRelation $user){
+                        $user->add(new CarPopulator());
+                    })->populate();
+                </pre>
+                <p>This method will create one new car for each user, it's a One-to-One relationship where the foreign
+                    key is carried by the cars table. AddOnRelation class
+                    has one method called <span class="type">add</span>, this method needs 2 parameters, one of which is
+                    optional, the first one is Populator class you will link to, and the second one is the name of
+                    relationship. In the User class declaration, the relationship function name is "car" or "cars" so
+                    the second
+                    parameter is not required, if the relationship name is not the prefix or pluralized prefix of the
+                    Populator class, you must specify the second parameter. For a One-to-Many relationship, you will
+                    have to create several cars to link to a user. To do that use count method with CarPopulator
+                    instance</p>
+                <pre class="brush:php">
+                    $userPopulator->count(10)->addOn(function(AddOnRelation $user){
+                        $carPopulator = new CarPopulator();
+                        $user->add($carPopulator->count(4));
+                    })->populate();
+                </pre>
+                <p>In this way, 4 cars will be created for each user and linked to the user.</p>
+            </div>
+            <h5>AttachOn Relation</h5>
+            <div class="col-md-12">
+                <pre class="brush: php">
+                    class Car extends \MkyCore\Abstracts\Entity
+                    {
+                        public function user(): HasOne
+                        {
+                            return $this->hasOne(User::class);
+                        }
+                    }
+                </pre>
+                <pre class="brush:php">
+                    $carPopulation = new CarPopulator();
+                    $carPopulation->count(4)->attachOn(function(AttachOnRelation $car){
+                        $car->attach(new UserPopulator());
+                    })->populate();
+                </pre>
+                <p>This method will create four cars for one user, it's a Many(or One)-To-One relationship where the
+                    foreign key is carried by the cars table. AttachOnRelation class
+                    has one method called <span class="type">attach</span>, this method needs 2 parameters, one of which
+                    is optional, the first one is Populator class you will link to, and the second one is the name of
+                    relationship. In the Car class declaration, the relationship function name is "user" so the second
+                    parameter is not required, if the relationship name is not the prefix or pluralized prefix of the
+                    Populator class, you must specify the second parameter.</p>
+            </div>
+            <h5>AddOnPivot Relation</h5>
+            <div class="col-md-12">
+                <pre class="brush: php">
+                    class User extends \MkyCore\Abstracts\Entity
+                    {
+                        public function cars(): ManyToMany
+                        {
+                            return $this->manyToMany(Car::class);
+                        }
+                    }
+                </pre>
+                <pre class="brush:php">
+                    $userPopulator->count(10)->addOnPivot(function(AddOnPivotRelation $user){
+                        $user->add(new CarPopulator(), [
+                            'invoice_date' => now()->format('Y-m-d: H:i:s')
+                        ]);
+                    })->populate();
+                </pre>
+                <p>This method will create one new car for each user and get the two foreign keys to add a row to the
+                    pivot table, it's a Many-to-Many relationship. AddOnPivotRelation class has one method called
+                    <span class="type">add</span>, this method needs 3 parameters, two of which is optional, the first
+                    one is Populator class you will link to, the second is optional and is the declaration of the pivot
+                    table without the foreign keys, this data will be merged in the new row in the pivot table and the
+                    third one is the name of relationship, in the example above the relationship name is "car" or "cars"
+                    so the third parameter is not required, if the relationship name is not the prefix or pluralized
+                    prefix of the Populator class you must specify the third parameter.</p>
+            </div>
+        </div>
+    </div>
+</section>

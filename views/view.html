@@ -1,0 +1,431 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">View
+                <hr>
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <p>MkyFramework uses Twig to render the views, to see documentation <a href="https://twig.symfony.com/doc/3.x/"
+                                                                               target="_blank">click here</a></p>
+        <p>Thanks to Twig we can send data to view and make views dynamic, some functions and filters are available, but
+            you can add others functions, filters and global variables in the \App\RootKernel class</p>
+        <pre class="brush:php">
+            class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+            {
+
+                public function getTwigFunctions(): array
+                {
+                    return [
+                        //
+                    ];
+                }
+
+                public function getTwigFilters(): array
+                {
+                    return [
+                        //
+                    ];
+                }
+
+                /**
+                 * @return array
+                 */
+                public function getTwigGlobalVariables(): array
+                {
+                    return [
+                        //
+                    ];
+                }
+            }
+        </pre>
+        <h4 id="functions">Functions</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/3.x/advanced.html#functions">Twig function documentation</a>
+            <p>In the "getTwigFunctions" method, you can add all custom twig function classes you are creating. To
+                create a
+                function class, your class must implement \Twig\Extension\AbstractExtension class and implement
+                "getFunctions" method whose must return an array of \Twig\TwigFunction instance.</p>
+            <pre class="brush:php">
+                class CustomFunction extends AbstractExtension
+                {
+
+                    public function getFunctions(): array
+                    {
+                        return [
+                            new TwigFunction('json', [$this, 'json']),
+                        ];
+                    }
+
+                    public function json(mixed $value): string
+                    {
+                        return json_encode($value);
+                    }
+                }
+            </pre>
+            <p>In RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigFunctions(): array
+                    {
+                        return [
+                            new CustomFunction();
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ json(['name' => 'micky']) }}</div>
+                // will be
+                <div>{"name": "micky"}</div>
+            </pre>
+        </div>
+        <h4 id="filters">Filters</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/3.x/advanced.html#filters">Twig filter documentation</a>
+            <p>In the "getTwigFilters" method, you can add all custom twig filter classes you are creating. To create a
+                filter class, your class must implement \Twig\Extension\AbstractExtension class and implement
+                "getFilters" method whose must return an array of \Twig\TwigFilter instance.</p>
+            <pre class="brush:php">
+                class CustomFilter extends AbstractExtension
+                {
+
+                    public function getFilters(): array
+                    {
+                        return [
+                            new TwigFilter('trim', [$this, 'trim']),
+                        ];
+                    }
+
+                    public function trim(string $value, string $char): string
+                    {
+                        return trim($value, $char);
+                    }
+                }
+            </pre>
+            <p>In RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigFilters(): array
+                    {
+                        return [
+                            new CustomFilter();
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ 'atesta' | trim('a') }}</div>
+                // will be
+                <div>test</div>
+            </pre>
+        </div>
+        <h4 id="global_variables">Global Variables</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/3.x/advanced.html#globals">Twig global variable documentation</a>
+            <p>In the "getTwigGlobalVariables" method, you can add all global variable whose will be accessible to all
+                views. To add a global variable set this in RootKernel.php</p>
+            <pre class="brush:php">
+                class RootKernel extends \MkyCore\Abstracts\ModuleKernel
+                {
+                    //
+                    public function getTwigGlobalVariables(): array
+                    {
+                        return [
+                            'app_name' => 'New Application'
+                        ];
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>{{ app_name }}</div>
+                // will be
+                <div>New Application</div>
+            </pre>
+        </div>
+        <h4>Configuration</h4>
+        <div>
+            <p>Each module have config.php file a key "views_mode", with this key you can set the level</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Module views available</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>base (default value)</td>
+                    <td>current module</td>
+                    <td>Only current module views are available</td>
+                </tr>
+                <tr>
+                    <td>parent</td>
+                    <td>current module + ancestors module</td>
+                    <td>Only current module and ancestors module views are available</td>
+                </tr>
+                <tr>
+                    <td>module</td>
+                    <td>all modules</td>
+                    <td>All modules views are available</td>
+                </tr>
+                </tbody>
+            </table>
+            <pre class="brush:php">
+                // UserModule/config.php
+                    "views_mode" => "base"
+
+                // Controller
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    /**
+                     * @Router('users')
+                     */
+                    public function index(): View
+                    {
+                        return view('@user/index.twig');
+                    }
+                }
+            </pre>
+            <p>If you want to call a view whose inside the current module (UserModule for example) you can remove the
+                module alias 'user' from the namespace:
+                <span class="code">view('@/index.php')</span></p>
+            <h5>View_mode configuration</h5>
+            <pre class="brush:php">
+                // UserModule/config.php
+                    "views_mode" => "parent"
+
+                // Controller
+                namespace \App\TodoModule\AdminModule\UserModule\Controller;
+
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    /**
+                     * @Router('/login')
+                     */
+                    public function login(): View
+                    {
+                        return view('@admin/login.twig'); // app/TodoModule/AdminModule/views/login.twig
+                    }
+
+                    /**
+                     * @Router('/')
+                     */
+                    public function index(): View
+                    {
+                        return view('@todo/index.twig'); // app/TodoModule/views/index.twig
+                    }
+
+                    /**
+                     * Wrong view namespace
+                     */
+                    public function index(): View
+                    {
+                        return view('@task/index.twig'); // app/TaskModule/views/index.twig is not available
+                    }
+                }
+            </pre>
+            <pre class="brush:php">
+                // UserModule/config.php
+                    "views_mode" => "module"
+
+                // Controller
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    /**
+                     * @Router('/login')
+                     */
+                    public function login(): View
+                    {
+                        return view('@auth/login.twig'); // app/AuthModule/views/login.twig
+                    }
+
+                    /**
+                     * @Router('/')
+                     */
+                    public function index(): View
+                    {
+                        return view('@/index.twig'); // currentModule/views/index.twig
+                    }
+
+                    /**
+                     * @Router('/user/tasks')
+                     */
+                    public function index(): View
+                    {
+                        return view('@task/index.twig'); // app/TaskModule/views/index.twig
+                    }
+                }
+            </pre>
+        </div>
+        <h4 id="rendering">Rendering</h4>
+        <div class="col-md-12">
+            <a href="https://twig.symfony.com/doc/2.x/api.html#rendering-templates">Twig view rendering</a>
+            <p>To send a view to navigate use <span class="code">View::render()</span>, or use the helper <span
+                    class="code">view()</span>. Render method return View class.</p>
+            <pre class="brush:php">
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    /**
+                     * @Router('users')
+                     */
+                    public function index(UserManager $userManager): View
+                    {
+                        return view('@/index.twig', ['users' => $userManager->all()]);
+                    }
+                }
+            </pre>
+            <p>In view</p>
+            <pre class="brush:html">
+                <div>
+                    {% for user in users %}
+                        <li>{{ user.name }}</li>
+                    {% endfor %}
+                </div>
+
+                // will be
+
+                <div>
+                    <li>username 1</li>
+                    <li>username 2</li>
+                    <li>username 3</li>
+                </div>
+            </pre>
+        </div>
+        <h4 id="twig_request">Twig Request</h4>
+        <div class="col-md-12">
+            <p>In Twig view, there is the request global variable, thanks to that you can access to some request methods
+                in view to interact with session, cookies and others.</p>
+            <h5>List of methods</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Parameters</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>session: <span class="type">mixed</span></td>
+                    <td>name: <span class="type">string|null</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return session value by key, if name and default are not set return Session class</td>
+                </tr>
+                <tr>
+                    <td>cookie: <span class="type">mixed</span></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return cookie value, if not isset return default param</td>
+                </tr>
+                <tr>
+                    <td>old: <span class="type">mixed</span></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return old form input value and remove it in session, if not isset return default param</td>
+                </tr>
+                <tr>
+                    <td>hasOld: <span class="type">bool</span></td>
+                    <td>name: <span class="type">string</span></td>
+                    <td>Check if form input name has value</td>
+                </tr>
+                <tr>
+                    <td>flash: <span class="type">mixed</span></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return flash session value and remove it in session, if not isset return default param</td>
+                </tr>
+                <tr>
+                    <td>hasFlash: <span class="type">bool</span></td>
+                    <td>name: <span class="type">string</span></td>
+                    <td>Check if key exists in session</td>
+                </tr>
+                <tr>
+                    <td>auth: <span class="type">mixed|AuthManager</span></td>
+                    <td></td>
+                    <td>Return auth instance if user is logged</td>
+                </tr>
+                <tr>
+                    <td>config: <span class="type">mixed</span></td>
+                    <td>key: <span class="type">string</span>, default: <span class="type">mixed|null</span></td>
+                    <td>Return config value, if not isset return default param</td>
+                </tr>
+                <tr>
+                    <td>is: <span class="type">bool</span></td>
+                    <td>url: <span class="type">string</span></td>
+                    <td>Return if url param is the current route url</td>
+                </tr>
+                <tr>
+                    <td>isName: <span class="type">bool</span></td>
+                    <td>name: <span class="type">string</span></td>
+                    <td>Return if name param is the current route name</td>
+                </tr>
+                <tr>
+                    <td>query: <span class="type">mixed</span></td>
+                    <td>name: <span class="type">string</span>, default: <span class="type">mixed</span></td>
+                    <td>Return query value, if not exists return default param</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 id="available_functions">Available functions</h4>
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <th>Methods</th>
+                <th>Params</th>
+                <th>Description</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>route: <span class="type">Router|string</span></td>
+                    <td>name: <span class="type">string|null</span>, params: <span class="type">array|null</span></td>
+                    <td>If name is set return the route url with params, if not return Router class</td>
+                </tr>
+                <tr>
+                    <td>csrf: <span class="type">string</span></td>
+                    <td></td>
+                    <td>Return the csrf tag</td>
+                </tr>
+                <tr>
+                    <td>method: <span class="type">string</span></td>
+                    <td>method: <span class="type">string</span></td>
+                    <td>Return a method tag, useful for handling HTTP request methods other than POST and GET</td>
+                </tr>
+                <tr>
+                    <td>asset: <span class="type">string</span></td>
+                    <td>asset: <span class="type">string</span></td>
+                    <td>Return public assets link with asset name</td>
+                </tr>
+                <tr>
+                    <td>public_path: <span class="type">string</span></td>
+                    <td>path: <span class="type">string</span></td>
+                    <td>Return public path link</td>
+                </tr>
+                <tr>
+                    <td>dump: <span class="type">void</span></td>
+                    <td>var: <span class="type">mixed</span>, ...moreVars: <span class="type">mixed</span></td>
+                    <td>Run dump debug</td>
+                </tr>
+                <tr>
+                    <td>dd: <span class="type">void</span></td>
+                    <td>var: <span class="type">mixed</span>, ...moreVars: <span class="type">mixed</span></td>
+                    <td>Run dd debug</td>
+                </tr>
+                <tr>
+                    <td>json: <span class="type">string</span></td>
+                    <td>value: <span class="type">mixed</span></td>
+                    <td>Parse value with json_encode and send to view</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

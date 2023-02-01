@@ -1,0 +1,157 @@
+<section id="line5" class="section">
+
+    <div class="row">
+        <div class="col-md-12 left-align">
+            <h2 class="dark-text">Controller
+                <hr>
+            </h2>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-12">
+            <p>In controller classes you can use $this->request to get request class, $this->moduleKernel to get current
+                module Kernel class and $this->app for Application class. Controller methods return
+                \MkyCore\Interfaces\ResponseHandlerInterface like View instance or JsonResponse for api, if not,
+                controller
+                methods will return the result as plain text.</p>
+            <p>To create controller by command line use the command</p>
+            <pre class="brush: ps">
+                php mky create:controller user
+            </pre>
+            <p>the controller name will be suffixed by "Controller"</p>
+            <p>Use the flag <span class="type">--crud</span> to implement Crud methods, for api
+                structure use the flag
+                <span class="type">--crud-api</span> to implement api CRUD methods</p>
+            <h5>Crud</h5>
+            <div class="col-md-12">
+                <p>With crud flag 7 methods will be implemented with routes in the controller following the crud system and
+                    with crud api flag 5 methods will be implemented with routes in the controller.</p>
+            </div>
+        </div>
+        <h4>Routing</h4>
+        <div class="col-md-12">
+            <p>If route_mode config is set to "controller", all routes in the module will be implemented in the
+                controller annotation</p>
+            <pre class="brush: php">
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    /**
+                     * @Router('/users', as: 'users.index', middlewares: ['@:auth'], allows: ['view-users'])
+                     */
+                    public function index(UserManager $userManager)
+                    {
+                        return view('@/index.twig', ['users' => $userManager->all()]);
+                    }
+                }
+            </pre>
+            <p>@Router annotation allows Router system to go to controller by url, list of parameters:</p>
+            <ul class="list">
+                <li>default <span class="type">string</span>: url of the route</li>
+                <li>as <span class="type">string</span>: name of the route (optional)</li>
+                <li>middlewares <span class="type">array</span>: list of middlewares (optional)</li>
+                <li>allows <span class="type">array</span>: list of permissions (optional)</li>
+                <li>methods <span class="type">array</span>: list of HTTP request methods (optional), ['GET'] by default
+                </li>
+            </ul>
+            <p>Routes of the controller's methods can be prefixed by setting global route in the annotation controller
+                class</p>
+            <pre class="brush: php">
+                /**
+                 * @Router('/users', as: 'users', middlewares: ['@:auth'], allows: ['view-users'])
+                 */
+                class UserController extends \MkyCore\Abstracts\Controller
+                {
+                    /**
+                     * @Router('/', as: 'index', middlewares: ['@:checkIp'])
+                     */
+                    public function index(UserManager $userManager)
+                    {
+                        return view('@/index.twig', ['users' => $userManager->all()]);
+                    }
+
+                    /**
+                     * @Router('{user}', as: 'show', allows: ['view-user:user'])
+                     */
+                    public function show(User $user)
+                    {
+                        return view('@/show.twig', ['user' => $user]);
+                    }
+                }
+            </pre>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>Method</td>
+                    <td>Url</td>
+                    <td>Name</td>
+                    <td>Middlewares</td>
+                    <td>Allows</td>
+                    <td>HTTP request methods</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>index</td>
+                    <td>/users/</td>
+                    <td>users.index</td>
+                    <td>[@:auth, @:checkIp]</td>
+                    <td>[view-users]</td>
+                    <td>GET</td>
+                </tr>
+                <tr>
+                    <td>show</td>
+                    <td>/users/{user}</td>
+                    <td>users.show</td>
+                    <td>[@:auth]</td>
+                    <td>[view-users, view-user:user]</td>
+                    <td>GET</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4>Implement</h4>
+        <div class="col-md-12">
+            <p>There are 2 ways to implement controller methods : with methods targeted by routes or in a controller
+                class with "__invoke" method whose will be the entry point of the controller.</p>
+            <h5>Controller methods</h5>
+            <div class="col-md-12">
+                <pre class="brush:php">
+                    Router::get('/users', [UserController::class, 'index']);
+                    // or
+                    /**
+                     * @Router('/users')
+                     */
+
+                    class UserController extends \MkyCore\Abstracts\Controller
+                    {
+                        public function index(UserManager $userManager)
+                        {
+                            return view('@/index.twig', ['users' => $userManager->all()]);
+                        }
+                    }
+                </pre>
+            </div>
+            <h5>Controller Invoke</h5>
+            <div class="col-md-12">
+                <pre class="brush:php">
+                    Router::get('/users', UserController::class);
+
+                    //
+
+                    class UserController extends \MkyCore\Abstracts\Controller
+                    {
+                        public function __invoke(UserManager $userManager)
+                        {
+                            $routeUrl = $this->request->currentRoute()->getUrl();
+                            switch($routeUrl){
+                                case 'users':
+                                    return view('@/index.twig', ['users' => $userManager->all()]);
+                                    break;
+                            }
+                        }
+                    }
+                </pre>
+            </div>
+        </div>
+    </div>
+</section>
