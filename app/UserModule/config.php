@@ -32,5 +32,6 @@ return [
      * Merge config in app file, replace route_mode config
      *
      */
-    'app::route_mode' => 'controller'
+    'app:route_mode' => 'controller',
+    'mkyengine:layoutDir' => 'path'
 ];

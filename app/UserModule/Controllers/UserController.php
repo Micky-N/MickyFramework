@@ -9,6 +9,7 @@ use MkyCore\Abstracts\Controller;
 use MkyCore\AuthManager;
 use MkyCore\Exceptions\Container\FailedToResolveContainerException;
 use MkyCore\Exceptions\Container\NotInstantiableContainerException;
+use MkyCore\Facades\Config;
 use MkyCore\RedirectResponse;
 use MkyCore\View;
 use ReflectionException;
