@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Error {{ code ?? '500' }} Page</title>
+    <title>Error <?= $code ?? '500' ?> Page</title>
     <style>
         body {
             background-color: #2F3242;
@@ -134,12 +134,12 @@
     </g>
 </svg>
 <div class="message-box">
-    <h1>{{ code ?? 500 }}</h1>
-    <p>{{ message ?? 'Internal Error' }}</p>
+    <h1><?= $code ?? '500' ?></h1>
+    <p><?= $message ?? 'Internal Error' ?></p>
     <div class="buttons-con">
         <div class="action-link-wrap">
-            <a href="{{ backUrl }}" class="link-button link-back-button">Go Back</a>
-            <a href="{{ homeUrl }}" class="link-button">Go to Home Page</a>
+            <a href="<?= $backUrl ?>>" class="link-button link-back-button">Go Back</a>
+            <a href="<?= $homeUrl ?>" class="link-button">Go to Home Page</a>
         </div>
     </div>
 </div>

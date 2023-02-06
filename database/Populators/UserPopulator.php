@@ -4,6 +4,7 @@ namespace Database\Populators;
 
 use App\UserModule\Managers\UserManager;
 use MkyCore\Abstracts\Populator;
+use MkyCore\Crypt;
 
 class UserPopulator extends Populator
 {
@@ -16,7 +17,7 @@ class UserPopulator extends Populator
         return [
             'name' => $this->faker->firstNameFemale(),
             'email' => $this->faker->email(),
-            'password' => password_hash('password', PASSWORD_BCRYPT)
+            'password' => Crypt::hash('password')
         ];
     }
 

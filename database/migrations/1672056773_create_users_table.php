@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
             $table->id()->autoIncrement();
             $table->string('name')->notNull();
             $table->string('email')->unique()->notNull();
-            $table->string('password')->notNull();
+            $table->text('password')->notNull();
             $table->dates();
         });
     }

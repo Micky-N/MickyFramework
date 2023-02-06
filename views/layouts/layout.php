@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
-    <title>{{ request.config('app.app_name', 'MkyFramework') }}</title>
+    <link rel="shortcut icon" href="<?= asset('img/favicon.ico') ?>" type="image/x-icon">
+    <title><?= $request->config('app.app_name', 'MkyFramework') ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 <div class="min-h-screen flex flex-col justify-between">
     <nav class="bg-gray-800 px-14 py-3 sm:flex sm:items-center sm:justify-between border-b-2 border-white">
-        <a href="{{ route('home.index') }}" class="flex items-center mb-4 sm:mb-0">
-            <img src="{{ asset('img/mky.png') }}" class="mr-4 h-6" alt=""/>
+        <a href="<?= router('home.index') ?>" class="flex items-center mb-4 sm:mb-0">
+            <img src="<?= asset('img/mky.png') ?>" class="mr-4 h-6" alt=""/>
         </a>
         <ul class="flex flex-wrap items-center mb-6 sm:mb-0">
-            {% if not request.auth().isLogin %}
+            <?php if(!$request->auth()->isLogin()): ?>
                 <li>
-                    <a href="{{ route('ui.login') }}"
-                       class="mr-4 text-sm {{ request.isName('ui.login') ? 'text-white' : 'text-gray-400' }} hover:text-gray-300 md:mr-6">Login</a>
+                    <a href="<?= router('ui.login') ?>"
+                       class="mr-4 text-sm <?= $request->isName('ui.login') ? 'text-white' : 'text-gray-400' ?> hover:text-gray-300 md:mr-6">Login</a>
                 </li>
                 <li>
-                    <a href="{{ route('users.create') }}"
-                       class="mr-4 text-sm {{ request.isName('users.create') ? 'text-white' : 'text-gray-400' }} hover:text-gray-300 md:mr-6">Register</a>
+                    <a href="<?= router('users.create') ?>"
+                       class="mr-4 text-sm <?= $request->isName('users.create') ? 'text-white' : 'text-gray-400' ?> hover:text-gray-300 md:mr-6">Register</a>
                 </li>
-            {% else %}
-                {% if request.hasFlash('success_login') %}
+            <?php else: ?>
+                <?php if($request->hasFlash('success_login')): ?>
                     <li>
-                        <p class="mr-4 text-sm text-gray-400 md:mr-6">{{ request.flash('success_login') }}</p>
+                        <p class="mr-4 text-sm text-gray-400 md:mr-6"><?= $request->flash('success_login') ?></p>
                     </li>
-                {% endif %}
+                <?php endif; ?>
                 <li>
-                    <a href="{{ route('users.profile') }}"
-                       class="mr-4 text-sm text-gray-400 hover:text-gray-300 md:mr-6">{{ request.auth().user().email }}</a>
+                    <a href="<?= router('users.profile') ?>"
+                       class="mr-4 text-sm text-gray-400 hover:text-gray-300 md:mr-6"><?= $request->auth()->user()->email() ?></a>
                 </li>
                 <li>
-                    <a href="{{ route('ui.logout') }}"
+                    <a href="<?= router('ui.logout') ?>"
                        class="mr-4 text-sm text-gray-400 hover:text-gray-300 md:mr-6">Logout</a>
                 </li>
-            {% endif %}
+            <?php endif; ?>
         </ul>
     </nav>
     <div class="grow flex">
-        {% block content %}{% endblock %}
+        <?= $this->section('content') ?>
     </div>
     <footer class="shadow py-3 bg-white text-gray-500 flex justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

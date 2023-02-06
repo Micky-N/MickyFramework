@@ -1,9 +1,8 @@
-{% extends "layouts/layout.twig" %}
+<?php $this->extends('layout') ?>
 
-
-{% block content %}
+<?php $this->block('content') ?>
 <div class="flex justify-center grow bg-no-repeat bg-contain bg-[length:100%_100%]"
-     style="background-image: url({{ asset('img/header.jpg') }})">
+     style="background-image: url(<?= asset('img/header.jpg') ?>)">
     <div class="flex justify-center mx-auto text-white">
         <div class="flex flex-col mr-5 my-auto">
             <h1 class="text-6xl font-bold mb-5">MKY Framework</h1>
@@ -19,4 +18,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+<?php $this->endBlock() ?>

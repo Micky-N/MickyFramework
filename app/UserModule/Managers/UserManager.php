@@ -6,6 +6,7 @@ use App\UserModule\Entities\User;
 use Exception;
 use MkyCore\Abstracts\Entity;
 use MkyCore\Abstracts\Manager;
+use MkyCore\Crypt;
 use MkyCore\Interfaces\AuthSystemInterface;
 
 /**
@@ -24,7 +25,9 @@ class UserManager extends Manager implements AuthSystemInterface
     public function save(Entity $entity, string $table = ''): false|Entity
     {
         /** @var User $entity */
-        $entity->setPassword(password_hash($entity->password(), PASSWORD_DEFAULT));
+        $password = $entity->password();
+
+        $entity->setPassword($password);
         return parent::save($entity, $table);
     }
 
@@ -35,7 +38,8 @@ class UserManager extends Manager implements AuthSystemInterface
         if(!($user = $this->where('email', $email)->first())){
             return false;
         }
-        if(!(password_verify($password, $user->password()))){
+
+        if(!(Crypt::verify($password, $user->password()))){
             return false;
         }
         return $user;

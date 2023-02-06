@@ -26,7 +26,7 @@ class UIController extends Controller
      */
     public function login(): View
     {
-        return view('@/login.twig');
+        return view('@:login');
     }
 
     /**
@@ -54,7 +54,7 @@ class UIController extends Controller
      */
     public function forgotPassword(): View
     {
-        return view('@/forgotPassword.twig');
+        return view('@:forgotPassword');
     }
 
     /**
@@ -105,7 +105,7 @@ class UIController extends Controller
             $passwordResetManager->delete($passwordReset);
             return redirect()->error(498, 'Password reset token has expired or does not exist');
         }
-        return view('@/resetPassword.twig');
+        return view('@:resetPassword');
     }
 
     /**

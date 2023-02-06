@@ -1,6 +1,6 @@
-{% extends '@ui/authLayouts/layout.twig' %}
+<?php $this->extends('@ui:layout') ?>
 
-{% block form %}
+<?php $this->block('form') ?>
     <form method="post">
         <!-- Email input -->
         <div class="mb-6">
@@ -9,12 +9,12 @@
                     class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     name="email"
                     placeholder="Email address"
-                    value="{{ request.old('email', '') }}"
+                    value="<?= $request->old('email', $request->query('email', '')) ?>"
                     autofocus
             />
-            {% if request.hasFlash('email') %}
-                <small class="text-red-500">{{ request.flash('email') }}</small>
-            {% endif %}
+            <?php if($request->hasFlash('email')): ?>
+                <small class="text-red-500"><?= $request->flash('email') ?></small>
+            <?php endif ?>
         </div>
 
         <div class="text-center lg:text-left">
@@ -25,4 +25,4 @@
             </button>
         </div>
     </form>
-{% endblock %}
+<?php $this->endblock() ?>

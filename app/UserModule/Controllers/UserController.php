@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function create(): View
     {
-        return view('@/create.twig');
+        return view('@:create');
     }
 
     /**
@@ -55,7 +55,7 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = $authManager->user();
-        return view('@/profile.twig', compact('user'));
+        return view('@:profile', compact('user'));
     }
 
     /**

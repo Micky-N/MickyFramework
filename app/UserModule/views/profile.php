@@ -1,6 +1,6 @@
-{% extends 'layouts/layout.twig' %}
+<?php $this->extends('layout') ?>
 
-{% block content %}
+<?php $this->block('content') ?>
     <div class="w-full flex items-center bg-gray-100">
         <div class="max-w-screen w-4/5 sm:mx-auto bg-white shadow-xl text-gray-900">
             <div class="h-32 overflow-hidden">
@@ -14,16 +14,16 @@
                      alt='Woman looking front'>
             </div>
             <div class="text-center mt-2">
-                <h2 class="font-semibold">{{ user.name() }}</h2>
+                <h2 class="font-semibold"><?= $user->name() ?></h2>
                 <p class="text-gray-500">Freelance Web Developer</p>
-                <small>Contact: <span class="font-semibold">{{ user.email() }}</span></small>
+                <small>Contact: <span class="font-semibold"><?= $user->email() ?></span></small>
             </div>
 
             <form method="post" class="p-4 border-t mx-8 mt-2">
-                {{ method('put') }}
+                <?= method('put') ?>
                 <div class="w-full border-gray-400 flex-column">
                     <div class="w-full">
-                        <h2 class="text-xl text-gray-600 pb-4">Account settings: <span class="text-green-500 text-sm">{{ request.flash('success') }}</span></h2>
+                        <h2 class="text-xl text-gray-600 pb-4">Account settings: <span class="text-green-500 text-sm"><?= $request->flash('success') ?></span></h2>
                     </div>
 
                     <div class="grid grid-cols-2">
@@ -32,11 +32,11 @@
                             <input name="email"
                                    class='w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow'
                                    type='text'
-                                   value="{{ request.old('email', user.email()) }}"
+                                   value="<?= $request->old('email', $user->email()) ?>"
                             >
-                            {% if request.hasFLash('email') %}
-                                <small class="text-red-500">{{ request.flash('email') }}</small>
-                            {% endif %}
+                            <?php if($request->hasFLash('email')): ?>
+                                <small class="text-red-500"><?= $request->flash('email') ?></small>
+                            <?php endif ?>
                         </div>
 
                         <div class='w-full md:w-full px-3 mb-3'>
@@ -45,9 +45,9 @@
                                    class='w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow'
                                    type='password'
                             >
-                            {% if request.hasFLash('old_password') %}
-                                <small class="text-red-500">{{ request.flash('old_password') }}</small>
-                            {% endif %}
+                            <?php if($request->hasFLash('old_password')): ?>
+                                <small class="text-red-500"><?= $request->flash('old_password') ?></small>
+                            <?php endif ?>
                         </div>
                     </div>
 
@@ -58,9 +58,9 @@
                                    class='w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow'
                                    type='password'
                             >
-                            {% if request.hasFLash('new_password') %}
-                                <small class="text-red-500">{{ request.flash('new_password') }}</small>
-                            {% endif %}
+                            <?php if($request->hasFLash('new_password')): ?>
+                                <small class="text-red-500"><?= $request->flash('new_password') ?></small>
+                            <?php endif ?>
                         </div>
 
                         <div class='w-full md:w-full px-3 mb-3'>
@@ -80,4 +80,4 @@
             </form>
         </div>
     </div>
-{% endblock %}
+<?php $this->endblock() ?>

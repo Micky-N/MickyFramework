@@ -1,6 +1,6 @@
-{% extends '@ui/authLayouts/layout.twig' %}
+<?php $this->extends('@ui:layout') ?>
 
-{% block form %}
+<?php $this->block('form') ?>
     <form method="post">
         <!-- Password input -->
         <div class="mb-6">
@@ -8,12 +8,11 @@
                     type="password"
                     class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     name="password"
-                    placeholder="New password"
-                    autofocus
+                    placeholder="Password"
             />
-            {% if request.hasFlash('password') %}
-                <small class="text-red-500">{{ request.flash('password') }}</small>
-            {% endif %}
+            <?php if($request->hasFlash('password')): ?>
+                <small class="text-red-500"><?= $request->flash('password') ?></small>
+            <?php endif ?>
         </div>
 
         <!-- Confirm Password input -->
@@ -34,4 +33,4 @@
             </button>
         </div>
     </form>
-{% endblock %}
+<?php $this->endblock() ?>

@@ -1,6 +1,6 @@
-{% extends 'layouts/layout.twig' %}
+<?php $this->extends('layout') ?>
 
-{% block content %}
+<?php $this->block('content') ?>
     <section class="mx-auto lg:px-20">
         <div class="h-full text-gray-800">
             <div
@@ -10,13 +10,13 @@
                         class="grow-0 shrink-1 md:shrink-0 basis-auto lg:w-6/12 w-9/12"
                 >
                     <img
-                            src="{{ asset('img/mky.png') }}"
+                            src="<?= asset('img/mky.png') ?>"
                             class="w-full"
                             alt="Sample image"
                     />
                 </div>
                 <div class="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
-                    <form method="post" action="{{ route('users.store') }}">
+                    <form method="post" action="<?= router('users.store') ?>">
                         <!-- Email input -->
                         <div class="mb-6">
                             <input
@@ -24,12 +24,12 @@
                                     class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                     name="email"
                                     placeholder="Email address"
-                                    value="{{ request.old('email', '') }}"
+                                    value="<?= $request->old('email', '') ?>"
                                     autofocus
                             />
-                            {% if request.hasFlash('email') %}
-                                <small class="text-red-500">{{ request.flash('email') }}</small>
-                            {% endif %}
+                            <?php if($request->hasFlash('email')): ?>
+                                <small class="text-red-500"><?= $request->flash('email') ?></small>
+                            <?php endif ?>
                         </div>
 
                         <!-- Password input -->
@@ -40,9 +40,9 @@
                                     name="password"
                                     placeholder="Password"
                             />
-                            {% if request.hasFlash('password') %}
-                                <small class="text-red-500">{{ request.flash('password') }}</small>
-                            {% endif %}
+                            <?php if($request->hasFlash('password')): ?>
+                                <small class="text-red-500"><?= $request->flash('password') ?></small>
+                            <?php endif ?>
                         </div>
 
                         <!-- Confirm Password input -->
@@ -53,9 +53,9 @@
                                     name="confirm_password"
                                     placeholder="Confirm your password"
                             />
-                            {% if request.hasFlash('confirm_password') %}
-                                <small class="text-red-500">{{ request.flash('confirm_password') }}</small>
-                            {% endif %}
+                            <?php if($request->hasFlash('confirm_password')): ?>
+                                <small class="text-red-500"><?= $request->flash('confirm_password') ?></small>
+                            <?php endif ?>
                         </div>
 
                         <div class="text-center lg:text-left">
@@ -66,7 +66,7 @@
                             </button>
                             <p class="text-sm font-semibold mt-2 pt-1 mb-0">
                                 Already have an account ?
-                                <a href="{{ route('ui.login') }}"
+                                <a href="<?= router('ui.login') ?>"
                                    class="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"
                                 >Login</a>
                             </p>
@@ -76,4 +76,4 @@
             </div>
         </div>
     </section>
-{% endblock %}
+<?php $this->endblock() ?>
